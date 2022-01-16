@@ -25,8 +25,6 @@ function App() {
 
   const navigate = useNavigate();
 
-  const toast = useToast();
-
   const isUserLoggedIn = !isEmpty(userData);
 
   useEffect(() => {
@@ -38,7 +36,7 @@ function App() {
   }, []);
 
   const contextValues = useMemo(() => {
-    return { setShowLoader, toast, userData, isUserLoggedIn, setUserData };
+    return { setShowLoader, userData, isUserLoggedIn, setUserData };
   }, [userData]);
 
   return (

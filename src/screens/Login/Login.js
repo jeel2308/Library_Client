@@ -1,6 +1,7 @@
 /**--external-- */
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react';
 
 /**--internal-- */
 import { AuthenticationPage } from '../../components';
@@ -13,7 +14,10 @@ const origin = 'http://localhost:4000';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setShowLoader, toast, setUserData } = useContext(AppContext);
+
+  const toast = useToast();
+
+  const { setShowLoader, setUserData } = useContext(AppContext);
 
   const generateToast = ({ message }) => {
     toast({
