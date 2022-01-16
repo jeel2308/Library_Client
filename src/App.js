@@ -1,11 +1,12 @@
 /**--external-- */
-import { useState, useMemo } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
+import isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
 import { FullScreenLoader } from './components';
-import { AppContext } from './Utils';
+import { AppContext, getUserInfoFromStorage } from './Utils';
 
 /**--relative-- */
 import {
@@ -19,7 +20,18 @@ import {
 function App() {
   const [showLoader, setShowLoader] = useState(false);
 
+  const navigate = useNavigate();
+
   const toast = useToast();
+
+  useEffect(() => {
+    const userInfo = getUserInfoFromStorage();
+    if (isEmpty(userInfo)) {
+      navigate('/');
+      return;
+    }
+    navigate('/resources');
+  }, []);
 
   const contextValues = useMemo(() => {
     return { setShowLoader, toast };
