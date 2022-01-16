@@ -6,7 +6,7 @@ import { Input, Text } from '@chakra-ui/react';
 
 /**--relative-- */
 import classes from './Form.module.scss';
-
+import PasswordInput from './PasswordInput';
 import { getInitialValues } from './utils';
 const Form = (props) => {
   const { fields, onSubmit, formButtonsElement } = props;
@@ -17,7 +17,7 @@ const Form = (props) => {
     formState: { errors },
   } = useForm({
     defaultValues: getInitialValues({ fields }),
-    mode: 'all',
+    mode: 'onBlur',
   });
 
   return (
@@ -41,17 +41,30 @@ const Form = (props) => {
 
                 return (
                   <React.Fragment>
-                    <Input
-                      borderColor={'blackAlpha.500'}
-                      errorBorderColor={'crimson'}
-                      isInvalid={isInvalid}
-                      type={type}
-                      value={value}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      placeholder={placeholder}
-                      size={'md'}
-                    />
+                    {type === 'password' ? (
+                      <PasswordInput
+                        borderColor={'blackAlpha.500'}
+                        errorBorderColor={'crimson'}
+                        isInvalid={isInvalid}
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        placeholder={placeholder}
+                        size={'md'}
+                      />
+                    ) : (
+                      <Input
+                        borderColor={'blackAlpha.500'}
+                        errorBorderColor={'crimson'}
+                        isInvalid={isInvalid}
+                        type={type}
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        placeholder={placeholder}
+                        size={'md'}
+                      />
+                    )}
 
                     {isInvalid && (
                       <div className={classes.error}>
