@@ -1,0 +1,15 @@
+.no-match-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.no-match-sub-header {
+  display: flex;
+}
+
+.no-match-link {
+  display: flex;
+}
