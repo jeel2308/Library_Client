@@ -4,4 +4,27 @@ const validateEmail = (email) => {
   return emailRegex.test(email);
 };
 
-export { validateEmail };
+const setUserInfoInStorage = ({ userInfo }) => {
+  localStorage.setItem(`library-user`, JSON.stringify(userInfo));
+};
+
+const getUserInfoFromStorage = () => {
+  const data = localStorage.getItem(`library-user`);
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
+};
+
+const clearStorage = () => {
+  setUserInfoInStorage({ userInfo: {} });
+};
+
+export {
+  validateEmail,
+  setUserInfoInStorage,
+  getUserInfoFromStorage,
+  clearStorage,
+};
