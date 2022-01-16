@@ -13,11 +13,25 @@ const origin = 'http://localhost:4000';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setShowLoader } = useContext(AppContext);
+  const { setShowLoader, toast } = useContext(AppContext);
+
+  const generateToast = ({ message }) => {
+    toast({
+      title: message,
+      status: 'error',
+      isClosable: true,
+      position: 'bottom-left',
+    });
+  };
   const submitForm = async (data) => {
+    let responseData = {};
+
+    let res = {};
+
     try {
       setShowLoader(true);
-      const res = await fetch(`${origin}/login`, {
+
+      res = await fetch(`${origin}/login`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -25,14 +39,19 @@ const Login = () => {
         },
         referrerPolicy: 'no-referrer',
       });
-      const responseData = await res.json();
-      const { success, ...userInfo } = responseData;
-      if (success) {
+
+      responseData = await res.json();
+
+      const { message, ...userInfo } = responseData;
+
+      if (res.ok) {
         setUserInfoInStorage({ userInfo });
         navigate('/resources');
+      } else {
+        generateToast({ message: message || res.statusText });
       }
     } catch (e) {
-      console.log(e);
+      generateToast({ message: 'Something went wrong' });
     } finally {
       setShowLoader(false);
     }

@@ -13,12 +13,25 @@ const origin = 'http://localhost:4000';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { setShowLoader } = useContext(AppContext);
+  const { setShowLoader, toast } = useContext(AppContext);
+
+  const generateToast = ({ message }) => {
+    toast({
+      title: message,
+      status: 'error',
+      isClosable: true,
+      position: 'bottom-left',
+    });
+  };
 
   const submitForm = async (data) => {
+    let responseData = {};
+
+    let res = {};
+
     try {
       setShowLoader(true);
-      const res = await fetch(`${origin}/signup`, {
+      res = await fetch(`${origin}/signup`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -27,15 +40,28 @@ const Register = () => {
         referrerPolicy: 'no-referrer',
       });
 
-      const responseData = await res.json();
-
-      const { success } = responseData;
-
-      if (success) {
+      /**
+       * If res status is ok(status is 200) then we will do redirection
+       */
+      if (res.ok) {
         navigate('/login');
+      } else {
+        /**
+         * Fetch api throws error only when network error occur.
+         * For status 4xx and 5xx, we have to add logic for toast in try block
+         */
+        responseData = await res.json();
+
+        const { message } = responseData;
+
+        /**
+         * If there is message from backend then we will use it otherwise we use
+         * default failure message from res obj.
+         */
+        generateToast({ message: message || res.statusText });
       }
     } catch (e) {
-      console.log(e);
+      generateToast({ message: 'Something went wrong' });
     } finally {
       setShowLoader(false);
     }

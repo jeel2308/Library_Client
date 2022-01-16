@@ -1,6 +1,7 @@
 /**--external-- */
 import { useState, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react';
 
 /**--internal-- */
 import { FullScreenLoader } from './components';
@@ -18,8 +19,10 @@ import {
 function App() {
   const [showLoader, setShowLoader] = useState(false);
 
+  const toast = useToast();
+
   const contextValues = useMemo(() => {
-    return { setShowLoader };
+    return { setShowLoader, toast };
   }, []);
 
   return (
