@@ -1,4 +1,4 @@
-.no-match-container {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,10 +6,10 @@
   height: 100vh;
 }
 
-.no-match-sub-header {
+.sub-header {
   display: flex;
 }
 
-.no-match-link {
+.link {
   display: flex;
 }

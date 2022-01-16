@@ -9,7 +9,7 @@
   width: 100%;
 }
 
-.authentication-content {
+.content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,18 +19,18 @@
   padding: 24px;
 }
 
-.authentication-figure {
+.figure {
   margin: 0;
   width: 100%;
   height: 100%;
 }
 
-.authentication-figure img {
+.figure img {
   width: 100%;
   height: 100%;
 }
 
-.authentication-overlay {
+.overlay {
   display: flex;
   position: fixed;
   width: 100vw;

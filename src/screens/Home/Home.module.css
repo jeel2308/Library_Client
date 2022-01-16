@@ -1,22 +1,22 @@
-.home-container {
+.container {
   display: flex;
   width: 100%;
   height: 100vh;
 }
 
-.home-figure {
+.figure {
   display: flex;
   margin: 0;
   width: 100%;
   height: 100%;
 }
 
-.home-figure img {
+.figure img {
   width: 100%;
   height: 100%;
 }
 
-.home-overlay {
+.overlay {
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -29,7 +29,7 @@
   align-items: center;
 }
 
-.home-content {
+.content {
   display: flex;
   margin-top: 100px;
   flex-direction: column;

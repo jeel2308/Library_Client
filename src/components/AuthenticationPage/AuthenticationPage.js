@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 /**--relative-- */
 import Form from '../Form';
-import './AuthenticationPage.css';
+import classes from './AuthenticationPage.module.css';
 import { buttonGroupStyle, linkStyle } from './AuthenticationPageStyles';
 
 const FormButtons = (props) => {
@@ -44,7 +44,7 @@ const AuthenticationPage = (props) => {
   } = props;
 
   return (
-    <div className="authentication-form-container">
+    <div className={classes.container}>
       <Heading as="h2" size="lg" mb="8">
         {headingText}
       </Heading>

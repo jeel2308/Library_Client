@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { Modal } from '../../components';
 
 /**--relative-- */
-import './Home.css';
+import classes from './Home.module.css';
 import { buttonGroupStyles } from './HomeStyles';
 import {
   HOME_BANNER,
@@ -25,12 +25,12 @@ import {
 
 const Home = () => {
   return (
-    <div className="home-container">
-      <figure className="home-figure">
+    <div className={classes.container}>
+      <figure className={classes.figure}>
         <img src={HOME_BANNER} alt="home-banner" />
       </figure>
       <Modal>
-        <div className="home-overlay">
+        <div className={classes.overlay}>
           <ButtonGroup spacing={'6'} style={buttonGroupStyles}>
             <Link to={'register'}>
               <Button colorScheme={'blue'}>Sign up</Button>
@@ -39,7 +39,7 @@ const Home = () => {
               <Button colorScheme={'blue'}>Sign in</Button>
             </Link>
           </ButtonGroup>
-          <div className="home-content">
+          <div className={classes.content}>
             <Heading as={TITLE_ELEMENT} size={TITLE_FONT_SIZE}>
               One place to keep all online articles
             </Heading>

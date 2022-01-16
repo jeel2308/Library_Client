@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import { Button, Heading } from '@chakra-ui/react';
 
 /**--relative-- */
-import './NoMatch.css';
+import classes from './NoMatch.module.css';
 
 const NoMatch = () => {
   return (
-    <div className="no-match-container">
+    <div className={classes.container}>
       <Heading as="h2" size={'2xl'}>
         Page not found
       </Heading>
-      <Heading as="h4" size={'md'} mt="4" className="no-match-sub-header">
+      <Heading as="h4" size={'md'} mt="4" className={classes['sub-header']}>
         Go to
-        <Link to="/" className="no-match-link">
+        <Link to="/" className={classes.link}>
           <Button colorScheme={'blue'} variant={'link'} ml={'2'}>
             Home page
           </Button>

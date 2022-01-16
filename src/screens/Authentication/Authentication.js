@@ -7,19 +7,19 @@ import { Modal } from '../../components';
 
 /**--relative-- */
 import { BANNER_URL } from './utils';
-import './Authentication.css';
+import classes from './Authentication.module.css';
 
 const Authentication = () => {
   return (
-    <div className="authentication-container">
-      <div className="authentication-banner">
-        <figure className="authentication-figure">
+    <div className={classes.container}>
+      <div className={classes.banner}>
+        <figure className={classes.figure}>
           <img src={BANNER_URL} alt="banner" />
         </figure>
       </div>
       <Modal>
-        <div className="authentication-overlay">
-          <div className="authentication-content">
+        <div className={classes.overlay}>
+          <div className={classes.content}>
             <Outlet />
           </div>
         </div>

@@ -5,7 +5,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Input, Text } from '@chakra-ui/react';
 
 /**--relative-- */
-import './Form.css';
+import classes from './Form.module.css';
+
 import { getInitialValues } from './utils';
 const Form = (props) => {
   const { fields, onSubmit, formButtonsElement } = props;
@@ -20,7 +21,7 @@ const Form = (props) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form-container">
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.container}>
       {fields.map((field) => {
         const { id, label, type, placeholder, errorMessages, constrains } =
           field;
@@ -28,7 +29,7 @@ const Form = (props) => {
         const errorType = errors?.[id]?.type ?? 'required';
 
         return (
-          <div key={id} className="form-field">
+          <div key={id} className={classes.field}>
             <Text mb="8px">{label}</Text>
             <Controller
               name={id}
@@ -53,7 +54,7 @@ const Form = (props) => {
                     />
 
                     {isInvalid && (
-                      <div className="field-error">
+                      <div className={classes.error}>
                         {errorMessages[errorType]}
                       </div>
                     )}
