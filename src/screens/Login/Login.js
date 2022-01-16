@@ -10,7 +10,7 @@ import { setUserInfoInStorage, AppContext } from '../../Utils';
 /**--relative-- */
 import { formFields } from './utils';
 
-const origin = 'http://localhost:4000';
+const origin = process.env.REACT_APP_SERVER_URL;
 
 const Login = () => {
   const navigate = useNavigate();
