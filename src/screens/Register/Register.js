@@ -1,9 +1,10 @@
 /**--external-- */
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /**--internal-- */
 import { AuthenticationPage } from '../../components';
+import { AppContext } from '../../Utils';
 
 /**--relative-- */
 import { formFields } from './utils';
@@ -12,9 +13,11 @@ const origin = 'http://localhost:4000';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { setShowLoader } = useContext(AppContext);
 
   const submitForm = async (data) => {
     try {
+      setShowLoader(true);
       const res = await fetch(`${origin}/signup`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -33,6 +36,8 @@ const Register = () => {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setShowLoader(false);
     }
   };
 

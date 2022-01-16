@@ -1,15 +1,16 @@
 /**--external-- */
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 /**--internal-- */
-import { Modal } from '../../components';
+import { Modal, FullScreenLoader } from '../../components';
 
 /**--relative-- */
 import { BANNER_URL } from './utils';
 import classes from './Authentication.module.scss';
 
 const Authentication = () => {
+  const [showLoader, setShowLoader] = useState(false);
   return (
     <div className={classes.container}>
       <div className={classes.banner}>
@@ -20,10 +21,11 @@ const Authentication = () => {
       <Modal>
         <div className={classes.overlay}>
           <div className={classes.content}>
-            <Outlet />
+            <Outlet context={setShowLoader} />
           </div>
         </div>
       </Modal>
+      {showLoader && <FullScreenLoader />}
     </div>
   );
 };
