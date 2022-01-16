@@ -13,7 +13,7 @@ const origin = 'http://localhost:4000';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setShowLoader, toast } = useContext(AppContext);
+  const { setShowLoader, toast, setUserData } = useContext(AppContext);
 
   const generateToast = ({ message }) => {
     toast({
@@ -46,6 +46,7 @@ const Login = () => {
 
       if (res.ok) {
         setUserInfoInStorage({ userInfo });
+        setUserData(userInfo);
         navigate('/resources');
       } else {
         generateToast({ message: message || res.statusText });
