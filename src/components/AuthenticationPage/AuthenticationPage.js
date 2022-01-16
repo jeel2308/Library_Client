@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 /**--relative-- */
 import Form from '../Form';
-import classes from './AuthenticationPage.module.css';
+import classes from './AuthenticationPage.module.scss';
 import { buttonGroupStyle, linkStyle } from './AuthenticationPageStyles';
 
 const FormButtons = (props) => {

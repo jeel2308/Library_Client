@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { Modal } from '../../components';
 
 /**--relative-- */
-import classes from './Home.module.css';
+import classes from './Home.module.scss';
 import { buttonGroupStyles } from './HomeStyles';
 import {
   HOME_BANNER,

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button, Heading } from '@chakra-ui/react';
 
 /**--relative-- */
-import classes from './NoMatch.module.css';
+import classes from './NoMatch.module.scss';
 
 const NoMatch = () => {
   return (

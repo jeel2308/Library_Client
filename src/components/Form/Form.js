@@ -5,7 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { Input, Text } from '@chakra-ui/react';
 
 /**--relative-- */
-import classes from './Form.module.css';
+import classes from './Form.module.scss';
 
 import { getInitialValues } from './utils';
 const Form = (props) => {

@@ -7,7 +7,7 @@ import { Modal } from '../../components';
 
 /**--relative-- */
 import { BANNER_URL } from './utils';
-import classes from './Authentication.module.css';
+import classes from './Authentication.module.scss';
 
 const Authentication = () => {
   return (
