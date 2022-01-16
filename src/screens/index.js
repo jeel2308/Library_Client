@@ -4,4 +4,13 @@ import NoMatch from './NoMatch';
 import Home from './Home';
 import Register from './Register';
 import Login from './Login';
-export { Authentication, Resources, NoMatch, Home, Register, Login };
+import ProtectedRoute from './ProtectedRoute';
+export {
+  Authentication,
+  Resources,
+  NoMatch,
+  Home,
+  Register,
+  Login,
+  ProtectedRoute,
+};

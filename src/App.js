@@ -16,32 +16,39 @@ import {
   Home,
   Register,
   Login,
+  ProtectedRoute,
 } from './screens';
 function App() {
   const [showLoader, setShowLoader] = useState(false);
+
+  const [userData, setUserData] = useState(() => getUserInfoFromStorage());
 
   const navigate = useNavigate();
 
   const toast = useToast();
 
+  const isUserLoggedIn = !isEmpty(userData);
+
   useEffect(() => {
-    const userInfo = getUserInfoFromStorage();
-    if (isEmpty(userInfo)) {
+    if (isUserLoggedIn) {
+      navigate('/resources');
+    } else {
       navigate('/');
-      return;
     }
-    navigate('/resources');
   }, []);
 
   const contextValues = useMemo(() => {
-    return { setShowLoader, toast };
-  }, []);
+    return { setShowLoader, toast, userData, isUserLoggedIn, setUserData };
+  }, [userData]);
 
   return (
     <AppContext.Provider value={contextValues}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="resources/*" element={<Resources />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="resources/*" element={<Resources />} />
+        </Route>
+
         <Route element={<Authentication />}>
           <Route element={<Register />} path="register" />
           <Route element={<Login />} path="login" />
