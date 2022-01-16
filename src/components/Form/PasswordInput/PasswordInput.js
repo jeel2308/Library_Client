@@ -50,7 +50,7 @@ PasswordInput.propTypes = {
   placeholder: PropTypes.string,
   borderColor: PropTypes.string,
   errorBorderColor: PropTypes.string,
-  isInvalid: PropTypes.string,
+  isInvalid: PropTypes.bool,
   value: PropTypes.string,
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
