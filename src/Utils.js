@@ -20,6 +20,11 @@ const getUserInfoFromStorage = () => {
   }
 };
 
+const getToken = () => {
+  const { token = '' } = getUserInfoFromStorage();
+  return `Bearer ${token}`;
+};
+
 const clearStorage = () => {
   setUserInfoInStorage({ userInfo: {} });
 };
@@ -34,4 +39,5 @@ export {
   getUserInfoFromStorage,
   clearStorage,
   AppContext,
+  getToken,
 };
