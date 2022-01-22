@@ -21,7 +21,7 @@ const getUserInfoFromStorage = () => {
 };
 
 const getToken = () => {
-  const { token = '' } = getUserInfoFromStorage();
+  const { token = '' } = getUserInfoFromStorage() ?? {};
   return `Bearer ${token}`;
 };
 
