@@ -8,7 +8,7 @@ import { ApolloProvider } from '@apollo/client';
 /**--relative-- */
 import './index.css';
 import App from './App';
-import client from './client';
+import client from './apolloClient';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
