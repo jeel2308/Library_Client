@@ -51,7 +51,7 @@ const Login = () => {
       if (res.ok) {
         setUserInfoInStorage({ userInfo });
         setUserData(userInfo);
-        navigate('/resources');
+        navigate('/folders');
       } else {
         generateToast({ message: message || res.statusText });
       }

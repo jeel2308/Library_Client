@@ -29,7 +29,7 @@ function App() {
 
   useEffect(() => {
     if (isUserLoggedIn) {
-      navigate('/resources');
+      navigate('/folders');
     } else {
       navigate('/');
     }
@@ -44,7 +44,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="resources/*" element={<Resources />} />
+          <Route path="folders/*" element={<Resources />} />
         </Route>
 
         <Route element={<Authentication />}>
