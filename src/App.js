@@ -1,6 +1,6 @@
 /**--external-- */
 import { useState, useMemo, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import isEmpty from 'lodash/isEmpty';
 
@@ -21,6 +21,8 @@ import {
 function App() {
   const [showLoader, setShowLoader] = useState(false);
 
+  const location = useLocation();
+
   const [userData, setUserData] = useState(() => getUserInfoFromStorage());
 
   const navigate = useNavigate();
@@ -28,10 +30,8 @@ function App() {
   const isUserLoggedIn = !isEmpty(userData);
 
   useEffect(() => {
-    if (isUserLoggedIn) {
+    if (isUserLoggedIn && location.pathname === '/') {
       navigate('/folders');
-    } else {
-      navigate('/');
     }
   }, []);
 
@@ -54,6 +54,7 @@ function App() {
 
         <Route path="*" element={<NoMatch />} />
       </Routes>
+
       {showLoader && <FullScreenLoader />}
     </AppContext.Provider>
   );

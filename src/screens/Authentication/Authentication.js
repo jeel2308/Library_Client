@@ -1,17 +1,27 @@
 /**--external-- */
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
 
 /**--internal-- */
-import { Modal, FullScreenLoader } from '../../components';
+import { Modal } from '../../components';
+import { AppContext } from '../../Utils';
 
 /**--relative-- */
 import { BANNER_URL } from './utils';
 import classes from './Authentication.module.scss';
 
 const Authentication = () => {
-  const [showLoader, setShowLoader] = useState(false);
-  return (
+  const { isUserLoggedIn } = useContext(AppContext);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isUserLoggedIn) {
+      navigate('/folder');
+    }
+  }, [isUserLoggedIn]);
+
+  const element = (
     <div className={classes.container}>
       <div className={classes.banner}>
         <figure className={classes.figure}>
@@ -21,13 +31,14 @@ const Authentication = () => {
       <Modal>
         <div className={classes.overlay}>
           <div className={classes.content}>
-            <Outlet context={setShowLoader} />
+            <Outlet />
           </div>
         </div>
       </Modal>
-      {showLoader && <FullScreenLoader />}
     </div>
   );
+
+  return !isUserLoggedIn && element;
 };
 
 export default Authentication;
