@@ -51,7 +51,12 @@ const Login = () => {
       if (res.ok) {
         setUserInfoInStorage({ userInfo });
         setUserData(userInfo);
-        navigate('/folders');
+        /**
+         * When we redirect using following approach, it will unmount App and
+         * remount it. This is necessary because without it App won't be able to
+         * use updated localStorage data.
+         */
+        window.location.href = '/';
       } else {
         generateToast({ message: message || res.statusText });
       }
