@@ -77,7 +77,7 @@ export const loginUser = (data) => {
         })
       );
     } finally {
-      setLoaderVisibility(false);
+      dispatch(setLoaderVisibility(false));
     }
   };
 };
