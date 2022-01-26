@@ -1,70 +1,21 @@
 /**--external-- */
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@chakra-ui/react';
+import React from 'react';
+import { connect } from 'react-redux';
 
 /**--internal-- */
 import { AuthenticationPage } from '../../components';
-import { setUserInfoInStorage, AppContext } from '../../Utils';
+import { loginUser } from '../../modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';
 
 const origin = process.env.REACT_APP_SERVER_URL;
 
-const Login = () => {
-  const navigate = useNavigate();
+const Login = (props) => {
+  const { loginUser } = props;
 
-  const toast = useToast();
-
-  const { setShowLoader, setUserData } = useContext(AppContext);
-
-  const generateToast = ({ message }) => {
-    toast({
-      title: message,
-      status: 'error',
-      isClosable: true,
-      position: 'bottom-left',
-    });
-  };
   const submitForm = async (data) => {
-    let responseData = {};
-
-    let res = {};
-
-    try {
-      setShowLoader(true);
-
-      res = await fetch(`${origin}/login`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        referrerPolicy: 'no-referrer',
-      });
-
-      responseData = await res.json();
-
-      const { message, ...userInfo } = responseData;
-
-      if (res.ok) {
-        setUserInfoInStorage({ userInfo });
-        setUserData(userInfo);
-        /**
-         * When we redirect using following approach, it will unmount App and
-         * remount it. This is necessary because without it App won't be able to
-         * use updated localStorage data.
-         */
-        window.location.href = '/';
-      } else {
-        generateToast({ message: message || res.statusText });
-      }
-    } catch (e) {
-      generateToast({ message: 'Something went wrong' });
-    } finally {
-      setShowLoader(false);
-    }
+    loginUser(data);
   };
 
   return (
@@ -79,5 +30,9 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapActionCreators = {
+  loginUser,
+};
+
+export default connect(null, mapActionCreators)(Login);
 Login.displayName = 'Login';

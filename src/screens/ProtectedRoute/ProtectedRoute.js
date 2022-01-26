@@ -1,14 +1,12 @@
 /**--external-- */
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-/**--internal-- */
-import { AppContext } from '../../Utils';
-
-const ProtectedRoute = () => {
+const ProtectedRoute = (props) => {
   const navigate = useNavigate();
 
-  const { isUserLoggedIn } = useContext(AppContext);
+  const { isUserLoggedIn } = props;
 
   useEffect(() => {
     if (!isUserLoggedIn) {
@@ -19,6 +17,10 @@ const ProtectedRoute = () => {
   return isUserLoggedIn && <Outlet />;
 };
 
-export default ProtectedRoute;
+const mapStateToProps = (state) => {
+  return { isUserLoggedIn: state.isUserLoggedIn };
+};
+
+export default connect(mapStateToProps)(ProtectedRoute);
 
 ProtectedRoute.displayName = 'ProtectedRoute';

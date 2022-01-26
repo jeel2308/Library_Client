@@ -1,17 +1,16 @@
 /**--external-- */
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 /**--internal-- */
 import { Modal } from '../../components';
-import { AppContext } from '../../Utils';
-
 /**--relative-- */
 import { BANNER_URL } from './utils';
 import classes from './Authentication.module.scss';
 
-const Authentication = () => {
-  const { isUserLoggedIn } = useContext(AppContext);
+const Authentication = (props) => {
+  const { isUserLoggedIn } = props;
 
   const navigate = useNavigate();
 
@@ -41,6 +40,12 @@ const Authentication = () => {
   return !isUserLoggedIn && element;
 };
 
-export default Authentication;
+const mapStateToProps = (state) => {
+  return {
+    isUserLoggedIn: state.isUserLoggedIn,
+  };
+};
+
+export default connect(mapStateToProps)(Authentication);
 
 Authentication.displayName = 'Authentication';

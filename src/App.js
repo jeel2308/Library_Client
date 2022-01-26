@@ -1,12 +1,13 @@
 /**--external-- */
-import { useState, useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useToast } from '@chakra-ui/react';
-import isEmpty from 'lodash/isEmpty';
+import _isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
-import { FullScreenLoader } from './components';
-import { AppContext, getUserInfoFromStorage } from './Utils';
+import { connect } from 'react-redux';
+import { FullScreenLoader, ToastMessage } from './components';
+import { setUserDetails, updateUserLoggedInStatus } from './modules/Module';
+import { getUserInfoFromStorage } from './Utils';
 
 /**--relative-- */
 import {
@@ -18,29 +19,28 @@ import {
   Login,
   ProtectedRoute,
 } from './screens';
-function App() {
-  const [showLoader, setShowLoader] = useState(false);
+function App(props) {
+  const { showLoader, setUserDetails, updateUserLoggedInStatus } = props;
 
   const location = useLocation();
 
-  const [userData, setUserData] = useState(() => getUserInfoFromStorage());
-
   const navigate = useNavigate();
 
-  const isUserLoggedIn = !isEmpty(userData);
-
   useEffect(() => {
+    const userDetails = getUserInfoFromStorage();
+
+    const isUserLoggedIn = !_isEmpty(userDetails);
+
+    setUserDetails(userDetails);
+    updateUserLoggedInStatus(isUserLoggedIn);
+
     if (isUserLoggedIn && location.pathname === '/') {
       navigate('/folders');
     }
   }, []);
 
-  const contextValues = useMemo(() => {
-    return { setShowLoader, userData, isUserLoggedIn, setUserData };
-  }, [userData]);
-
   return (
-    <AppContext.Provider value={contextValues}>
+    <React.Fragment>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route element={<ProtectedRoute />}>
@@ -56,8 +56,19 @@ function App() {
       </Routes>
 
       {showLoader && <FullScreenLoader />}
-    </AppContext.Provider>
+      <ToastMessage />
+    </React.Fragment>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  const { showLoader } = state;
+  return { showLoader };
+};
+
+const mapActionCreators = {
+  setUserDetails,
+  updateUserLoggedInStatus,
+};
+
+export default connect(mapStateToProps, mapActionCreators)(App);

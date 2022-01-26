@@ -1,5 +1,3 @@
-import { createContext } from 'react';
-
 const validateEmail = (email) => {
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/, 'i');
 
@@ -29,15 +27,10 @@ const clearStorage = () => {
   setUserInfoInStorage({ userInfo: {} });
 };
 
-const AppContext = createContext({
-  setShowLoader: () => {},
-});
-
 export {
   validateEmail,
   setUserInfoInStorage,
   getUserInfoFromStorage,
   clearStorage,
-  AppContext,
   getToken,
 };

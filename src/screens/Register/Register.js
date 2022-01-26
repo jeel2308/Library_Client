@@ -1,74 +1,22 @@
 /**--external-- */
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@chakra-ui/react';
+
+import { connect } from 'react-redux';
 
 /**--internal-- */
 import { AuthenticationPage } from '../../components';
-import { AppContext } from '../../Utils';
+import { registerUser } from '../../modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';
 
-const origin = process.env.REACT_APP_SERVER_URL;
-
-const Register = () => {
+const Register = (props) => {
+  const { registerUser } = props;
   const navigate = useNavigate();
 
-  const toast = useToast();
-
-  const { setShowLoader } = useContext(AppContext);
-
-  const generateToast = ({ message }) => {
-    toast({
-      title: message,
-      status: 'error',
-      isClosable: true,
-      position: 'bottom-left',
-    });
-  };
-
-  const submitForm = async (data) => {
-    let responseData = {};
-
-    let res = {};
-
-    try {
-      setShowLoader(true);
-      res = await fetch(`${origin}/signup`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        referrerPolicy: 'no-referrer',
-      });
-
-      /**
-       * If res status is ok(status is 200) then we will do redirection
-       */
-      if (res.ok) {
-        navigate('/login');
-      } else {
-        /**
-         * Fetch api throws error only when network error occur.
-         * For status 4xx and 5xx, we have to add logic for toast in try block
-         */
-        responseData = await res.json();
-
-        const { message } = responseData;
-
-        /**
-         * If there is message from backend then we will use it otherwise we use
-         * default failure message from res obj.
-         */
-        generateToast({ message: message || res.statusText });
-      }
-    } catch (e) {
-      generateToast({ message: 'Something went wrong' });
-    } finally {
-      setShowLoader(false);
-    }
+  const onSubmit = (data) => {
+    registerUser(data, () => navigate('/login'));
   };
 
   return (
@@ -77,12 +25,15 @@ const Register = () => {
       linkButtonText="Sign in"
       submitButtonText="Sign up"
       formFields={formFields}
-      onSubmit={submitForm}
+      onSubmit={onSubmit}
       linkButtonHref="/login"
     />
   );
 };
 
 Register.displayName = 'Register';
+const mapActionCreators = {
+  registerUser,
+};
 
-export default Register;
+export default connect(null, mapActionCreators)(Register);
