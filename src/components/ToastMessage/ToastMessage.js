@@ -11,7 +11,7 @@ const ToastMessage = (props) => {
   const setToast = useToast();
 
   useEffect(() => {
-    if (!_.isEmpty(toastMessage)) {
+    if (!_isEmpty(toastMessage)) {
       setToast(toastMessage);
       setToastMessage({});
     }
