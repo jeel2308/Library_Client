@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import _isEmpty from 'lodash/isEmpty';
 
@@ -22,6 +22,8 @@ import {
 function App(props) {
   const { showLoader, setUserDetails, updateUserLoggedInStatus } = props;
 
+  const [isComponentReady, setIsComponentReady] = useState(false);
+
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ function App(props) {
 
     setUserDetails(userDetails);
     updateUserLoggedInStatus(isUserLoggedIn);
-
+    setIsComponentReady(true);
     if (isUserLoggedIn && location.pathname === '/') {
       navigate('/folders');
     }
@@ -41,21 +43,23 @@ function App(props) {
 
   return (
     <React.Fragment>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="folders/*" element={<Resources />} />
-        </Route>
+      {isComponentReady && (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="folders/*" element={<Resources />} />
+          </Route>
 
-        <Route element={<Authentication />}>
-          <Route element={<Register />} path="register" />
-          <Route element={<Login />} path="login" />
-        </Route>
+          <Route element={<Authentication />}>
+            <Route element={<Register />} path="register" />
+            <Route element={<Login />} path="login" />
+          </Route>
 
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      )}
 
-      {showLoader && <FullScreenLoader />}
+      {(showLoader || !isComponentReady) && <FullScreenLoader />}
       <ToastMessage />
     </React.Fragment>
   );
