@@ -13,16 +13,25 @@
 }
 
 .optionButton {
-  display: block;
+  display: flex;
+  gap: 16px;
+  align-items: center;
   border: unset;
+  flex: 1;
   padding: 16px 24px 16px 24px;
+  &:hover {
+    background-color: #2b313c;
+  }
+}
+
+.optionLabel {
+  display: block;
+  margin: 0;
   font-size: 18px;
   line-height: 24px;
-  height: 56px;
+  height: 24px;
   color: white;
-  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: left;
 }
