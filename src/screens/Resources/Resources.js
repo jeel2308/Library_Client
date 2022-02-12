@@ -22,6 +22,7 @@ const Resources = (props) => {
     <div className={classes.container}>
       <div className={classes.sidebarContainer}>
         <Sidebar
+          initialActiveOption={folders[0]?.id}
           sidebarOptions={folders}
           onClickOption={(args) => console.log(args)}
         />

@@ -9,8 +9,8 @@ import { combineClasses } from '../../Utils';
 /**--relative-- */
 import classes from './Sidebar.module.scss';
 const Sidebar = (props) => {
-  const { sidebarOptions, onClickOption } = props;
-  const [activeOption, setActiveOption] = useState(null);
+  const { sidebarOptions, onClickOption, initialActiveOption } = props;
+  const [activeOption, setActiveOption] = useState(initialActiveOption);
 
   const updateActiveOption = useCallback((id) => setActiveOption(id), []);
 
