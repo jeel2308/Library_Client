@@ -1,3 +1,4 @@
+import _reduceRight from 'lodash/reduceRight';
 const validateEmail = (email) => {
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/, 'i');
 
@@ -27,10 +28,24 @@ const clearStorage = () => {
   setUserInfoInStorage({ userInfo: {} });
 };
 
+//for POC only, use compose util from Apollo
+const compose =
+  (...hocArray) =>
+  (Component) => {
+    return _reduceRight(
+      hocArray,
+      (WrappedComponent, hoc) => {
+        return hoc(WrappedComponent);
+      },
+      Component
+    );
+  };
+
 export {
   validateEmail,
   setUserInfoInStorage,
   getUserInfoFromStorage,
   clearStorage,
   getToken,
+  compose,
 };

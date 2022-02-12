@@ -1,66 +1,55 @@
 /**--external-- */
 import React from 'react';
-import { useQuery } from '@apollo/client';
-import { useToast, Button } from '@chakra-ui/react';
+import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _map from 'lodash/map';
+import _pipe from 'lodash/flow';
+
+/**--internal-- */
+import { compose } from '../../Utils';
+import { withQuery, Sidebar } from '../../components';
+import { getUserFoldersQuery } from '../../modules/Queries';
 
 /**--relative-- */
-import { getUserFoldersQuery } from '../../modules/Queries';
-import { createFolder } from '../../modules/Module';
+import classes from './Resources.module.scss';
+import { loadingContainerStyle } from './ResourcesStyles';
 
-const Resources = () => {
-  // const {
-  //   setShowLoader,
-  //   userData: { id },
-  // } = useContext(AppContext);
-  // const setToast = useToast();
+const Resources = (props) => {
+  const { folders } = props;
 
-  // const { loading, error, data } = useQuery(getUserFoldersQuery, {
-  //   variables: { input: { id, type: 'USER' } },
-  // });
-
-  // const onCreateFolder = async ({ name }) => {
-  //   await createFolder({ setToast, setLoadingState: setShowLoader, name });
-  // };
-
-  // const folders = _get(data, 'node.folders', []);
-
-  // if (_isEmpty(folders)) {
-  //   return (
-  //     <div>
-  //       No Folders
-  //       <Button
-  //         onClick={() => onCreateFolder({ name: 'Test' })}
-  //         colorScheme={'blue'}
-  //       >
-  //         Create one
-  //       </Button>
-  //     </div>
-  //   );
-  // }
-
-  // if (loading) {
-  //   return <div>Loading</div>;
-  // }
-  // return (
-  //   <div>
-  //     <Button
-  //       onClick={() => onCreateFolder({ name: 'Test' })}
-  //       colorScheme={'blue'}
-  //     >
-  //       Create one
-  //     </Button>
-  //     Resources
-  //     {_map(folders, ({ name, id }) => (
-  //       <div key={id}> {name}</div>
-  //     ))}
-  //   </div>
-  // );
-  return <div>Test</div>;
+  return (
+    <div className={classes.container}>
+      <div className={classes.sidebarContainer}>
+        <Sidebar
+          sidebarOptions={folders}
+          onClickOption={(args) => console.log(args)}
+        />
+      </div>
+    </div>
+  );
 };
 
-export default Resources;
+const mapStateToProps = (state) => {
+  const userDetails = state.userDetails;
+  return { userId: userDetails.id };
+};
+
+export default compose(
+  connect(mapStateToProps),
+  withQuery(getUserFoldersQuery, {
+    name: 'folders',
+    fetchPolicy: 'cache-and-network',
+    getVariables: ({ userId }) => ({ input: { id: userId, type: 'USER' } }),
+    mapQueryDataToProps: ({ folders }) => {
+      const folderList = _pipe([
+        (data) => _get(data, 'node.folders', []),
+        (data) => _map(data, ({ id, name }) => ({ id, label: name })),
+      ])(folders);
+      return { folders: folderList };
+    },
+    loadingContainerStyle,
+  })
+)(Resources);
 
 Resources.displayName = 'Resources';
