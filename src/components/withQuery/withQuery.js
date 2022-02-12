@@ -1,7 +1,14 @@
+/**--external-- */
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useQuery } from '@apollo/client';
+import { Spinner } from '@chakra-ui/react';
+
+/**--internal-- */
 import { setToastMessage } from '../../modules/Module';
+
+/**--relative-- */
+import classes from './withQuery.module.scss';
 
 const withQuery = (query, configuration) => (WrappedComponent) => {
   const WithQuery = (props) => {
@@ -14,6 +21,7 @@ const withQuery = (query, configuration) => (WrappedComponent) => {
       getSkipQueryStatus,
       mapQueryDataToProps,
       updateQuery,
+      loadingContainerStyle,
     } = configuration;
 
     const variables = getVariables(otherProps);
@@ -44,7 +52,17 @@ const withQuery = (query, configuration) => (WrappedComponent) => {
     });
 
     if (loading) {
-      return <div>Loading</div>;
+      return (
+        <div className={classes.container} style={loadingContainerStyle}>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        </div>
+      );
     }
     if (error) {
       return null;
