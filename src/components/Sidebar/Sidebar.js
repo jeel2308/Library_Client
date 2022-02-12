@@ -1,22 +1,37 @@
 /**--external-- */
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import _map from 'lodash/map';
 import { Avatar } from '@chakra-ui/react';
 
 /**--internal-- */
+import { combineClasses } from '../../Utils';
+
+/**--relative-- */
 import classes from './Sidebar.module.scss';
 const Sidebar = (props) => {
   const { sidebarOptions, onClickOption } = props;
+  const [activeOption, setActiveOption] = useState(null);
+
+  const updateActiveOption = useCallback((id) => setActiveOption(id), []);
+
   return (
     <ul className={classes.container}>
       {_map(sidebarOptions, (option) => {
         const { id, label } = option;
+
+        const onOptionClick = () => {
+          updateActiveOption(id);
+          onClickOption(option);
+        };
+
+        const buttonClasses = combineClasses(classes.optionButton, {
+          [classes.activeOptionButton]: id === activeOption,
+        });
+        console.log(activeOption, id, buttonClasses);
+
         return (
           <li key={id} className={classes.option}>
-            <button
-              className={classes.optionButton}
-              onClick={() => onClickOption(option)}
-            >
+            <button className={buttonClasses} onClick={onOptionClick}>
               <Avatar name={label} size="sm" />
               <p className={classes.optionLabel}>{label}</p>
             </button>
