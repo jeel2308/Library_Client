@@ -3,4 +3,15 @@ import AuthenticationPage from './AuthenticationPage';
 import Modal from './Modal';
 import FullScreenLoader from './FullScreenLoader';
 import ToastMessage from './ToastMessage';
-export { Form, Modal, AuthenticationPage, FullScreenLoader, ToastMessage };
+import withQuery from './withQuery';
+import Sidebar from './Sidebar';
+
+export {
+  Form,
+  Modal,
+  AuthenticationPage,
+  FullScreenLoader,
+  ToastMessage,
+  withQuery,
+  Sidebar,
+};
