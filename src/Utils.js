@@ -1,4 +1,7 @@
 import _reduceRight from 'lodash/reduceRight';
+import _reduce from 'lodash/reduce';
+import _keys from 'lodash/keys';
+
 const validateEmail = (email) => {
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/, 'i');
 
@@ -41,6 +44,29 @@ const compose =
     );
   };
 
+//for POC only, use classnames package
+const combineClasses = (...classes) => {
+  return _reduce(
+    classes,
+    (allClasses, className) => {
+      if (typeof className === 'string') {
+        return `${allClasses} ${className}`;
+      }
+      if (typeof className === 'object') {
+        const keys = _keys(className);
+        const classNameKey = keys[0];
+        const shouldClassNameApply = className[classNameKey];
+        if (shouldClassNameApply) {
+          return `${allClasses} ${classNameKey}`;
+        }
+        return allClasses;
+      }
+      return allClasses;
+    },
+    ''
+  );
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -48,4 +74,5 @@ export {
   clearStorage,
   getToken,
   compose,
+  combineClasses,
 };
