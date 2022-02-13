@@ -1,6 +1,52 @@
+import client from '../apolloClient';
 import _isEmpty from 'lodash/isEmpty';
+import _get from 'lodash/get';
 import { setUserInfoInStorage } from '../Utils';
-
+import { updateUserFoldersInCache } from './GraphqlHelpers';
+import { createFolderMutation } from './Mutations';
+export const createFolder =
+  ({ name }) =>
+  async (dispatch, getState) => {
+    const state = getState();
+    try {
+      dispatch(setLoaderVisibility(true));
+      await client.mutate({
+        mutation: createFolderMutation,
+        variables: {
+          input: { name },
+        },
+        update: (
+          _,
+          {
+            data: {
+              folderManagement: { addFolder },
+            },
+          }
+        ) => {
+          const { id, name } = addFolder;
+          console.log(state);
+          updateUserFoldersInCache({
+            addedFolders: [{ id, name }],
+            userId: _get(state, 'userDetails.id', ''),
+          });
+        },
+      });
+      return true;
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+      return false;
+    } finally {
+      dispatch(setLoaderVisibility(false));
+    }
+  };
 const origin = process.env.REACT_APP_SERVER_URL;
 
 const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';
