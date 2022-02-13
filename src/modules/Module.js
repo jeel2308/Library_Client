@@ -4,7 +4,11 @@ import _get from 'lodash/get';
 import _uniqueId from 'lodash/uniqueId';
 import { setUserInfoInStorage } from '../Utils';
 import { updateUserFoldersInCache } from './GraphqlHelpers';
-import { createFolderMutation, updateFolderMutation } from './Mutations';
+import {
+  createFolderMutation,
+  updateFolderMutation,
+  deleteFolderMutation,
+} from './Mutations';
 export const createFolder =
   ({ name }) =>
   async (dispatch, getState) => {
@@ -47,7 +51,7 @@ export const createFolder =
   };
 
 export const updateFolder = ({ name, id }) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
       await client.mutate({
         mutation: updateFolderMutation,
@@ -73,6 +77,39 @@ export const updateFolder = ({ name, id }) => {
   };
 };
 
+export const deleteFolder = ({ id }) => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const userId = _get(state, 'userDetails.id', '');
+    try {
+      await client.mutate({
+        mutation: deleteFolderMutation,
+        variables: { input: { id } },
+        optimisticResponse: {
+          folderManagement: {
+            deleteFolder: { id, __typename: 'Folder' },
+            __typename: 'FolderMutations',
+          },
+        },
+        update: (_, { data }) => {
+          const id = _get(data, 'folderManagement.deleteFolder.id', '');
+          const removedFolders = [id];
+          updateUserFoldersInCache({ removedFolders, userId });
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    }
+  };
+};
 const origin = process.env.REACT_APP_SERVER_URL;
 
 const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';

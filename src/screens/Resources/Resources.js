@@ -18,6 +18,7 @@ import classes from './Resources.module.scss';
 import AddButton from './AddButton';
 import Search from './Search';
 import EditOrCreateFolderModal from './EditOrCreateFolderModal';
+import DeleteWarningModal from './DeleteWarningModal';
 import { loadingContainerStyle } from './ResourcesStyles';
 
 const Resources = (props) => {
@@ -28,10 +29,17 @@ const Resources = (props) => {
   const [showEditOrCreateFolderModal, setShowEditOrCreateFolderModal] =
     useState(false);
 
+  const [showDeleteWarningModal, setShowDeleteWarningModal] = useState(false);
+
   const [folderId, setFolderId] = useState(null);
 
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
+    setFolderId(null);
+  }, []);
+
+  const closeDeleteWarningModal = useCallback(() => {
+    setShowDeleteWarningModal(false);
     setFolderId(null);
   }, []);
 
@@ -50,6 +58,7 @@ const Resources = (props) => {
       }
       case 'DELETE': {
         setFolderId(data.id);
+        setShowDeleteWarningModal(true);
         break;
       }
     }
@@ -81,6 +90,12 @@ const Resources = (props) => {
       {showEditOrCreateFolderModal && (
         <EditOrCreateFolderModal
           closeModal={closeEditOrCreateFolderModal}
+          folderId={folderId}
+        />
+      )}
+      {showDeleteWarningModal && (
+        <DeleteWarningModal
+          closeModal={closeDeleteWarningModal}
           folderId={folderId}
         />
       )}

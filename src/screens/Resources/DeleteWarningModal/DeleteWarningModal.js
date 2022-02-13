@@ -1,15 +1,23 @@
 /**--external-- */
 import React from 'react';
 import { Heading, Text, ButtonGroup, Button } from '@chakra-ui/react';
+import { connect } from 'react-redux';
 
 /**--internal-- */
 import { Modal } from '../../../components';
+import { deleteFolder } from '../../../modules/Module';
 
 /**--relative-- */
 import classes from './DeleteWarningModal.module.scss';
 
 const DeleteWarningModal = (props) => {
-  const { closeModal } = props;
+  const { closeModal, deleteFolder, folderId } = props;
+
+  const onDeleteClick = () => {
+    deleteFolder({ id: folderId });
+    closeModal();
+  };
+
   return (
     <Modal onClickOutside={closeModal}>
       <div className={classes.container}>
@@ -22,13 +30,19 @@ const DeleteWarningModal = (props) => {
         </Text>
         <ButtonGroup mt={'10'} display={'flex'} justifyContent={'flex-end'}>
           <Button onClick={closeModal}>Cancel</Button>
-          <Button colorScheme={'red'}>Delete</Button>
+          <Button colorScheme={'red'} onClick={onDeleteClick}>
+            Delete
+          </Button>
         </ButtonGroup>
       </div>
     </Modal>
   );
 };
 
-export default DeleteWarningModal;
+const mapActionCreators = {
+  deleteFolder,
+};
+
+export default connect(null, mapActionCreators)(DeleteWarningModal);
 
 DeleteWarningModal.displayName = 'DeleteWarningModal';

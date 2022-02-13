@@ -22,4 +22,14 @@ const updateFolderMutation = gql`
   }
 `;
 
-export { createFolderMutation, updateFolderMutation };
+const deleteFolderMutation = gql`
+  mutation deleteFolder($input: DeleteFolderInput!) {
+    folderManagement {
+      deleteFolder(input: $input) {
+        id
+      }
+    }
+  }
+`;
+
+export { createFolderMutation, updateFolderMutation, deleteFolderMutation };
