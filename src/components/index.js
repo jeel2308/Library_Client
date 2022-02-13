@@ -4,6 +4,7 @@ import Modal from './Modal';
 import FullScreenLoader from './FullScreenLoader';
 import ToastMessage from './ToastMessage';
 import withQuery from './withQuery';
+import withTooltip from './withTooltip';
 import Sidebar from './Sidebar';
 
 export {
@@ -13,5 +14,6 @@ export {
   FullScreenLoader,
   ToastMessage,
   withQuery,
+  withTooltip,
   Sidebar,
 };
