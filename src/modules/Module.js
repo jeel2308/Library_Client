@@ -5,18 +5,18 @@ import _uniqueId from 'lodash/uniqueId';
 import { setUserInfoInStorage } from '../Utils';
 import { updateUserFoldersInCache } from './GraphqlHelpers';
 import {
-  createFolderMutation,
+  addFolderMutation,
   updateFolderMutation,
   deleteFolderMutation,
 } from './Mutations';
-export const createFolder =
+export const addFolder =
   ({ name }) =>
   async (dispatch, getState) => {
     const state = getState();
     try {
       dispatch(setLoaderVisibility(true));
       await client.mutate({
-        mutation: createFolderMutation,
+        mutation: addFolderMutation,
         variables: {
           input: { name },
         },

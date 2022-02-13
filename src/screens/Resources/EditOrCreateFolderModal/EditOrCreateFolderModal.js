@@ -6,18 +6,18 @@ import _isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
 import { Modal, Form } from '../../../components';
-import { createFolder, updateFolder } from '../../../modules/Module';
+import { addFolder, updateFolder } from '../../../modules/Module';
 import { getFolderDetailsFromCache } from '../../../modules/GraphqlHelpers';
 
 /**--relative-- */
 import { formFields, getDynamicFormFields } from './utils';
 import classes from './EditOrCreateFolderModal.module.scss';
 const EditOrCreateFolderModal = (props) => {
-  const { createFolder, closeModal, folderDetails, mode, updateFolder } = props;
+  const { addFolder, closeModal, folderDetails, mode, updateFolder } = props;
 
   const onSubmit = (data) => {
     if (mode === 'CREATE') {
-      createFolder({ name: data.folder });
+      addFolder({ name: data.folder });
     } else {
       updateFolder({ name: data.folder, id: folderDetails.id });
     }
@@ -57,7 +57,7 @@ const mapStateToProps = (_, ownProps) => {
 };
 
 const mapActionCreators = {
-  createFolder,
+  addFolder,
   updateFolder,
 };
 

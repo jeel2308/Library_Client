@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-const createFolderMutation = gql`
-  mutation createFolder($input: AddFolderInput!) {
+const addFolderMutation = gql`
+  mutation addFolder($input: AddFolderInput!) {
     folderManagement {
       addFolder(input: $input) {
         id
@@ -32,4 +32,4 @@ const deleteFolderMutation = gql`
   }
 `;
 
-export { createFolderMutation, updateFolderMutation, deleteFolderMutation };
+export { addFolderMutation, updateFolderMutation, deleteFolderMutation };
