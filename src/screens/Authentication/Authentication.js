@@ -28,10 +28,8 @@ const Authentication = (props) => {
         </figure>
       </div>
       <Modal>
-        <div className={classes.overlay}>
-          <div className={classes.content}>
-            <Outlet />
-          </div>
+        <div className={classes.content}>
+          <Outlet />
         </div>
       </Modal>
     </div>
