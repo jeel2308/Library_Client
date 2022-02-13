@@ -24,7 +24,7 @@ export const createFolder =
           }
         ) => {
           const { id, name } = addFolder;
-          console.log(state);
+
           updateUserFoldersInCache({
             addedFolders: [{ id, name }],
             userId: _get(state, 'userDetails.id', ''),
