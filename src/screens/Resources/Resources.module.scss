@@ -4,9 +4,29 @@
   width: 100%;
 }
 
-.sidebarContainer {
+.leftContainer {
   display: flex;
   width: 264px;
+  flex-direction: column;
+  background-color: #202632;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  padding: 12px 24px 12px 12px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebarContainer {
+  display: flex;
+  width: 100%;
   min-height: 0;
   overflow-y: auto;
+}
+
+.noMatchText {
+  display: flex;
+  color: white;
 }
