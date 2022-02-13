@@ -27,7 +27,6 @@ const Sidebar = (props) => {
         const buttonClasses = combineClasses(classes.optionButton, {
           [classes.activeOptionButton]: id === activeOption,
         });
-        console.log(activeOption, id, buttonClasses);
 
         return (
           <li key={id} className={classes.option}>
