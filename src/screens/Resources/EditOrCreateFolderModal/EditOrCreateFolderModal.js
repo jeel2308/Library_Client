@@ -38,10 +38,9 @@ const EditOrCreateFolderModal = (props) => {
           onSubmit={onSubmit}
           formButtonsElement={
             <div className={classes.footer}>
-              <Button
-                colorScheme={'blue'}
-                type={'submit'}
-              >{`Create folder`}</Button>
+              <Button colorScheme={'blue'} type={'submit'}>{`${
+                mode === 'CREATE' ? 'Create' : 'Update'
+              } folder`}</Button>
             </div>
           }
         />
