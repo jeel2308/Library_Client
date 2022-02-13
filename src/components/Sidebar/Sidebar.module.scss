@@ -13,7 +13,7 @@
 
 .optionButton {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   border: unset;
   flex: 1;
@@ -21,6 +21,7 @@
   &:hover {
     background-color: #2b313c;
   }
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .activeOptionButton {
