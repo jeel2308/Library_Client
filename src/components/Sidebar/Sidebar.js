@@ -1,15 +1,26 @@
 /**--external-- */
 import React, { useState, useCallback } from 'react';
 import _map from 'lodash/map';
-import { Avatar } from '@chakra-ui/react';
+import {
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+} from '@chakra-ui/react';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
+import { IconContext } from 'react-icons';
 
 /**--internal-- */
 import { combineClasses } from '../../Utils';
 
 /**--relative-- */
 import classes from './Sidebar.module.scss';
+import { dotsStyle, menuButtonStyle } from './SidebarStyles';
 const Sidebar = (props) => {
-  const { sidebarOptions, onClickOption, initialActiveOption } = props;
+  const { sidebarOptions, onClickOption, initialActiveOption, handleAction } =
+    props;
   const [activeOption, setActiveOption] = useState(initialActiveOption);
 
   const updateActiveOption = useCallback((id) => setActiveOption(id), []);
@@ -19,21 +30,49 @@ const Sidebar = (props) => {
       {_map(sidebarOptions, (option) => {
         const { id, label } = option;
 
-        const onOptionClick = () => {
+        const onOptionClick = (e) => {
+          if (e.target !== e.currentTarget) {
+            return;
+          }
           updateActiveOption(id);
           onClickOption(option);
         };
 
-        const buttonClasses = combineClasses(classes.optionButton, {
-          [classes.activeOptionButton]: id === activeOption,
+        const buttonClasses = combineClasses(classes.option, {
+          [classes.activeOption]: id === activeOption,
         });
 
         return (
-          <li key={id} className={classes.option}>
-            <button className={buttonClasses} onClick={onOptionClick}>
+          <li key={id} className={buttonClasses} onClick={onOptionClick}>
+            <div className={classes.leftContent}>
               <Avatar name={label} size="sm" />
               <p className={classes.optionLabel}>{label}</p>
-            </button>
+            </div>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label={'Actions'}
+                style={menuButtonStyle}
+                icon={
+                  <IconContext.Provider value={dotsStyle}>
+                    <BiDotsVerticalRounded />
+                  </IconContext.Provider>
+                }
+                variant={'unstyled'}
+              />
+              <MenuList>
+                <MenuItem
+                  onClick={() => handleAction({ data: option, type: 'EDIT' })}
+                >
+                  {'Edit'}
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleAction({ data: option, type: 'DELETE' })}
+                >
+                  {'Delete'}
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </li>
         );
       })}

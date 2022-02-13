@@ -7,24 +7,20 @@
 }
 
 .option {
-  display: flex;
   width: 100%;
-}
-
-.optionButton {
   display: flex;
-  gap: 12px;
-  align-items: center;
   border: unset;
   flex: 1;
+  align-items: center;
   padding: 16px 24px 16px 24px;
   &:hover {
     background-color: #2b313c;
   }
+  gap: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.activeOptionButton {
+.activeOption {
   border-left: 4px solid #f75961;
   padding-left: 20px;
 }
@@ -39,4 +35,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.leftContent {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1;
 }

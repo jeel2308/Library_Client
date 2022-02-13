@@ -28,8 +28,11 @@ const Resources = (props) => {
   const [showEditOrCreateFolderModal, setShowEditOrCreateFolderModal] =
     useState(false);
 
+  const [folderId, setFolderId] = useState(null);
+
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
+    setFolderId(null);
   }, []);
 
   const matchingFolders = getMatchingResults({
@@ -37,6 +40,20 @@ const Resources = (props) => {
     field: 'label',
     searchText: searchValue,
   });
+
+  const handleAction = ({ data, type }) => {
+    switch (type) {
+      case 'EDIT': {
+        setFolderId(data.id);
+        setShowEditOrCreateFolderModal(true);
+        break;
+      }
+      case 'DELETE': {
+        setFolderId(data.id);
+        break;
+      }
+    }
+  };
 
   return (
     <div className={classes.container}>
@@ -54,6 +71,7 @@ const Resources = (props) => {
               initialActiveOption={folders[0]?.id}
               sidebarOptions={matchingFolders}
               onClickOption={(args) => console.log(args)}
+              handleAction={handleAction}
             />
           ) : (
             <div className={classes.noMatchText}>{'No match found'}</div>
@@ -61,7 +79,10 @@ const Resources = (props) => {
         </div>
       </div>
       {showEditOrCreateFolderModal && (
-        <EditOrCreateFolderModal closeModal={closeEditOrCreateFolderModal} />
+        <EditOrCreateFolderModal
+          closeModal={closeEditOrCreateFolderModal}
+          folderId={folderId}
+        />
       )}
     </div>
   );
