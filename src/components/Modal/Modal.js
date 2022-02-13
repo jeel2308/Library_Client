@@ -1,8 +1,10 @@
 /**--external-- */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 
+/**--relative-- */
+import classes from './Modal.module.scss';
 const Modal = ({ children }) => {
   const portalNode = document.getElementById('portal');
 
@@ -14,7 +16,9 @@ const Modal = ({ children }) => {
     return () => portalNode.removeChild(modalParentNode);
   }, []);
 
-  return createPortal(children, modalParentNodeRef.current);
+  const contentElement = <div className={classes.overlay}>{children}</div>;
+
+  return createPortal(contentElement, modalParentNodeRef.current);
 };
 
 export default Modal;
