@@ -1,6 +1,7 @@
 import _reduceRight from 'lodash/reduceRight';
 import _reduce from 'lodash/reduce';
 import _keys from 'lodash/keys';
+import _filter from 'lodash/filter';
 
 const validateEmail = (email) => {
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/, 'i');
@@ -67,6 +68,14 @@ const combineClasses = (...classes) => {
   );
 };
 
+const getMatchingResults = ({ list, field, searchText }) => {
+  const searchRegex = new RegExp(searchText, 'i');
+  return _filter(list, (listItem) => {
+    const fieldValue = listItem[field];
+    return fieldValue.search(searchRegex) > -1;
+  });
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -75,4 +84,5 @@ export {
   getToken,
   compose,
   combineClasses,
+  getMatchingResults,
 };
