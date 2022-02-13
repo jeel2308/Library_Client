@@ -10,7 +10,10 @@ const Modal = ({ children, onClickOutside }) => {
 
   const modalParentNodeRef = useRef(document.createElement('div'));
 
-  const onOverlayClick = useCallback(() => {
+  const onOverlayClick = useCallback((e) => {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
     onClickOutside?.();
   }, []);
 
