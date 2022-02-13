@@ -5,6 +5,7 @@ import _map from 'lodash/map';
 import _includes from 'lodash/includes';
 import _filter from 'lodash/filter';
 import { getUserFoldersQuery } from './Queries';
+import { folderFragments } from './Fragments';
 export const getUserFoldersFromCache = ({
   showOptimistic = false,
   userId,
@@ -61,4 +62,19 @@ export const updateUserFoldersInCache = ({
   const newData = { ...rest, folders: updatedFolders };
 
   writeUserFoldersToCache({ data: { node: newData }, userId });
+};
+
+export const getFolderDetailsFromCache = ({ folderId }) => {
+  let fragmentData;
+  try {
+    fragmentData = client.readFragment({
+      id: `Folder:${folderId}`,
+      fragment: folderFragments.folderBasicDetails,
+      fragmentName: 'folderBasicDetailsItem',
+    });
+  } catch (e) {
+    console.error(e);
+  }
+
+  return fragmentData;
 };

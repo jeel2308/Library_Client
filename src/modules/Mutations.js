@@ -11,4 +11,15 @@ const createFolderMutation = gql`
   }
 `;
 
-export { createFolderMutation };
+const updateFolderMutation = gql`
+  mutation updateFolder($input: UpdateFolderInput!) {
+    folderManagement {
+      updateFolder(input: $input) {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export { createFolderMutation, updateFolderMutation };

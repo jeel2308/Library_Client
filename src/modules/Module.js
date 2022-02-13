@@ -1,9 +1,10 @@
 import client from '../apolloClient';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
+import _uniqueId from 'lodash/uniqueId';
 import { setUserInfoInStorage } from '../Utils';
 import { updateUserFoldersInCache } from './GraphqlHelpers';
-import { createFolderMutation } from './Mutations';
+import { createFolderMutation, updateFolderMutation } from './Mutations';
 export const createFolder =
   ({ name }) =>
   async (dispatch, getState) => {
@@ -24,14 +25,12 @@ export const createFolder =
           }
         ) => {
           const { id, name } = addFolder;
-
           updateUserFoldersInCache({
             addedFolders: [{ id, name }],
             userId: _get(state, 'userDetails.id', ''),
           });
         },
       });
-      return true;
     } catch (e) {
       console.error(e);
       dispatch(
@@ -42,11 +41,38 @@ export const createFolder =
           position: 'bottom-left',
         })
       );
-      return false;
     } finally {
       dispatch(setLoaderVisibility(false));
     }
   };
+
+export const updateFolder = ({ name, id }) => {
+  return async (dispatch) => {
+    try {
+      await client.mutate({
+        mutation: updateFolderMutation,
+        variables: { input: { id, name } },
+        optimisticResponse: {
+          folderManagement: {
+            updateFolder: { id, name, __typename: 'Folder' },
+            __typename: 'FolderMutations',
+          },
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    }
+  };
+};
+
 const origin = process.env.REACT_APP_SERVER_URL;
 
 const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';
