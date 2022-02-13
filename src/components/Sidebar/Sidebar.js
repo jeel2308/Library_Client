@@ -31,7 +31,7 @@ const Sidebar = (props) => {
         const { id, label } = option;
 
         const onOptionClick = (e) => {
-          if (e.target !== e.currentTarget) {
+          if (e.defaultPrevented) {
             return;
           }
           updateActiveOption(id);
@@ -50,6 +50,9 @@ const Sidebar = (props) => {
             </div>
             <Menu>
               <MenuButton
+                onClick={(e) =>
+                  e.stopPropagation()
+                } /**Here preventDefault will break dropdown behaviour */
                 as={IconButton}
                 aria-label={'Actions'}
                 style={menuButtonStyle}
@@ -62,12 +65,18 @@ const Sidebar = (props) => {
               />
               <MenuList>
                 <MenuItem
-                  onClick={() => handleAction({ data: option, type: 'EDIT' })}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAction({ data: option, type: 'EDIT' });
+                  }}
                 >
                   {'Edit'}
                 </MenuItem>
                 <MenuItem
-                  onClick={() => handleAction({ data: option, type: 'DELETE' })}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleAction({ data: option, type: 'DELETE' });
+                  }}
                 >
                   {'Delete'}
                 </MenuItem>
