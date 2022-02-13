@@ -5,10 +5,14 @@ import { createPortal } from 'react-dom';
 
 /**--relative-- */
 import classes from './Modal.module.scss';
-const Modal = ({ children }) => {
+const Modal = ({ children, onClickOutside }) => {
   const portalNode = document.getElementById('portal');
 
   const modalParentNodeRef = useRef(document.createElement('div'));
+
+  const onOverlayClick = useCallback(() => {
+    onClickOutside?.();
+  }, []);
 
   useEffect(() => {
     const modalParentNode = modalParentNodeRef.current;
@@ -16,7 +20,11 @@ const Modal = ({ children }) => {
     return () => portalNode.removeChild(modalParentNode);
   }, []);
 
-  const contentElement = <div className={classes.overlay}>{children}</div>;
+  const contentElement = (
+    <div className={classes.overlay} onClick={onOverlayClick}>
+      {children}
+    </div>
+  );
 
   return createPortal(contentElement, modalParentNodeRef.current);
 };
