@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useQuery } from '@apollo/client';
 import { Spinner } from '@chakra-ui/react';
+import _isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
 import { setToastMessage } from '../../modules/Module';
@@ -28,12 +29,14 @@ const withQuery = (query, configuration) => (WrappedComponent) => {
 
     const skip = getSkipQueryStatus?.(otherProps) ?? false;
 
-    const { loading, data, error, ...rest } = useQuery(query, {
+    const queryObject = useQuery(query, {
       fetchPolicy: fetchPolicy ?? 'cache-and-network',
       skip,
       variables,
       updateQuery,
     });
+
+    const { error } = queryObject;
 
     useEffect(() => {
       if (error) {
@@ -46,12 +49,12 @@ const withQuery = (query, configuration) => (WrappedComponent) => {
       }
     }, [error]);
 
-    const queryDataProps = mapQueryDataToProps({
-      [name ? name : 'data']: data,
+    const { isData, isLoading, ...otherQueryDataProps } = mapQueryDataToProps({
+      [name ? name : 'queryObject']: queryObject,
       ownProps: otherProps,
     });
 
-    if (loading) {
+    if (!isData && isLoading) {
       return (
         <div className={classes.container} style={loadingContainerStyle}>
           <Spinner
@@ -67,7 +70,7 @@ const withQuery = (query, configuration) => (WrappedComponent) => {
     if (error) {
       return null;
     }
-    return <WrappedComponent {...otherProps} {...queryDataProps} />;
+    return <WrappedComponent {...otherProps} {...otherQueryDataProps} />;
   };
 
   const mapActionCreators = {

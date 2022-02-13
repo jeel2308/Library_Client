@@ -75,15 +75,22 @@ const mapStateToProps = (state) => {
 export default compose(
   connect(mapStateToProps),
   withQuery(getUserFoldersQuery, {
-    name: 'folders',
+    name: 'getUserFoldersQuery',
     fetchPolicy: 'cache-and-network',
     getVariables: ({ userId }) => ({ input: { id: userId, type: 'USER' } }),
-    mapQueryDataToProps: ({ folders }) => {
+    mapQueryDataToProps: ({ getUserFoldersQuery }) => {
+      const { networkStatus, data } = getUserFoldersQuery;
+
+      const isData = !_isEmpty(data);
+
+      const isLoading = _includes([1, 2], networkStatus);
+
       const folderList = _pipe([
         (data) => _get(data, 'node.folders', []),
         (data) => _map(data, ({ id, name }) => ({ id, label: name })),
-      ])(folders);
-      return { folders: folderList };
+      ])(data);
+
+      return { folders: folderList, isData, isLoading };
     },
     loadingContainerStyle,
   })
