@@ -1,6 +1,6 @@
 /**--external-- */
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useRoutes } from 'react-router-dom';
 import _isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
@@ -12,7 +12,7 @@ import { getUserInfoFromStorage } from './Utils';
 /**--relative-- */
 import {
   Authentication,
-  Resources,
+  resourcesRoutes,
   NoMatch,
   Home,
   Register,
@@ -41,23 +41,31 @@ function App(props) {
     }
   }, []);
 
+  const element = useRoutes([
+    {
+      path: '/',
+      element: <Home />,
+    },
+    {
+      element: <ProtectedRoute />,
+      children: [resourcesRoutes],
+    },
+    {
+      element: <Authentication />,
+      children: [
+        { path: 'register', element: <Register /> },
+        { path: 'login', element: <Login /> },
+      ],
+    },
+    {
+      path: '*',
+      element: <NoMatch />,
+    },
+  ]);
+  console.log({ element });
   return (
     <React.Fragment>
-      {isComponentReady && (
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="folders/*" element={<Resources />} />
-          </Route>
-
-          <Route element={<Authentication />}>
-            <Route element={<Register />} path="register" />
-            <Route element={<Login />} path="login" />
-          </Route>
-
-          <Route path="*" element={<NoMatch />} />
-        </Routes>
-      )}
+      {isComponentReady && element}
 
       {(showLoader || !isComponentReady) && <FullScreenLoader />}
       <ToastMessage />

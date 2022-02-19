@@ -1,2 +1,8 @@
 import Component from './Resources';
-export default Component;
+
+const plainRoutes = {
+  path: 'folders',
+  element: <Component />,
+};
+
+export default plainRoutes;
