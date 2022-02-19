@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
-import { Modal, Form } from '../../../components';
-import { addFolder, updateFolder } from '../../../modules/Module';
-import { getFolderDetailsFromCache } from '../../../modules/GraphqlHelpers';
+import { Modal, Form } from '#components';
+import { addFolder, updateFolder } from '#modules/Module';
+import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
 
 /**--relative-- */
 import { formFields, getDynamicFormFields } from './utils';

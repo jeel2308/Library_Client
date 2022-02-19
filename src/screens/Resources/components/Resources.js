@@ -9,9 +9,9 @@ import _filter from 'lodash/filter';
 import _includes from 'lodash/includes';
 
 /**--internal-- */
-import { compose, getMatchingResults } from '../../Utils';
-import { withQuery, Sidebar } from '../../components';
-import { getUserFoldersQuery } from '../../modules/Queries';
+import { compose, getMatchingResults } from '#Utils';
+import { withQuery, Sidebar } from '#components';
+import { getUserFoldersQuery } from '#modules/Queries';
 
 /**--relative-- */
 import classes from './Resources.module.scss';

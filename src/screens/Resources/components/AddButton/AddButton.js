@@ -4,7 +4,7 @@ import { IconContext } from 'react-icons';
 import { BiPlusCircle } from 'react-icons/bi';
 
 /**--internal-- */
-import { withTooltip } from '../../../components';
+import { withTooltip } from '#components';
 
 /**--relative-- */
 import classes from './AddButton.modules.scss';

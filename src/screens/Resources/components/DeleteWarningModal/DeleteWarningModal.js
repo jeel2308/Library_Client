@@ -4,8 +4,8 @@ import { Heading, Text, ButtonGroup, Button } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 
 /**--internal-- */
-import { Modal } from '../../../components';
-import { deleteFolder } from '../../../modules/Module';
+import { Modal } from '#components';
+import { deleteFolder } from '#modules/Module';
 
 /**--relative-- */
 import classes from './DeleteWarningModal.module.scss';
