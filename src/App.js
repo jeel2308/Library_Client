@@ -54,7 +54,6 @@ function App(props) {
       element: <NoMatch />,
     },
   ]);
-  console.log({ element });
   return (
     <React.Fragment>
       {isComponentReady && element}
