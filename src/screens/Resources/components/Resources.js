@@ -87,6 +87,7 @@ const Resources = (props) => {
           )}
         </div>
       </div>
+
       {showEditOrCreateFolderModal && (
         <EditOrCreateFolderModal
           closeModal={closeEditOrCreateFolderModal}

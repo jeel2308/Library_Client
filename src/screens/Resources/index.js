@@ -1,4 +1,4 @@
-import Component from './Resources';
+import Component from './components';
 
 const plainRoutes = {
   path: 'folders',
