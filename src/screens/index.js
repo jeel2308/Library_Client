@@ -1,6 +1,6 @@
 import authenticationRoutes from './Authentication';
-import resourcesRoutes from './Resources';
+import foldersRoutes from './Folders';
 import NoMatch from './NoMatch';
 import Home from './Home';
 import ProtectedRoute from './ProtectedRoute';
-export { authenticationRoutes, resourcesRoutes, NoMatch, Home, ProtectedRoute };
+export { authenticationRoutes, foldersRoutes, NoMatch, Home, ProtectedRoute };

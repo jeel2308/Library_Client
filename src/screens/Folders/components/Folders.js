@@ -14,12 +14,12 @@ import { withQuery, Sidebar } from '#components';
 import { getUserFoldersQuery } from '#modules/Queries';
 
 /**--relative-- */
-import classes from './Resources.module.scss';
+import classes from './Folders.module.scss';
 import AddButton from './AddButton';
 import Search from './Search';
 import EditOrCreateFolderModal from './EditOrCreateFolderModal';
 import DeleteWarningModal from './DeleteWarningModal';
-import { loadingContainerStyle } from './ResourcesStyles';
+import { loadingContainerStyle } from './FoldersStyles';
 
 const Resources = (props) => {
   const { folders } = props;

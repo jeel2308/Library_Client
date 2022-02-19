@@ -12,7 +12,7 @@ import { getUserInfoFromStorage } from './Utils';
 /**--relative-- */
 import {
   authenticationRoutes,
-  resourcesRoutes,
+  foldersRoutes,
   NoMatch,
   Home,
   ProtectedRoute,
@@ -46,7 +46,7 @@ function App(props) {
     },
     {
       element: <ProtectedRoute />,
-      children: [resourcesRoutes],
+      children: [foldersRoutes],
     },
     authenticationRoutes,
     {
