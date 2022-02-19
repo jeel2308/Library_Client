@@ -48,13 +48,13 @@ export const updateUserFoldersInCache = ({
   let updatedFolders = folders;
   if (!_isEmpty(removedFolders)) {
     updatedFolders = _filter(
-      folders,
+      updatedFolders,
       ({ id }) => !_includes(removedFolders, id)
     );
   }
   if (!_isEmpty(addedFolders)) {
     updatedFolders = [
-      ...folders,
+      ...updatedFolders,
       ..._map(addedFolders, (folder) => ({ ...folder, __typename: 'Folder' })),
     ];
   }
