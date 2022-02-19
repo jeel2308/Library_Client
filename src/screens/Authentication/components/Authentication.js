@@ -4,7 +4,7 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 /**--internal-- */
-import { Modal } from '../../components';
+import { Modal } from '#components';
 /**--relative-- */
 import { BANNER_URL } from './utils';
 import classes from './Authentication.module.scss';

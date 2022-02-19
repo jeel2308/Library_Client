@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 /**--internal-- */
-import { AuthenticationPage } from '../../components';
-import { loginUser } from '../../modules/Module';
+import { AuthenticationPage } from '#components';
+import { loginUser } from '#modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';

@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 /**--internal-- */
-import { AuthenticationPage } from '../../components';
-import { registerUser } from '../../modules/Module';
+import { AuthenticationPage } from '#components';
+import { registerUser } from '#modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';

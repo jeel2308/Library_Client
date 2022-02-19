@@ -11,12 +11,10 @@ import { getUserInfoFromStorage } from './Utils';
 
 /**--relative-- */
 import {
-  Authentication,
+  authenticationRoutes,
   resourcesRoutes,
   NoMatch,
   Home,
-  Register,
-  Login,
   ProtectedRoute,
 } from './screens';
 function App(props) {
@@ -50,13 +48,7 @@ function App(props) {
       element: <ProtectedRoute />,
       children: [resourcesRoutes],
     },
-    {
-      element: <Authentication />,
-      children: [
-        { path: 'register', element: <Register /> },
-        { path: 'login', element: <Login /> },
-      ],
-    },
+    authenticationRoutes,
     {
       path: '*',
       element: <NoMatch />,
