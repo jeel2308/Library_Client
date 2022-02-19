@@ -1,7 +1,8 @@
 import Component from './components';
 
 const plainRoutes = {
-  path: ':folder-id',
+  /**kebab case won't work here */
+  path: ':folderId',
   element: <Component />,
 };
 

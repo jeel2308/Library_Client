@@ -1,5 +1,6 @@
 /**--external-- */
 import React, { useState, useCallback } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
@@ -32,6 +33,8 @@ const Resources = (props) => {
   const [showDeleteWarningModal, setShowDeleteWarningModal] = useState(false);
 
   const [folderId, setFolderId] = useState(null);
+
+  const navigate = useNavigate();
 
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
@@ -79,13 +82,14 @@ const Resources = (props) => {
             <Sidebar
               initialActiveOption={folders[0]?.id}
               sidebarOptions={matchingFolders}
-              onClickOption={(args) => console.log(args)}
+              onClickOption={({ id }) => navigate(`${id}`)}
               handleAction={handleAction}
             />
           ) : (
             <div className={classes.noMatchText}>{'No match found'}</div>
           )}
         </div>
+        <Outlet />
       </div>
 
       {showEditOrCreateFolderModal && (
