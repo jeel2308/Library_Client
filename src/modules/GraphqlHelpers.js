@@ -29,7 +29,7 @@ export const writeUserFoldersToCache = ({ data, userId }) => {
   try {
     client.writeQuery({
       query: getUserFoldersQuery,
-      variables: { id: userId, type: 'USER' },
+      variables: { input: { id: userId, type: 'USER' } },
       data,
     });
   } catch (e) {
