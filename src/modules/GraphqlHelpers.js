@@ -64,7 +64,7 @@ export const updateUserFoldersInCache = ({
   writeUserFoldersToCache({ data: { node: newData }, userId });
 };
 
-export const getFolderDetailsFromCache = ({ folderId }) => {
+export const getFolderBasicDetailsFromCache = ({ folderId }) => {
   let fragmentData;
   try {
     fragmentData = client.readFragment({

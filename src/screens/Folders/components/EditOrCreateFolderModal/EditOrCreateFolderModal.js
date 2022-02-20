@@ -7,7 +7,7 @@ import _isEmpty from 'lodash/isEmpty';
 /**--internal-- */
 import { Modal, Form } from '#components';
 import { addFolder, updateFolder } from '#modules/Module';
-import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
+import { getFolderBasicDetailsFromCache } from '#modules/GraphqlHelpers';
 
 /**--relative-- */
 import { formFields, getDynamicFormFields } from './utils';
@@ -51,7 +51,7 @@ const EditOrCreateFolderModal = (props) => {
 
 const mapStateToProps = (_, ownProps) => {
   const { folderId } = ownProps;
-  const folderDetails = getFolderDetailsFromCache({ folderId });
+  const folderDetails = getFolderBasicDetailsFromCache({ folderId });
   const mode = _isEmpty(folderDetails) ? 'CREATE' : 'UPDATE';
   return { folderDetails, mode };
 };
