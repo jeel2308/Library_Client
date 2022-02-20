@@ -2,7 +2,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
-import { Input, Text } from '@chakra-ui/react';
+import {
+  Input,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+} from '@chakra-ui/react';
 
 /**--relative-- */
 import classes from './Form.module.scss';
@@ -30,7 +36,6 @@ const Form = (props) => {
 
         return (
           <div key={id} className={classes.field}>
-            <Text mb="8px">{label}</Text>
             <Controller
               name={id}
               control={control}
@@ -39,40 +44,79 @@ const Form = (props) => {
                 const { value, onChange, onBlur } = field;
                 const { invalid: isInvalid } = fieldState;
 
-                return (
-                  <React.Fragment>
-                    {type === 'password' ? (
-                      <PasswordInput
-                        borderColor={'blackAlpha.500'}
-                        errorBorderColor={'crimson'}
-                        isInvalid={isInvalid}
-                        value={value}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        placeholder={placeholder}
-                        size={'md'}
-                      />
-                    ) : (
-                      <Input
-                        borderColor={'blackAlpha.500'}
-                        errorBorderColor={'crimson'}
-                        isInvalid={isInvalid}
-                        type={type}
-                        value={value}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        placeholder={placeholder}
-                        size={'md'}
-                      />
-                    )}
+                const getInputElement = () => {
+                  switch (type) {
+                    case 'password': {
+                      return (
+                        <FormControl isInvalid={isInvalid}>
+                          <FormLabel htmlFor={id} fontSize={16}>
+                            {label}
+                          </FormLabel>
+                          <PasswordInput
+                            id={id}
+                            borderColor={'blackAlpha.500'}
+                            errorBorderColor={'crimson'}
+                            isInvalid={isInvalid}
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            placeholder={placeholder}
+                            size={'md'}
+                          />
+                          {isInvalid && (
+                            <FormErrorMessage>
+                              {errorMessages[errorType]}
+                            </FormErrorMessage>
+                          )}
+                        </FormControl>
+                      );
+                    }
+                    case 'checkbox': {
+                      return (
+                        <FormControl display="flex" alignItems="center">
+                          <Checkbox
+                            id={id}
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            size={'lg'}
+                          />
+                          <FormLabel htmlFor={id} mb={0} fontSize={16} ml={2}>
+                            {label}
+                          </FormLabel>
+                        </FormControl>
+                      );
+                    }
+                    default: {
+                      return (
+                        <FormControl>
+                          <FormLabel htmlFor={id} fontSize={16}>
+                            {label}
+                          </FormLabel>
+                          <Input
+                            id={id}
+                            borderColor={'blackAlpha.500'}
+                            errorBorderColor={'crimson'}
+                            isInvalid={isInvalid}
+                            type={type}
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            placeholder={placeholder}
+                            size={'md'}
+                          />
+                          {isInvalid && (
+                            <FormErrorMessage>
+                              {errorMessages[errorType]}
+                            </FormErrorMessage>
+                          )}
+                        </FormControl>
+                      );
+                    }
+                  }
+                };
 
-                    {isInvalid && (
-                      <div className={classes.error}>
-                        {errorMessages[errorType]}
-                      </div>
-                    )}
-                  </React.Fragment>
-                );
+                return <React.Fragment>{getInputElement()}</React.Fragment>;
               }}
             />
           </div>

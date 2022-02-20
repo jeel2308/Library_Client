@@ -20,11 +20,13 @@ const PasswordInput = (props) => {
     value,
     onChange,
     onBlur,
+    id,
   } = props;
   return (
     <InputGroup size={size}>
       <Input
         pr={'16'}
+        id={id}
         type={isPasswordVisible ? 'text' : 'password'}
         placeholder={placeholder}
         borderColor={borderColor}
