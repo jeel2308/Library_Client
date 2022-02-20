@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
@@ -8,6 +8,7 @@ import _map from 'lodash/map';
 import _pipe from 'lodash/flow';
 import _filter from 'lodash/filter';
 import _includes from 'lodash/includes';
+import _find from 'lodash/find';
 
 /**--internal-- */
 import { compose, getMatchingResults } from '#Utils';
@@ -34,13 +35,15 @@ const Resources = (props) => {
 
   const [folderId, setFolderId] = useState(null);
 
-  const [selectedFolder, setSelectedFolder] = useState(() => folders[0]);
+  const [selectedFolderId, setSelectedFolderId] = useState(
+    () => folders[0]?.id
+  );
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(`${selectedFolder.id}`);
-  }, [selectedFolder]);
+    navigate(`${selectedFolderId}`);
+  }, [selectedFolderId]);
 
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
@@ -57,6 +60,10 @@ const Resources = (props) => {
     field: 'label',
     searchText: searchValue,
   });
+
+  const selectedFolder = useMemo(() => {
+    return _find(folders, ({ id }) => id === selectedFolderId);
+  }, [selectedFolderId, folders]);
 
   const handleAction = ({ data, type }) => {
     switch (type) {
@@ -86,9 +93,9 @@ const Resources = (props) => {
         <div className={classes.sidebarContainer}>
           {!_isEmpty(matchingFolders) ? (
             <Sidebar
-              initialActiveOption={folders[0]?.id}
+              activeOption={selectedFolderId}
               sidebarOptions={matchingFolders}
-              onClickOption={setSelectedFolder}
+              onClickOption={({ id }) => setSelectedFolderId(id)}
               handleAction={handleAction}
             />
           ) : (
