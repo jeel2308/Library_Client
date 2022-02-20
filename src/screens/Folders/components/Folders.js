@@ -89,9 +89,8 @@ const Resources = (props) => {
             <div className={classes.noMatchText}>{'No match found'}</div>
           )}
         </div>
-        <Outlet />
       </div>
-
+      <Outlet />
       {showEditOrCreateFolderModal && (
         <EditOrCreateFolderModal
           closeModal={closeEditOrCreateFolderModal}
