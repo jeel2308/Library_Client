@@ -17,11 +17,11 @@ export const folderFragments = {
       name
     }
   `,
-  folderDetails: gql`'
+  folderDetails: gql`
     fragment folderDetailsItem on Folder {
       id
       name
-      links{
+      links {
         ...linkDetailsItem
       }
     }
