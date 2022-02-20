@@ -32,4 +32,21 @@ const deleteFolderMutation = gql`
   }
 `;
 
-export { addFolderMutation, updateFolderMutation, deleteFolderMutation };
+const addLinkMutation = gql`
+  mutation addLink($input: AddLinkInput!) {
+    linkManagement {
+      addLink(input: $input) {
+        id
+        url
+        isCompleted
+      }
+    }
+  }
+`;
+
+export {
+  addFolderMutation,
+  updateFolderMutation,
+  deleteFolderMutation,
+  addLinkMutation,
+};

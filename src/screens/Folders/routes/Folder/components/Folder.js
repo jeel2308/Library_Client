@@ -47,7 +47,7 @@ const Folder = (props) => {
       {showEditOrCreateLinkModal && (
         <EditOrCreateLinkModal
           closeModal={closeModal}
-          onSubmit={(data) => console.log(data)}
+          folderId={_get(folderBasicDetails, 'id')}
         />
       )}
     </div>

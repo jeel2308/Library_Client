@@ -8,7 +8,9 @@ import {
   addFolderMutation,
   updateFolderMutation,
   deleteFolderMutation,
+  addLinkMutation,
 } from './Mutations';
+
 export const addFolder =
   ({ name }) =>
   async (dispatch, getState) => {
@@ -110,6 +112,31 @@ export const deleteFolder = ({ id }) => {
     }
   };
 };
+
+export const addLink = ({ url, isCompleted, folderId }) => {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoaderVisibility(true));
+      await client.mutate({
+        mutation: addLinkMutation,
+        variables: { input: { url, folderId, isCompleted } },
+      });
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    } finally {
+      dispatch(setLoaderVisibility(false));
+    }
+  };
+};
+
 const origin = process.env.REACT_APP_SERVER_URL;
 
 const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';
