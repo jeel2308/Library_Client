@@ -17,3 +17,14 @@ export const getUserFoldersQuery = gql`
   }
   ${folderFragments.folderBasicDetails}
 `;
+
+export const getFolderDetailsQuery = gql`
+  query getFolderDetails($input: NodeInput!) {
+    node(input: $input) {
+      ... on Folder {
+        ...folderDetailsItem
+      }
+    }
+  }
+  ${folderFragments.folderDetails}
+`;

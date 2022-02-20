@@ -4,7 +4,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _map from 'lodash/map';
 import _includes from 'lodash/includes';
 import _filter from 'lodash/filter';
-import { getUserFoldersQuery } from './Queries';
+import { getFolderDetailsQuery, getUserFoldersQuery } from './Queries';
 import { folderFragments } from './Fragments';
 export const getUserFoldersFromCache = ({
   showOptimistic = false,
@@ -77,4 +77,17 @@ export const getFolderBasicDetailsFromCache = ({ folderId }) => {
   }
 
   return fragmentData;
+};
+
+export const getFolderDetailsFromCache = ({ folderId }) => {
+  let queryData;
+  try {
+    queryData = client.readQuery({
+      query: getFolderDetailsQuery,
+      variables: { input: { id: folderId, type: 'FOLDER' } },
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  return _get(queryData, 'node', {});
 };
