@@ -55,8 +55,6 @@ const Form = (props) => {
                           <PasswordInput
                             id={id}
                             borderColor={'blackAlpha.500'}
-                            errorBorderColor={'crimson'}
-                            isInvalid={isInvalid}
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
@@ -89,15 +87,13 @@ const Form = (props) => {
                     }
                     default: {
                       return (
-                        <FormControl>
+                        <FormControl isInvalid={isInvalid}>
                           <FormLabel htmlFor={id} fontSize={16}>
                             {label}
                           </FormLabel>
                           <Input
                             id={id}
                             borderColor={'blackAlpha.500'}
-                            errorBorderColor={'crimson'}
-                            isInvalid={isInvalid}
                             type={type}
                             value={value}
                             onChange={onChange}

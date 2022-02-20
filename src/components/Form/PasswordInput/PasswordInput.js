@@ -11,17 +11,7 @@ const PasswordInput = (props) => {
     []
   );
 
-  const {
-    size,
-    placeholder,
-    borderColor,
-    errorBorderColor,
-    isInvalid,
-    value,
-    onChange,
-    onBlur,
-    id,
-  } = props;
+  const { size, placeholder, borderColor, value, onChange, onBlur, id } = props;
   return (
     <InputGroup size={size}>
       <Input
@@ -30,8 +20,6 @@ const PasswordInput = (props) => {
         type={isPasswordVisible ? 'text' : 'password'}
         placeholder={placeholder}
         borderColor={borderColor}
-        errorBorderColor={errorBorderColor}
-        isInvalid={isInvalid}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
