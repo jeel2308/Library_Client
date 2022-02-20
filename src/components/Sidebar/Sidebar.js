@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import _map from 'lodash/map';
 import {
   Avatar,
@@ -19,11 +19,7 @@ import { combineClasses } from '../../Utils';
 import classes from './Sidebar.module.scss';
 import { dotsStyle, menuButtonStyle } from './SidebarStyles';
 const Sidebar = (props) => {
-  const { sidebarOptions, onClickOption, initialActiveOption, handleAction } =
-    props;
-  const [activeOption, setActiveOption] = useState(initialActiveOption);
-
-  const updateActiveOption = useCallback((id) => setActiveOption(id), []);
+  const { sidebarOptions, onClickOption, activeOption, handleAction } = props;
 
   return (
     <ul className={classes.container}>
@@ -34,7 +30,6 @@ const Sidebar = (props) => {
           if (e.defaultPrevented) {
             return;
           }
-          updateActiveOption(id);
           onClickOption(option);
         };
 

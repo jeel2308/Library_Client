@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
@@ -34,7 +34,13 @@ const Resources = (props) => {
 
   const [folderId, setFolderId] = useState(null);
 
+  const [selectedFolder, setSelectedFolder] = useState(() => folders[0]);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(`${selectedFolder.id}`);
+  }, [selectedFolder]);
 
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
@@ -82,7 +88,7 @@ const Resources = (props) => {
             <Sidebar
               initialActiveOption={folders[0]?.id}
               sidebarOptions={matchingFolders}
-              onClickOption={({ id }) => navigate(`${id}`)}
+              onClickOption={setSelectedFolder}
               handleAction={handleAction}
             />
           ) : (
@@ -90,7 +96,7 @@ const Resources = (props) => {
           )}
         </div>
       </div>
-      <Outlet />
+      <Outlet context={selectedFolder} />
       {showEditOrCreateFolderModal && (
         <EditOrCreateFolderModal
           closeModal={closeEditOrCreateFolderModal}
