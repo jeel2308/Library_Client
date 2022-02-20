@@ -1,13 +1,11 @@
 /**--external-- */
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
 import { Text } from '@chakra-ui/react';
 
 /**--internal-- */
-import { withRouter, SegmentControl } from '#components';
-import { getFolderBasicDetailsFromCache } from '#modules/GraphqlHelpers';
-import { compose } from '#Utils';
+import { SegmentControl } from '#components';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
@@ -21,9 +19,8 @@ const Folder = (props) => {
     () => segmentControlOptions[0].value
   );
 
-  const { folderBasicDetails } = props;
-
-  const folderName = _get(folderBasicDetails, 'name', 'Anonymous');
+  const folderBasicDetails = useOutletContext();
+  const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
 
   return (
     <div className={classes.container}>
@@ -41,10 +38,4 @@ const Folder = (props) => {
   );
 };
 
-const mapStateToProps = (_, ownProps) => {
-  const { folderId } = ownProps;
-  const folderBasicDetails = getFolderBasicDetailsFromCache({ folderId });
-  return { folderBasicDetails };
-};
-
-export default compose(withRouter, connect(mapStateToProps))(Folder);
+export default Folder;
