@@ -11,10 +11,17 @@
   padding: 12px;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  justify-content: space-between;
 }
 
 .segmentContainer {
   display: flex;
   width: 400px;
-  margin-left: 25%;
+}
+
+.middleContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
 }
