@@ -5,6 +5,7 @@ import FullScreenLoader from './FullScreenLoader';
 import ToastMessage from './ToastMessage';
 import withQuery from './withQuery';
 import withTooltip from './withTooltip';
+import withRouter from './withRouter';
 import Sidebar from './Sidebar';
 
 export {
@@ -15,5 +16,6 @@ export {
   ToastMessage,
   withQuery,
   withTooltip,
+  withRouter,
   Sidebar,
 };
