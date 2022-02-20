@@ -7,6 +7,7 @@ import withQuery from './withQuery';
 import withTooltip from './withTooltip';
 import withRouter from './withRouter';
 import Sidebar from './Sidebar';
+import SegmentControl from './SegmentControl';
 
 export {
   Form,
@@ -18,4 +19,5 @@ export {
   withTooltip,
   withRouter,
   Sidebar,
+  SegmentControl,
 };
