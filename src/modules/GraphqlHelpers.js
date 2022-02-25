@@ -79,12 +79,16 @@ export const getFolderBasicDetailsFromCache = ({ folderId }) => {
   return fragmentData;
 };
 
-export const getFolderDetailsFromCache = ({ folderId }) => {
+export const getFolderDetailsFromCache = ({ folderId, linkFilters }) => {
   let queryData;
+
   try {
     queryData = client.readQuery({
       query: getFolderDetailsQuery,
-      variables: { input: { id: folderId, type: 'FOLDER' } },
+      variables: {
+        input: { id: folderId, type: 'FOLDER' },
+        ...(linkFilters ? { linkFolderInput: linkFilters } : {}),
+      },
     });
   } catch (e) {
     console.error(e);

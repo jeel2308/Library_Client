@@ -21,7 +21,7 @@ export const folderFragments = {
     fragment folderDetailsItem on Folder {
       id
       name
-      links {
+      links(input: $linkFilterInput) {
         ...linkDetailsItem
       }
     }
