@@ -8,6 +8,7 @@ import withTooltip from './withTooltip';
 import withRouter from './withRouter';
 import Sidebar from './Sidebar';
 import SegmentControl from './SegmentControl';
+import Dropdown from './Dropdown';
 
 export {
   Form,
@@ -20,4 +21,5 @@ export {
   withRouter,
   Sidebar,
   SegmentControl,
+  Dropdown,
 };
