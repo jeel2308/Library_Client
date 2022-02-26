@@ -1,5 +1,6 @@
 /**--external-- */
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _includes from 'lodash/includes';
@@ -7,6 +8,8 @@ import _map from 'lodash/map';
 
 /**--internal-- */
 import { withQuery } from '#components';
+import { deleteLink } from '#modules/Module';
+import { compose } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 
 /**--relative-- */
@@ -16,7 +19,7 @@ import { LINK_ACTIONS } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 
 const Links = (props) => {
-  const { folderDetails, folderId } = props;
+  const { folderDetails, folderId, deleteLink, isCompleted } = props;
   const { links } = folderDetails;
 
   const [showEditLinkModal, setShowEditLinkModal] = useState(false);
@@ -37,6 +40,10 @@ const Links = (props) => {
     switch (value) {
       case 'EDIT': {
         openEditLinkModal({ linkId });
+        break;
+      }
+      case 'DELETE': {
+        deleteLink({ linkId, isCompleted, folderId });
         break;
       }
     }
@@ -74,22 +81,29 @@ const Links = (props) => {
   );
 };
 
-export default withQuery(getFolderDetailsQuery, {
-  name: 'getFolderDetailsQuery',
-  displayName: 'getFolderDetailsQuery',
-  fetchPolicy: 'cache-and-network',
-  getVariables: ({ folderId, isCompleted }) => {
-    return {
-      input: { id: folderId, type: 'FOLDER' },
-      linkFilterInput: { isCompleted },
-    };
-  },
-  getSkipQueryState: ({ folderId }) => !folderId,
-  mapQueryDataToProps: ({ getFolderDetailsQuery }) => {
-    const { data, networkStatus } = getFolderDetailsQuery;
-    const isData = !_isEmpty(data);
-    const isLoading = _includes([1, 2], networkStatus);
-    const folderDetails = _get(data, 'node', {});
-    return { isData, isLoading, folderDetails };
-  },
-})(Links);
+const mapActionCreators = {
+  deleteLink,
+};
+
+export default compose(
+  connect(null, mapActionCreators),
+  withQuery(getFolderDetailsQuery, {
+    name: 'getFolderDetailsQuery',
+    displayName: 'getFolderDetailsQuery',
+    fetchPolicy: 'cache-and-network',
+    getVariables: ({ folderId, isCompleted }) => {
+      return {
+        input: { id: folderId, type: 'FOLDER' },
+        linkFilterInput: { isCompleted },
+      };
+    },
+    getSkipQueryState: ({ folderId }) => !folderId,
+    mapQueryDataToProps: ({ getFolderDetailsQuery }) => {
+      const { data, networkStatus } = getFolderDetailsQuery;
+      const isData = !_isEmpty(data);
+      const isLoading = _includes([1, 2], networkStatus);
+      const folderDetails = _get(data, 'node', {});
+      return { isData, isLoading, folderDetails };
+    },
+  })
+)(Links);

@@ -56,10 +56,21 @@ const updateLinkMutation = gql`
   ${linkFragments.linkDetails}
 `;
 
+const deleteLinkMutation = gql`
+  mutation deleteLink($input: DeleteLinkInput!) {
+    linkManagement {
+      deleteLink(input: $input) {
+        id
+      }
+    }
+  }
+`;
+
 export {
   addFolderMutation,
   updateFolderMutation,
   deleteFolderMutation,
   addLinkMutation,
   updateLinkMutation,
+  deleteLinkMutation,
 };

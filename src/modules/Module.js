@@ -3,13 +3,18 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _uniqueId from 'lodash/uniqueId';
 import { setUserInfoInStorage } from '../Utils';
-import { updateUserFoldersInCache, addLinkInCache } from './GraphqlHelpers';
+import {
+  updateUserFoldersInCache,
+  addLinkInCache,
+  deleteLinkFromCache,
+} from './GraphqlHelpers';
 import {
   addFolderMutation,
   updateFolderMutation,
   deleteFolderMutation,
   addLinkMutation,
   updateLinkMutation,
+  deleteLinkMutation,
 } from './Mutations';
 
 export const addFolder =
@@ -165,8 +170,50 @@ export const updateLink = ({ linkDetails }) => {
       });
     } catch (e) {
       console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } finally {
       dispatch(setLoaderVisibility(false));
+    }
+  };
+};
+
+export const deleteLink = ({ isCompleted, folderId, linkId }) => {
+  return async (dispatch, getState) => {
+    try {
+      await client.mutate({
+        mutation: deleteLinkMutation,
+        variables: { input: { id: linkId } },
+        optimisticResponse: {
+          linkManagement: {
+            deleteLink: { id: linkId, __typename: 'Link' },
+            __typename: 'LinkMutations',
+          },
+        },
+        update: () => {
+          deleteLinkFromCache({
+            folderId,
+            linkFilters: { isCompleted },
+            linkId,
+          });
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     }
   };
 };

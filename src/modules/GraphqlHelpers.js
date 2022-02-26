@@ -144,3 +144,24 @@ export const getLinkDetailsFromCache = ({ linkId }) => {
   }
   return fragmentData;
 };
+
+export const deleteLinkFromCache = ({ folderId, linkFilters, linkId }) => {
+  const oldFolderDetails = getFolderDetailsFromCache({
+    folderId,
+    linkFilters,
+  });
+
+  if (_isEmpty(oldFolderDetails)) {
+    return;
+  }
+
+  const { links } = oldFolderDetails;
+  const updatedLinks = _filter(links, ({ id }) => id !== linkId);
+
+  const updatedFolderDetails = { ...oldFolderDetails, links: updatedLinks };
+  writeFolderDetailsToCache({
+    folderId,
+    linkFilters,
+    data: updatedFolderDetails,
+  });
+};
