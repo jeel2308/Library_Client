@@ -5,7 +5,7 @@ import _map from 'lodash/map';
 import _includes from 'lodash/includes';
 import _filter from 'lodash/filter';
 import { getFolderDetailsQuery, getUserFoldersQuery } from './Queries';
-import { folderFragments } from './Fragments';
+import { folderFragments, linkFragments } from './Fragments';
 export const getUserFoldersFromCache = ({
   showOptimistic = false,
   userId,
@@ -129,4 +129,18 @@ export const addLinkInCache = ({ folderId, linkFilters, linkData }) => {
     linkFilters,
     data: updatedFolderDetails,
   });
+};
+
+export const getLinkDetailsFromCache = ({ linkId }) => {
+  let fragmentData = {};
+  try {
+    fragmentData = client.readFragment({
+      id: `Link:${linkId}`,
+      fragment: linkFragments.linkDetails,
+      fragmentName: 'linkDetailsItem',
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  return fragmentData;
 };

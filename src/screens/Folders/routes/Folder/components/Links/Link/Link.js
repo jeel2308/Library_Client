@@ -11,7 +11,11 @@ import classes from './Link.module.scss';
 import { dotsStyle } from './LinkStyles';
 
 const Link = (props) => {
-  const { url, dropDownOptions } = props;
+  const { url, dropDownOptions, id } = props;
+
+  const handleActions = ({ value }) => {
+    props.handleActions({ value, linkId: id });
+  };
 
   return (
     <div className={classes.container}>
@@ -23,7 +27,7 @@ const Link = (props) => {
           variant="unstyled"
           options={dropDownOptions}
           dropdownButtonType="icon"
-          handleActions={(args) => console.log(args)}
+          handleActions={handleActions}
           icon={
             <IconContext.Provider value={dotsStyle}>
               <BiDotsVerticalRounded />
@@ -34,5 +38,7 @@ const Link = (props) => {
     </div>
   );
 };
+
+Link.displayName = 'Link';
 
 export default Link;
