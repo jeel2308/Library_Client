@@ -11,6 +11,7 @@ import { SegmentControl } from '#components';
 import classes from './Folder.module.scss';
 import AddButton from './AddButton';
 import EditOrCreateLinkModal from './EditOrCreateLinkModal';
+import Links from './Links';
 
 const segmentControlOptions = [
   { label: 'Pending', value: 'PENDING' },
@@ -29,6 +30,7 @@ const Folder = (props) => {
 
   const folderBasicDetails = useOutletContext();
   const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
+  const folderId = _get(folderBasicDetails, 'id', '');
 
   return (
     <div className={classes.container}>
@@ -43,12 +45,11 @@ const Folder = (props) => {
         </div>
         <AddButton onClick={openModal} />
       </div>
-      <div className={classes.middleContainer}></div>
+      <div className={classes.middleContainer}>
+        <Links folderId={folderId} isCompleted={linkStatus !== 'PENDING'} />
+      </div>
       {showEditOrCreateLinkModal && (
-        <EditOrCreateLinkModal
-          closeModal={closeModal}
-          folderId={_get(folderBasicDetails, 'id')}
-        />
+        <EditOrCreateLinkModal closeModal={closeModal} folderId={folderId} />
       )}
     </div>
   );
