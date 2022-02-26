@@ -87,11 +87,46 @@ export const getFolderDetailsFromCache = ({ folderId, linkFilters }) => {
       query: getFolderDetailsQuery,
       variables: {
         input: { id: folderId, type: 'FOLDER' },
-        ...(linkFilters ? { linkFolderInput: linkFilters } : {}),
+        ...(linkFilters ? { linkFilterInput: linkFilters } : {}),
       },
     });
   } catch (e) {
     console.error(e);
   }
   return _get(queryData, 'node', {});
+};
+
+export const writeFolderDetailsToCache = ({ folderId, linkFilters, data }) => {
+  try {
+    client.writeQuery({
+      query: getFolderDetailsQuery,
+      variables: {
+        input: { id: folderId, type: 'FOLDER' },
+        ...(linkFilters ? { linkFilterInput: linkFilters } : {}),
+      },
+      data: { node: data },
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const addLinkInCache = ({ folderId, linkFilters, linkData }) => {
+  const oldFolderDetails = getFolderDetailsFromCache({
+    folderId,
+    linkFilters,
+  });
+
+  if (_isEmpty(oldFolderDetails)) {
+    return;
+  }
+
+  const { links } = oldFolderDetails;
+  const updatedLinks = [...links, linkData];
+  const updatedFolderDetails = { ...oldFolderDetails, links: updatedLinks };
+  writeFolderDetailsToCache({
+    folderId,
+    linkFilters,
+    data: updatedFolderDetails,
+  });
 };

@@ -14,7 +14,7 @@ import { formFields } from './utils';
 const EditOrCreateLinkModal = (props) => {
   const { closeModal, addLink, folderId } = props;
 
-  const onSubmit = ({ link, isCompleted }) => {
+  const onSubmit = ({ link, isCompleted = false }) => {
     addLink({ url: link, isCompleted, folderId });
     closeModal();
   };

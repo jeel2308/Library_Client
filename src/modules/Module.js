@@ -3,7 +3,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _uniqueId from 'lodash/uniqueId';
 import { setUserInfoInStorage } from '../Utils';
-import { updateUserFoldersInCache } from './GraphqlHelpers';
+import { updateUserFoldersInCache, addLinkInCache } from './GraphqlHelpers';
 import {
   addFolderMutation,
   updateFolderMutation,
@@ -120,6 +120,20 @@ export const addLink = ({ url, isCompleted, folderId }) => {
       await client.mutate({
         mutation: addLinkMutation,
         variables: { input: { url, folderId, isCompleted } },
+        update: (
+          _,
+          {
+            data: {
+              linkManagement: { addLink },
+            },
+          }
+        ) => {
+          addLinkInCache({
+            folderId,
+            linkFilters: { isCompleted },
+            linkData: addLink,
+          });
+        },
       });
     } catch (e) {
       console.error(e);
