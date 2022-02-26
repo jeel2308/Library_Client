@@ -3,11 +3,20 @@
   flex: 1;
   border-radius: 8px;
   background-color: white;
-  color: blue;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+  align-items: center;
+  padding: 12px;
 }
 
 .link {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
   text-decoration: underline;
-  padding: 12px;
+
+  color: blue;
+}
+
+.dropDownContainer {
+  display: flex;
 }

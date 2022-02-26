@@ -12,6 +12,7 @@ import { getFolderDetailsQuery } from '#modules/Queries';
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
+import { LINK_ACTIONS } from './LinkUtils';
 
 const Links = (props) => {
   const { folderDetails } = props;
@@ -25,7 +26,7 @@ const Links = (props) => {
       const { id } = link;
       return (
         <div key={id} className={classes.linkContainer}>
-          <Link {...link} />
+          <Link {...link} dropDownOptions={LINK_ACTIONS} />
         </div>
       );
     });
