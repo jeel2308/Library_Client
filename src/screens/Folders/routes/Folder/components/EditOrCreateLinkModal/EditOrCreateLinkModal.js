@@ -6,7 +6,7 @@ import _isEmpty from 'lodash/isEmpty';
 
 /**--internal-- */
 import { Modal, Form } from '#components';
-import { addLink } from '#modules/Module';
+import { addLink, updateLink } from '#modules/Module';
 import { getLinkDetailsFromCache } from '#modules/GraphqlHelpers';
 
 /**--relative */
@@ -14,7 +14,15 @@ import classes from './EditOrCreateLinkModal.module.scss';
 import { formFields, getDynamicFormFields } from './utils';
 
 const EditOrCreateLinkModal = (props) => {
-  const { closeModal, addLink, folderId, linkDetails } = props;
+  const {
+    closeModal,
+    addLink,
+    folderId,
+    linkDetails,
+    mode,
+    linkId,
+    updateLink,
+  } = props;
 
   const dynamicFormFields = getDynamicFormFields({
     formFields,
@@ -22,7 +30,12 @@ const EditOrCreateLinkModal = (props) => {
   });
 
   const onSubmit = ({ link, isCompleted = false }) => {
-    addLink({ url: link, isCompleted, folderId });
+    if (mode === 'CREATE') {
+      addLink({ url: link, isCompleted, folderId });
+    } else {
+      updateLink({ linkDetails: { url: link, isCompleted, id: linkId } });
+    }
+
     closeModal();
   };
 
@@ -49,11 +62,13 @@ const mapStateToProps = (_, ownProps) => {
   const { linkId } = ownProps;
 
   const linkDetails = getLinkDetailsFromCache({ linkId });
-  return _isEmpty(linkDetails) ? {} : { linkDetails };
+  const mode = _isEmpty(linkDetails) ? 'CREATE' : 'EDIT';
+  return { mode, ...(mode === 'EDIT' ? { linkDetails } : {}) };
 };
 
 const mapActionCreators = {
   addLink,
+  updateLink,
 };
 
 EditOrCreateLinkModal.displayName = 'EditOrCreateLinkModal';

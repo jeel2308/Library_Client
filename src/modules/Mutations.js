@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { linkFragments } from './Fragments';
 
 const addFolderMutation = gql`
   mutation addFolder($input: AddFolderInput!) {
@@ -44,9 +45,21 @@ const addLinkMutation = gql`
   }
 `;
 
+const updateLinkMutation = gql`
+  mutation updateLink($input: UpdateLinkInput!) {
+    linkManagement {
+      updateLink(input: $input) {
+        ...linkDetailsItem
+      }
+    }
+  }
+  ${linkFragments.linkDetails}
+`;
+
 export {
   addFolderMutation,
   updateFolderMutation,
   deleteFolderMutation,
   addLinkMutation,
+  updateLinkMutation,
 };

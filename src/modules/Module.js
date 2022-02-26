@@ -9,6 +9,7 @@ import {
   updateFolderMutation,
   deleteFolderMutation,
   addLinkMutation,
+  updateLinkMutation,
 } from './Mutations';
 
 export const addFolder =
@@ -145,6 +146,25 @@ export const addLink = ({ url, isCompleted, folderId }) => {
           position: 'bottom-left',
         })
       );
+    } finally {
+      dispatch(setLoaderVisibility(false));
+    }
+  };
+};
+
+export const updateLink = ({ linkDetails }) => {
+  return async (dispatch, getState) => {
+    dispatch(setLoaderVisibility(true));
+    try {
+      await client.mutate({
+        mutation: updateLinkMutation,
+        variables: {
+          input: linkDetails,
+        },
+        //update function is not needed as when mutation response arrives, it will update data in cache and hence data in query
+      });
+    } catch (e) {
+      console.error(e);
     } finally {
       dispatch(setLoaderVisibility(false));
     }
