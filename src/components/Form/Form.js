@@ -74,7 +74,7 @@ const Form = (props) => {
                         <FormControl display="flex" alignItems="center">
                           <Checkbox
                             id={id}
-                            value={value}
+                            isChecked={value}
                             onChange={onChange}
                             onBlur={onBlur}
                             size={'lg'}
