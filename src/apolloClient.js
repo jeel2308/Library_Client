@@ -12,7 +12,20 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 
 const client = new ApolloClient({
   uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
-  cache: new InMemoryCache({ fragmentMatcher }),
+  cache: new InMemoryCache({
+    fragmentMatcher,
+    typePolicies: {
+      Folder: {
+        fields: {
+          links: {
+            merge: (_, incoming) => {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  }),
   headers: {
     authorization: getToken(),
   },
