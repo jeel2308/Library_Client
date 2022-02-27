@@ -46,14 +46,13 @@ const addLinkMutation = gql`
 `;
 
 const updateLinkMutation = gql`
-  mutation updateLink($input: UpdateLinkInput!) {
+  mutation updateLink($input: [UpdateLinkInput!]!) {
     linkManagement {
       updateLink(input: $input) {
-        ...linkDetailsItem
+        id
       }
     }
   }
-  ${linkFragments.linkDetails}
 `;
 
 const deleteLinkMutation = gql`

@@ -165,7 +165,7 @@ export const updateLink = ({ linkDetails }) => {
       await client.mutate({
         mutation: updateLinkMutation,
         variables: {
-          input: linkDetails,
+          input: [linkDetails],
         },
         refetchQueries: ['getFolderDetails'],
         awaitRefetchQueries: true,
