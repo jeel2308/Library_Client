@@ -158,7 +158,7 @@ export const addLink = ({ url, isCompleted, folderId }) => {
   };
 };
 
-export const updateLink = ({ linkDetails, folderId, isCompleted }) => {
+export const updateLink = ({ linkDetails }) => {
   return async (dispatch, getState) => {
     dispatch(setLoaderVisibility(true));
     try {
@@ -167,6 +167,8 @@ export const updateLink = ({ linkDetails, folderId, isCompleted }) => {
         variables: {
           input: linkDetails,
         },
+        refetchQueries: ['getFolderDetails'],
+        awaitRefetchQueries: true,
       });
     } catch (e) {
       console.error(e);

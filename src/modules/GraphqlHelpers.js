@@ -145,19 +145,6 @@ export const getLinkDetailsFromCache = ({ linkId }) => {
   return fragmentData;
 };
 
-export const writeLinkDetailsToCache = ({ linkId, data }) => {
-  try {
-    client.writeFragment({
-      id: `Link:${linkId}`,
-      fragment: linkFragments.linkDetails,
-      fragmentName: 'linkDetailsItem',
-      data,
-    });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 export const deleteLinkFromCache = ({ folderId, linkFilters, linkId }) => {
   const oldFolderDetails = getFolderDetailsFromCache({
     folderId,
@@ -177,13 +164,4 @@ export const deleteLinkFromCache = ({ folderId, linkFilters, linkId }) => {
     linkFilters,
     data: updatedFolderDetails,
   });
-};
-
-export const updateLinkInCache = ({ data }) => {
-  const oldLinkData = getLinkDetailsFromCache({ linkId });
-  if (_isEmpty(oldLinkData)) {
-    return;
-  }
-  const updatedLinkData = { ...oldLinkData, ...data };
-  writeLinkDetailsToCache({ linkId, data: updatedLinkData });
 };
