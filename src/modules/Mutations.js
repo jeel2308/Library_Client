@@ -56,7 +56,7 @@ const updateLinkMutation = gql`
 `;
 
 const deleteLinkMutation = gql`
-  mutation deleteLink($input: DeleteLinkInput!) {
+  mutation deleteLink($input: [DeleteLinkInput!]!) {
     linkManagement {
       deleteLink(input: $input) {
         id

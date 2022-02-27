@@ -194,7 +194,7 @@ export const deleteLink = ({ isCompleted, folderId, linkId }) => {
         variables: { input: { id: linkId } },
         optimisticResponse: {
           linkManagement: {
-            deleteLink: { id: linkId, __typename: 'Link' },
+            deleteLink: [{ id: linkId, __typename: 'Link' }],
             __typename: 'LinkMutations',
           },
         },
@@ -202,7 +202,7 @@ export const deleteLink = ({ isCompleted, folderId, linkId }) => {
           deleteLinkFromCache({
             folderId,
             linkFilters: { isCompleted },
-            linkId,
+            linkIds: [linkId],
           });
         },
       });
