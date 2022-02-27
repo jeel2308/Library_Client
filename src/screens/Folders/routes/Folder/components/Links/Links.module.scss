@@ -7,7 +7,14 @@
   gap: 48px;
 }
 
+.linkOption {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 .linkContainer {
   display: flex;
+  gap: 20px;
   max-width: 720px;
 }

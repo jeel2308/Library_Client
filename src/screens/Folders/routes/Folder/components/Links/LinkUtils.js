@@ -13,6 +13,10 @@ export const LINK_ACTIONS = [
     value: 'MARK_AS_PENDING',
     getVisibilityStatus: ({ isCompleted }) => isCompleted,
   },
+  {
+    label: 'Select',
+    value: 'SELECT',
+  },
 ];
 
 export const getLinkActions = (data) => {

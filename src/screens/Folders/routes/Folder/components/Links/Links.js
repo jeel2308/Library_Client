@@ -1,10 +1,14 @@
 /**--external-- */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _includes from 'lodash/includes';
 import _map from 'lodash/map';
+import { Checkbox } from '@chakra-ui/react';
+import _filter from 'lodash/filter';
+import _find from 'lodash/find';
+import _size from 'lodash/size';
 
 /**--internal-- */
 import { withQuery } from '#components';
@@ -25,7 +29,16 @@ const Links = (props) => {
 
   const [showEditLinkModal, setShowEditLinkModal] = useState(false);
 
+  const [selectedLinks, setSelectedLinks] = useState([]);
+
   const [linkId, setLinkId] = useState(null);
+
+  const [showBulkSelection, setShowBulkSelection] = useState(false);
+
+  useEffect(() => {
+    setSelectedLinks([]);
+    disableBulkSelectionMode();
+  }, [folderId]);
 
   const openEditLinkModal = ({ linkId }) => {
     setShowEditLinkModal(true);
@@ -36,6 +49,14 @@ const Links = (props) => {
     setShowEditLinkModal(false);
     setLinkId(null);
   };
+  const enableBulkSelectionMode = useCallback(
+    () => setShowBulkSelection(true),
+    []
+  );
+  const disableBulkSelectionMode = useCallback(
+    () => setShowBulkSelection(false),
+    []
+  );
 
   const handleActions = ({ value, linkId }) => {
     switch (value) {
@@ -55,9 +76,25 @@ const Links = (props) => {
         });
         break;
       }
+      case 'SELECT': {
+        enableBulkSelectionMode();
+        break;
+      }
     }
   };
 
+  const updateSelectedLinks = ({ id }) => {
+    setSelectedLinks((selectedLinks) => {
+      const filteredLinks = _filter(
+        selectedLinks,
+        (selectedLinkId) => selectedLinkId !== id
+      );
+      if (_size(filteredLinks) === _size(selectedLinks)) {
+        return [...selectedLinks, id];
+      }
+      return filteredLinks;
+    });
+  };
   const renderLinks = () => {
     if (_isEmpty(links)) {
       return 'No links';
@@ -65,13 +102,31 @@ const Links = (props) => {
     const linkActions = getLinkActions({ isCompleted });
     return _map(links, (link) => {
       const { id } = link;
+      const isLinkSelected = _includes(selectedLinks, id);
+
+      const onChange = (e) => {
+        e.stopPropagation();
+        updateSelectedLinks({ id });
+      };
+
       return (
-        <div key={id} className={classes.linkContainer}>
-          <Link
-            {...link}
-            dropDownOptions={linkActions}
-            handleActions={handleActions}
-          />
+        <div className={classes.linkOption} key={id}>
+          {showBulkSelection && (
+            <Checkbox
+              size="lg"
+              isChecked={isLinkSelected}
+              backgroundColor="white"
+              borderColor="rgba(0,0,0,0.5)"
+              onChange={onChange}
+            />
+          )}
+          <div className={classes.linkContainer}>
+            <Link
+              {...link}
+              dropDownOptions={linkActions}
+              handleActions={handleActions}
+            />
+          </div>
         </div>
       );
     });
