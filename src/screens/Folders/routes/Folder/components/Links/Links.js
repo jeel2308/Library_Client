@@ -8,18 +8,19 @@ import _map from 'lodash/map';
 
 /**--internal-- */
 import { withQuery } from '#components';
-import { deleteLink } from '#modules/Module';
+import { deleteLink, updateLink } from '#modules/Module';
 import { compose } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
-import { LINK_ACTIONS } from './LinkUtils';
+import { getLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 
 const Links = (props) => {
-  const { folderDetails, folderId, deleteLink, isCompleted } = props;
+  const { folderDetails, folderId, deleteLink, isCompleted, updateLink } =
+    props;
   const { links } = folderDetails;
 
   const [showEditLinkModal, setShowEditLinkModal] = useState(false);
@@ -46,6 +47,14 @@ const Links = (props) => {
         deleteLink({ linkId, isCompleted, folderId });
         break;
       }
+
+      case 'MARK_AS_PENDING':
+      case 'MARK_AS_COMPLETE': {
+        updateLink({
+          linkDetails: { id: linkId, isCompleted: !isCompleted },
+        });
+        break;
+      }
     }
   };
 
@@ -53,13 +62,14 @@ const Links = (props) => {
     if (_isEmpty(links)) {
       return 'No links';
     }
+    const linkActions = getLinkActions({ isCompleted });
     return _map(links, (link) => {
       const { id } = link;
       return (
         <div key={id} className={classes.linkContainer}>
           <Link
             {...link}
-            dropDownOptions={LINK_ACTIONS}
+            dropDownOptions={linkActions}
             handleActions={handleActions}
           />
         </div>
@@ -83,6 +93,7 @@ const Links = (props) => {
 
 const mapActionCreators = {
   deleteLink,
+  updateLink,
 };
 
 export default compose(

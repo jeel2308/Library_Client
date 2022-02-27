@@ -7,6 +7,7 @@ import {
   updateUserFoldersInCache,
   addLinkInCache,
   deleteLinkFromCache,
+  updateLinkInCache,
 } from './GraphqlHelpers';
 import {
   addFolderMutation,
@@ -157,7 +158,7 @@ export const addLink = ({ url, isCompleted, folderId }) => {
   };
 };
 
-export const updateLink = ({ linkDetails }) => {
+export const updateLink = ({ linkDetails, folderId, isCompleted }) => {
   return async (dispatch, getState) => {
     dispatch(setLoaderVisibility(true));
     try {
@@ -166,7 +167,6 @@ export const updateLink = ({ linkDetails }) => {
         variables: {
           input: linkDetails,
         },
-        //update function is not needed as when mutation response arrives, it will update data in cache and hence data in query
       });
     } catch (e) {
       console.error(e);
