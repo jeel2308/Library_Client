@@ -12,8 +12,8 @@ import _find from 'lodash/find';
 
 /**--internal-- */
 import { compose, getMatchingResults } from '#Utils';
-import { withQuery, Sidebar } from '#components';
-import { getUserFoldersQuery } from '#modules/Queries';
+import { Sidebar } from '#components';
+import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
 
 /**--relative-- */
 import classes from './Folders.module.scss';
@@ -127,26 +127,7 @@ const mapStateToProps = (state) => {
 
 export default compose(
   connect(mapStateToProps),
-  withQuery(getUserFoldersQuery, {
-    name: 'getUserFoldersQuery',
-    fetchPolicy: 'cache-and-network',
-    getVariables: ({ userId }) => ({ input: { id: userId, type: 'USER' } }),
-    mapQueryDataToProps: ({ getUserFoldersQuery }) => {
-      const { networkStatus, data } = getUserFoldersQuery;
-
-      const isData = !_isEmpty(data);
-
-      const isLoading = _includes([1, 2], networkStatus);
-
-      const folderList = _pipe([
-        (data) => _get(data, 'node.folders', []),
-        (data) => _map(data, ({ id, name }) => ({ id, label: name })),
-      ])(data);
-
-      return { folders: folderList, isData, isLoading };
-    },
-    loadingContainerStyle,
-  })
+  getUserFoldersEnhancer({ loadingContainerStyle })
 )(Resources);
 
 Resources.displayName = 'Resources';
