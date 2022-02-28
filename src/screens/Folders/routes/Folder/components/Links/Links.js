@@ -73,7 +73,7 @@ const Links = (props) => {
       case 'MARK_AS_PENDING':
       case 'MARK_AS_COMPLETE': {
         updateLink({
-          linkDetails: { id: linkId, isCompleted: !isCompleted },
+          linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
         });
         break;
       }
@@ -96,7 +96,13 @@ const Links = (props) => {
         break;
       }
       case 'UPDATE_STATUS': {
-        //do something
+        updateLink({
+          linksDetails: _map(selectedLinks, (id) => ({
+            id,
+            isCompleted: !isCompleted,
+          })),
+        });
+        disableBulkSelectionMode();
         break;
       }
     }
@@ -160,6 +166,9 @@ const Links = (props) => {
           onMoveClick={() => {}}
           onUpdateStatusClick={() =>
             handleBulkSelectionActions({ type: 'UPDATE_STATUS' })
+          }
+          statusButtonLabel={
+            isCompleted ? 'Mark as pending' : 'Mark as completed'
           }
           totalSelectedLinks={_size(selectedLinks)}
         />

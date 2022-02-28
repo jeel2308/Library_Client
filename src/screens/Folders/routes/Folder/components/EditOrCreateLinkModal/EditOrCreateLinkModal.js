@@ -33,7 +33,7 @@ const EditOrCreateLinkModal = (props) => {
     if (mode === 'CREATE') {
       addLink({ url: link, isCompleted, folderId });
     } else {
-      updateLink({ linkDetails: { url: link, isCompleted, id: linkId } });
+      updateLink({ linksDetails: [{ url: link, isCompleted, id: linkId }] });
     }
 
     closeModal();

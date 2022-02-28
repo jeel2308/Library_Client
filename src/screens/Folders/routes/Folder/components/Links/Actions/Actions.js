@@ -6,15 +6,25 @@ import { ButtonGroup, Button } from '@chakra-ui/react';
 import classes from './Actions.module.scss';
 
 const Actions = (props) => {
-  const { onCancelClick, onDeleteClick, totalSelectedLinks } = props;
+  const {
+    onCancelClick,
+    onDeleteClick,
+    totalSelectedLinks,
+    statusButtonLabel,
+    onUpdateStatusClick,
+  } = props;
   return (
     <div className={classes.container}>
       <ButtonGroup spacing="3">
         <Button variant="unstyled" onClick={onCancelClick}>
           Cancel
         </Button>
-        <Button colorScheme="blue" disabled={!totalSelectedLinks}>
-          Mark as complete
+        <Button
+          colorScheme="blue"
+          disabled={!totalSelectedLinks}
+          onClick={onUpdateStatusClick}
+        >
+          {statusButtonLabel}
         </Button>
         <Button
           colorScheme="red"

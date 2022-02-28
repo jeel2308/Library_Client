@@ -159,14 +159,14 @@ export const addLink = ({ url, isCompleted, folderId }) => {
   };
 };
 
-export const updateLink = ({ linkDetails }) => {
+export const updateLink = ({ linksDetails }) => {
   return async (dispatch, getState) => {
     dispatch(setLoaderVisibility(true));
     try {
       await client.mutate({
         mutation: updateLinkMutation,
         variables: {
-          input: [linkDetails],
+          input: linksDetails,
         },
         refetchQueries: ['getFolderDetails'],
         awaitRefetchQueries: true,
