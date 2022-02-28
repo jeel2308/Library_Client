@@ -66,6 +66,7 @@ const Links = (props) => {
   const closeFolderList = useCallback(() => {
     setShowFolderList(false);
     setSelectedLinks([]);
+    disableBulkSelectionMode();
   }, []);
 
   const onUpdateFolder = ({ folderId }) => {
@@ -187,7 +188,7 @@ const Links = (props) => {
         <Actions
           onCancelClick={() => handleBulkSelectionActions({ type: 'CANCEL' })}
           onDeleteClick={() => handleBulkSelectionActions({ type: 'DELETE' })}
-          onMoveClick={() => {}}
+          onMoveClick={() => handleBulkSelectionActions({ type: 'MOVE' })}
           onUpdateStatusClick={() =>
             handleBulkSelectionActions({ type: 'UPDATE_STATUS' })
           }

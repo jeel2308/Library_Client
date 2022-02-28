@@ -12,6 +12,7 @@ const Actions = (props) => {
     totalSelectedLinks,
     statusButtonLabel,
     onUpdateStatusClick,
+    onMoveClick,
   } = props;
   return (
     <div className={classes.container}>
@@ -25,6 +26,13 @@ const Actions = (props) => {
           onClick={onUpdateStatusClick}
         >
           {statusButtonLabel}
+        </Button>
+        <Button
+          colorScheme="blue"
+          disabled={!totalSelectedLinks}
+          onClick={onMoveClick}
+        >
+          Move
         </Button>
         <Button
           colorScheme="red"
