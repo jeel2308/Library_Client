@@ -1,8 +1,17 @@
 /**--external-- */
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import _get from 'lodash/get';
 import _map from 'lodash/map';
+import _filter from 'lodash/filter';
+import {
+  Heading,
+  RadioGroup,
+  Radio,
+  Stack,
+  ButtonGroup,
+  Button,
+} from '@chakra-ui/react';
 
 /**--internal-- */
 import { Modal } from '#components';
@@ -13,13 +22,40 @@ import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
 import classes from './FolderListModal.module.scss';
 
 const FolderList = (props) => {
-  const { folders } = props;
+  const { folders, closeModal, currentFolderId, onUpdateFolder } = props;
+
+  const [selectedFolder, setSelectedFolder] = useState(false);
+
+  const filteredFolders = _filter(folders, ({ id }) => id !== currentFolderId);
 
   return (
     <div className={classes.folderListContainer}>
-      {_map(folders, (folder) => {
-        return <div key={folder.id}>{folder.label}</div>;
-      })}
+      <Heading as="h4" size="md">
+        Select Folder
+      </Heading>
+      <RadioGroup onChange={setSelectedFolder} value={selectedFolder} mt={4}>
+        <Stack direction="column" spacing="1">
+          {_map(filteredFolders, (folder) => {
+            return (
+              <Radio size="lg" value={folder.id} display="flex" minWidth={0}>
+                <div className={classes.folderLabel}>{folder.label}</div>
+              </Radio>
+            );
+          })}
+        </Stack>
+      </RadioGroup>
+      <ButtonGroup display="flex" justifyContent="space-between" mt={4}>
+        <Button variant="unstyled" onClick={closeModal}>
+          Cancel
+        </Button>
+        <Button
+          colorScheme="blue"
+          disabled={!selectedFolder}
+          onClick={() => onUpdateFolder({ folderId: selectedFolder })}
+        >
+          Update folder
+        </Button>
+      </ButtonGroup>
     </div>
   );
 };
@@ -35,11 +71,15 @@ const EnhancedFolderList = compose(
 )(FolderList);
 
 const FolderListModal = (props) => {
-  const { closeModal } = props;
+  const { closeModal, currentFolderId, onUpdateFolder } = props;
   return (
     <Modal onClickOutside={closeModal}>
       <div className={classes.container}>
-        <EnhancedFolderList />
+        <EnhancedFolderList
+          closeModal={closeModal}
+          currentFolderId={currentFolderId}
+          onUpdateFolder={onUpdateFolder}
+        />
       </div>
     </Modal>
   );

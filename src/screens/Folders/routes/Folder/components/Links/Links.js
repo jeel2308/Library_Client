@@ -68,6 +68,13 @@ const Links = (props) => {
     setSelectedLinks([]);
   }, []);
 
+  const onUpdateFolder = ({ folderId }) => {
+    updateLink({
+      linksDetails: _map(selectedLinks, (id) => ({ id, folderId })),
+    });
+    closeFolderList();
+  };
+
   const handleActions = ({ value, linkId }) => {
     switch (value) {
       case 'EDIT': {
@@ -203,6 +210,8 @@ const Links = (props) => {
           <FolderListModal
             selectedLinks={selectedLinks}
             closeModal={closeFolderList}
+            currentFolderId={folderId}
+            onUpdateFolder={onUpdateFolder}
           />
         )}
       </div>
