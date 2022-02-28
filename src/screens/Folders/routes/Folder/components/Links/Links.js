@@ -40,19 +40,21 @@ const Links = (props) => {
     disableBulkSelectionMode();
   }, [folderId]);
 
-  const openEditLinkModal = ({ linkId }) => {
+  const openEditLinkModal = useCallback(({ linkId }) => {
     setShowEditLinkModal(true);
     setLinkId(linkId);
-  };
+  }, []);
 
-  const closeEditLinkModal = () => {
+  const closeEditLinkModal = useCallback(() => {
     setShowEditLinkModal(false);
     setLinkId(null);
-  };
+  }, []);
+
   const enableBulkSelectionMode = useCallback(({ linkId }) => {
     setShowBulkSelection(true);
     setSelectedLinks([linkId]);
   }, []);
+
   const disableBulkSelectionMode = useCallback(() => {
     setShowBulkSelection(false);
     setSelectedLinks([]);
