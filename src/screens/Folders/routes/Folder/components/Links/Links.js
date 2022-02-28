@@ -37,7 +37,6 @@ const Links = (props) => {
   const [showBulkSelection, setShowBulkSelection] = useState(false);
 
   useEffect(() => {
-    setSelectedLinks([]);
     disableBulkSelectionMode();
   }, [folderId]);
 
@@ -50,14 +49,14 @@ const Links = (props) => {
     setShowEditLinkModal(false);
     setLinkId(null);
   };
-  const enableBulkSelectionMode = useCallback(
-    () => setShowBulkSelection(true),
-    []
-  );
-  const disableBulkSelectionMode = useCallback(
-    () => setShowBulkSelection(false),
-    []
-  );
+  const enableBulkSelectionMode = useCallback(({ linkId }) => {
+    setShowBulkSelection(true);
+    setSelectedLinks([linkId]);
+  }, []);
+  const disableBulkSelectionMode = useCallback(() => {
+    setShowBulkSelection(false);
+    setSelectedLinks([]);
+  }, []);
 
   const handleActions = ({ value, linkId }) => {
     switch (value) {
@@ -78,7 +77,7 @@ const Links = (props) => {
         break;
       }
       case 'SELECT': {
-        enableBulkSelectionMode();
+        enableBulkSelectionMode({ linkId });
         break;
       }
     }
