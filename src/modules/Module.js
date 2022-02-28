@@ -2,6 +2,7 @@ import client from '../apolloClient';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _uniqueId from 'lodash/uniqueId';
+import _map from 'lodash/map';
 import { setUserInfoInStorage } from '../Utils';
 import {
   updateUserFoldersInCache,
@@ -186,15 +187,18 @@ export const updateLink = ({ linkDetails }) => {
   };
 };
 
-export const deleteLink = ({ isCompleted, folderId, linkId }) => {
+export const deleteLink = ({ isCompleted, folderId, linkIds }) => {
   return async (dispatch, getState) => {
+    const mutationInput = _map(linkIds, (id) => ({ id }));
+    const responseLinks = _map(linkIds, (id) => ({ id, __typename: 'Link' }));
+
     try {
       await client.mutate({
         mutation: deleteLinkMutation,
-        variables: { input: { id: linkId } },
+        variables: { input: mutationInput },
         optimisticResponse: {
           linkManagement: {
-            deleteLink: [{ id: linkId, __typename: 'Link' }],
+            deleteLink: responseLinks,
             __typename: 'LinkMutations',
           },
         },
@@ -202,7 +206,7 @@ export const deleteLink = ({ isCompleted, folderId, linkId }) => {
           deleteLinkFromCache({
             folderId,
             linkFilters: { isCompleted },
-            linkIds: [linkId],
+            linkIds,
           });
         },
       });
