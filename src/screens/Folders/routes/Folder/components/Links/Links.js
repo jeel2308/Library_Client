@@ -33,8 +33,6 @@ const Links = (props) => {
 
   const [selectedLinks, setSelectedLinks] = useState([]);
 
-  const [linkId, setLinkId] = useState(null);
-
   const [showBulkSelection, setShowBulkSelection] = useState(false);
 
   const [showFolderList, setShowFolderList] = useState(false);
@@ -45,12 +43,12 @@ const Links = (props) => {
 
   const openEditLinkModal = useCallback(({ linkId }) => {
     setShowEditLinkModal(true);
-    setLinkId(linkId);
+    setSelectedLinks([linkId]);
   }, []);
 
   const closeEditLinkModal = useCallback(() => {
     setShowEditLinkModal(false);
-    setLinkId(null);
+    setSelectedLinks([]);
   }, []);
 
   const enableBulkSelectionMode = useCallback(({ linkId }) => {
@@ -202,7 +200,7 @@ const Links = (props) => {
         {renderLinks()}
         {showEditLinkModal && (
           <EditOrCreateLinkModal
-            linkId={linkId}
+            linkId={selectedLinks?.[0] ?? ''}
             closeModal={closeEditLinkModal}
             folderId={folderId}
           />
