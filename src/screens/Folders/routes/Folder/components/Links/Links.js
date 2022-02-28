@@ -22,6 +22,7 @@ import Link from './Link';
 import { getLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
+import FolderListModal from './FolderListModal';
 
 const Links = (props) => {
   const { folderDetails, folderId, deleteLink, isCompleted, updateLink } =
@@ -35,6 +36,8 @@ const Links = (props) => {
   const [linkId, setLinkId] = useState(null);
 
   const [showBulkSelection, setShowBulkSelection] = useState(false);
+
+  const [showFolderList, setShowFolderList] = useState(false);
 
   useEffect(() => {
     disableBulkSelectionMode();
@@ -60,6 +63,11 @@ const Links = (props) => {
     setSelectedLinks([]);
   }, []);
 
+  const closeFolderList = useCallback(() => {
+    setShowFolderList(false);
+    setSelectedLinks([]);
+  }, []);
+
   const handleActions = ({ value, linkId }) => {
     switch (value) {
       case 'EDIT': {
@@ -80,6 +88,11 @@ const Links = (props) => {
       }
       case 'SELECT': {
         enableBulkSelectionMode({ linkId });
+        break;
+      }
+      case 'MOVE': {
+        setShowFolderList(true);
+        setSelectedLinks([linkId]);
         break;
       }
     }
@@ -105,6 +118,9 @@ const Links = (props) => {
         });
         disableBulkSelectionMode();
         break;
+      }
+      case 'MOVE': {
+        setShowFolderList(true);
       }
     }
   };
@@ -181,6 +197,12 @@ const Links = (props) => {
             linkId={linkId}
             closeModal={closeEditLinkModal}
             folderId={folderId}
+          />
+        )}
+        {showFolderList && (
+          <FolderListModal
+            selectedLinks={selectedLinks}
+            closeModal={closeFolderList}
           />
         )}
       </div>

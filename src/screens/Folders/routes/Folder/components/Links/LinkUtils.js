@@ -17,6 +17,10 @@ export const LINK_ACTIONS = [
     label: 'Select',
     value: 'SELECT',
   },
+  {
+    label: 'Move',
+    value: 'MOVE',
+  },
 ];
 
 export const getLinkActions = (data) => {
