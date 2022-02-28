@@ -1,0 +1,17 @@
+.container {
+  width: 500px;
+  max-height: 400px;
+  flex-direction: column;
+  display: flex;
+  min-height: 0;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.folderListContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
