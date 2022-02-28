@@ -66,7 +66,7 @@ const Links = (props) => {
         break;
       }
       case 'DELETE': {
-        deleteLink({ linkIds:[linkId], isCompleted, folderId });
+        deleteLink({ linkIds: [linkId], isCompleted, folderId });
         break;
       }
 
@@ -79,6 +79,24 @@ const Links = (props) => {
       }
       case 'SELECT': {
         enableBulkSelectionMode();
+        break;
+      }
+    }
+  };
+
+  const handleBulkSelectionActions = ({ type }) => {
+    switch (type) {
+      case 'DELETE': {
+        deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
+        disableBulkSelectionMode();
+        break;
+      }
+      case 'CANCEL': {
+        disableBulkSelectionMode();
+        break;
+      }
+      case 'UPDATE_STATUS': {
+        //do something
         break;
       }
     }
@@ -137,10 +155,13 @@ const Links = (props) => {
     <div className={classes.container}>
       {showBulkSelection && (
         <Actions
-          onCancelClick={disableBulkSelectionMode}
-          onDeleteClick={() => {}}
+          onCancelClick={() => handleBulkSelectionActions({ type: 'CANCEL' })}
+          onDeleteClick={() => handleBulkSelectionActions({ type: 'DELETE' })}
           onMoveClick={() => {}}
-          onUpdateStatusClick={() => {}}
+          onUpdateStatusClick={() =>
+            handleBulkSelectionActions({ type: 'UPDATE_STATUS' })
+          }
+          totalSelectedLinks={_size(selectedLinks)}
         />
       )}
       <div className={classes.listContainer}>
