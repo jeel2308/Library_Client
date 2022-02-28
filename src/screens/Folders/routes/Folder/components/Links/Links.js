@@ -21,6 +21,7 @@ import classes from './Links.module.scss';
 import Link from './Link';
 import { getLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
+import Actions from './Actions';
 
 const Links = (props) => {
   const { folderDetails, folderId, deleteLink, isCompleted, updateLink } =
@@ -65,7 +66,7 @@ const Links = (props) => {
         break;
       }
       case 'DELETE': {
-        deleteLink({ linkId, isCompleted, folderId });
+        deleteLink({ linkIds:[linkId], isCompleted, folderId });
         break;
       }
 
@@ -134,14 +135,24 @@ const Links = (props) => {
 
   return (
     <div className={classes.container}>
-      {renderLinks()}
-      {showEditLinkModal && (
-        <EditOrCreateLinkModal
-          linkId={linkId}
-          closeModal={closeEditLinkModal}
-          folderId={folderId}
+      {showBulkSelection && (
+        <Actions
+          onCancelClick={disableBulkSelectionMode}
+          onDeleteClick={() => {}}
+          onMoveClick={() => {}}
+          onUpdateStatusClick={() => {}}
         />
       )}
+      <div className={classes.listContainer}>
+        {renderLinks()}
+        {showEditLinkModal && (
+          <EditOrCreateLinkModal
+            linkId={linkId}
+            closeModal={closeEditLinkModal}
+            folderId={folderId}
+          />
+        )}
+      </div>
     </div>
   );
 };
