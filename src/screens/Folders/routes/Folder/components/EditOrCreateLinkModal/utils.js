@@ -21,6 +21,18 @@ export const formFields = [
     label: 'mark as completed',
     type: 'checkbox',
   },
+  {
+    id: 'folderId',
+    label: 'Select folder',
+    placeholder: 'Select folder',
+    type: 'select',
+    constrains: {
+      required: true,
+    },
+    errorMessages: {
+      required: 'Folder is required!!',
+    },
+  },
 ];
 
 export const getDynamicFormFields = ({ formFields, data }) => {
@@ -30,6 +42,7 @@ export const getDynamicFormFields = ({ formFields, data }) => {
   return _map(formFields, (field) => {
     const { id } = field;
     let defaultValue;
+    let options = [];
     switch (id) {
       case 'link': {
         defaultValue = _get(data, 'url', '');
@@ -39,7 +52,12 @@ export const getDynamicFormFields = ({ formFields, data }) => {
         defaultValue = _get(data, 'isCompleted', false);
         break;
       }
+      case 'folderId': {
+        options = _get(data, 'options', []);
+        defaultValue = _get(data, 'folderId', '');
+        break;
+      }
     }
-    return { ...field, defaultValue };
+    return { ...field, defaultValue, options };
   });
 };
