@@ -37,7 +37,13 @@ const FolderList = (props) => {
         <Stack direction="column" spacing="1">
           {_map(filteredFolders, (folder) => {
             return (
-              <Radio size="lg" value={folder.id} display="flex" minWidth={0}>
+              <Radio
+                size="lg"
+                value={folder.id}
+                display="flex"
+                minWidth={0}
+                key={folder.id}
+              >
                 <div className={classes.folderLabel}>{folder.label}</div>
               </Radio>
             );
