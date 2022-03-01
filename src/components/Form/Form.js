@@ -8,7 +8,9 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  Select,
 } from '@chakra-ui/react';
+import _map from 'lodash/map';
 
 /**--relative-- */
 import classes from './Form.module.scss';
@@ -29,8 +31,15 @@ const Form = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.container}>
       {fields.map((field) => {
-        const { id, label, type, placeholder, errorMessages, constrains } =
-          field;
+        const {
+          id,
+          label,
+          type,
+          placeholder,
+          errorMessages,
+          constrains,
+          options,
+        } = field;
 
         const errorType = errors?.[id]?.type ?? 'required';
 
@@ -82,6 +91,33 @@ const Form = (props) => {
                           <FormLabel htmlFor={id} mb={0} fontSize={16} ml={2}>
                             {label}
                           </FormLabel>
+                        </FormControl>
+                      );
+                    }
+                    case 'select': {
+                      return (
+                        <FormControl isInvalid={isInvalid}>
+                          <FormLabel htmlFor={id} fontSize={16}>
+                            {label}
+                          </FormLabel>
+                          <Select
+                            placeholder="Select folder"
+                            onChange={onChange}
+                          >
+                            {_map(options, (option) => {
+                              const { id, label } = option;
+                              return (
+                                <option value={id} key={id}>
+                                  {label}
+                                </option>
+                              );
+                            })}
+                          </Select>
+                          {isInvalid && (
+                            <FormErrorMessage>
+                              {errorMessages[errorType]}
+                            </FormErrorMessage>
+                          )}
                         </FormControl>
                       );
                     }
