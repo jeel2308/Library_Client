@@ -13,7 +13,7 @@ import _size from 'lodash/size';
 /**--internal-- */
 import { withQuery } from '#components';
 import { deleteLink, updateLink } from '#modules/Module';
-import { compose } from '#Utils';
+import { compose, copyToClipboard } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 
 /**--relative-- */
@@ -100,6 +100,10 @@ const Links = (props) => {
         setShowFolderList(true);
         setSelectedLinks([linkId]);
         break;
+      }
+      case 'COPY': {
+        const { url } = _find(links, ({ id }) => id == linkId);
+        copyToClipboard({ text: url });
       }
     }
   };

@@ -76,6 +76,10 @@ const getMatchingResults = ({ list, field, searchText }) => {
   });
 };
 
+const copyToClipboard = ({ text }) => {
+  window.navigator.clipboard.writeText(text);
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -85,4 +89,5 @@ export {
   compose,
   combineClasses,
   getMatchingResults,
+  copyToClipboard,
 };

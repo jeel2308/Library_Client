@@ -21,6 +21,10 @@ export const LINK_ACTIONS = [
     label: 'Move',
     value: 'MOVE',
   },
+  {
+    label: 'Copy',
+    value: 'COPY',
+  },
 ];
 
 export const getLinkActions = (data) => {
