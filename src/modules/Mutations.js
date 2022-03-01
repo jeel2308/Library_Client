@@ -37,12 +37,11 @@ const addLinkMutation = gql`
   mutation addLink($input: AddLinkInput!) {
     linkManagement {
       addLink(input: $input) {
-        id
-        url
-        isCompleted
+        ...linkDetailsItem
       }
     }
   }
+  ${linkFragments.linkDetails}
 `;
 
 const updateLinkMutation = gql`
@@ -65,6 +64,19 @@ const deleteLinkMutation = gql`
   }
 `;
 
+const updateLinksMetadataMutation = gql`
+  mutation updateLinksMetadata($input: [UpdateLinkMetadataInput!]!) {
+    linkManagement {
+      updateLinksMetadata(input: $input) {
+        id
+        title
+        description
+        url
+      }
+    }
+  }
+`;
+
 export {
   addFolderMutation,
   updateFolderMutation,
@@ -72,4 +84,5 @@ export {
   addLinkMutation,
   updateLinkMutation,
   deleteLinkMutation,
+  updateLinksMetadataMutation,
 };

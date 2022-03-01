@@ -6,6 +6,9 @@ export const linkFragments = {
       id
       url
       isCompleted
+      title
+      description
+      thumbnail
     }
   `,
 };

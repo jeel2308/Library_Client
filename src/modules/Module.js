@@ -3,12 +3,13 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _uniqueId from 'lodash/uniqueId';
 import _map from 'lodash/map';
+import _find from 'lodash/find';
 import { setUserInfoInStorage } from '../Utils';
 import {
   updateUserFoldersInCache,
   addLinkInCache,
   deleteLinkFromCache,
-  updateLinkInCache,
+  getFolderDetailsFromCache,
 } from './GraphqlHelpers';
 import {
   addFolderMutation,
@@ -17,6 +18,7 @@ import {
   addLinkMutation,
   updateLinkMutation,
   deleteLinkMutation,
+  updateLinksMetadataMutation,
 } from './Mutations';
 
 export const addFolder =
@@ -121,10 +123,9 @@ export const deleteFolder = ({ id }) => {
   };
 };
 
-export const addLink = ({ url, isCompleted, folderId }) => {
+export const addLinkBasicDetails = ({ url, isCompleted, folderId }) => {
   return async (dispatch) => {
     try {
-      dispatch(setLoaderVisibility(true));
       await client.mutate({
         mutation: addLinkMutation,
         variables: { input: { url, folderId, isCompleted } },
@@ -153,9 +154,45 @@ export const addLink = ({ url, isCompleted, folderId }) => {
           position: 'bottom-left',
         })
       );
-    } finally {
-      dispatch(setLoaderVisibility(false));
     }
+  };
+};
+
+export const updateLinksMetadata = ({ linksDetails }) => {
+  return async (dispatch) => {
+    try {
+      await client.mutate({
+        mutation: updateLinksMetadataMutation,
+        variables: { input: linksDetails },
+      });
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    }
+  };
+};
+
+export const addLink = ({ url, isCompleted, folderId }) => {
+  return async (dispatch) => {
+    dispatch(setLoaderVisibility(true));
+    await dispatch(addLinkBasicDetails({ url, isCompleted, folderId }));
+    dispatch(setLoaderVisibility(false));
+
+    const folderDetails = getFolderDetailsFromCache({
+      folderId,
+      linkFilters: { isCompleted },
+    });
+
+    const { links } = folderDetails;
+    const { id } = _find(links, ({ url: linkUrl }) => url === linkUrl);
+    dispatch(updateLinksMetadata({ linksDetails: [{ url, id }] }));
   };
 };
 
