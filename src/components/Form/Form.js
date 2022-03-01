@@ -15,7 +15,7 @@ import _map from 'lodash/map';
 /**--relative-- */
 import classes from './Form.module.scss';
 import PasswordInput from './PasswordInput';
-import { getInitialValues } from './utils';
+import { getInitialValues, trimFormFields } from './utils';
 const Form = (props) => {
   const { fields, onSubmit, formButtonsElement } = props;
 
@@ -28,8 +28,16 @@ const Form = (props) => {
     mode: 'onBlur',
   });
 
+  const formSubmitHandler = (value) => {
+    const updatedValue = trimFormFields(value);
+    onSubmit(updatedValue);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={classes.container}>
+    <form
+      onSubmit={handleSubmit(formSubmitHandler)}
+      className={classes.container}
+    >
       {fields.map((field) => {
         const {
           id,
