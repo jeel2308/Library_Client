@@ -103,6 +103,8 @@ const Form = (props) => {
                           <Select
                             placeholder="Select folder"
                             onChange={onChange}
+                            isInvalid={isInvalid}
+                            value={value}
                           >
                             {_map(options, (option) => {
                               const { id, label } = option;
