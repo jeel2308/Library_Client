@@ -36,14 +36,19 @@ const EditOrCreateLink = (props) => {
       folderId,
     },
   });
-  console.log({ dynamicFormFields });
+
+  const getUpdatedLinkData = ({ link, isCompleted, folderId }) => {
+    const linkData = { folderId, isCompleted, id: linkId };
+    const isLinkUrlUpdated = link !== linkDetails.url;
+    return isLinkUrlUpdated ? { ...linkData, url: link } : linkData;
+  };
 
   const onSubmit = ({ link, isCompleted = false, folderId }) => {
     if (mode === 'CREATE') {
       addLink({ url: link, isCompleted, folderId });
     } else {
       updateLink({
-        linksDetails: [{ url: link, isCompleted, id: linkId, folderId }],
+        linksDetails: [getUpdatedLinkData({ link, isCompleted, folderId })],
       });
     }
 
@@ -57,7 +62,7 @@ const EditOrCreateLink = (props) => {
       formButtonsElement={
         <div className={classes.footer}>
           <Button type="submit" colorScheme="blue">
-            Add link
+            {mode === 'CREATE' ? 'Add link' : 'Update link'}
           </Button>
         </div>
       }

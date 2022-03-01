@@ -4,6 +4,7 @@ import _get from 'lodash/get';
 import _uniqueId from 'lodash/uniqueId';
 import _map from 'lodash/map';
 import _find from 'lodash/find';
+import _filter from 'lodash/filter';
 import { setUserInfoInStorage } from '../Utils';
 import {
   updateUserFoldersInCache,
@@ -158,6 +159,31 @@ export const addLinkBasicDetails = ({ url, isCompleted, folderId }) => {
   };
 };
 
+export const updateLinkBasicDetails = ({ linksDetails }) => {
+  return async (dispatch) => {
+    try {
+      await client.mutate({
+        mutation: updateLinkMutation,
+        variables: {
+          input: linksDetails,
+        },
+        refetchQueries: ['getFolderDetails'],
+        awaitRefetchQueries: true,
+      });
+    } catch (e) {
+      console.error(e);
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    }
+  };
+};
+
 export const updateLinksMetadata = ({ linksDetails }) => {
   return async (dispatch) => {
     try {
@@ -197,29 +223,21 @@ export const addLink = ({ url, isCompleted, folderId }) => {
 };
 
 export const updateLink = ({ linksDetails }) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
+    const linksWithNewUrl = _filter(linksDetails, ({ url }) => !!url);
+
     dispatch(setLoaderVisibility(true));
-    try {
-      await client.mutate({
-        mutation: updateLinkMutation,
-        variables: {
-          input: linksDetails,
-        },
-        refetchQueries: ['getFolderDetails'],
-        awaitRefetchQueries: true,
-      });
-    } catch (e) {
-      console.error(e);
-      dispatch(
-        setToastMessage({
-          title: 'Something went wrong',
-          status: 'error',
-          isClosable: true,
-          position: 'bottom-left',
-        })
+    await dispatch(updateLinkBasicDetails({ linksDetails }));
+    dispatch(setLoaderVisibility(false));
+
+    if (!_isEmpty(linksWithNewUrl)) {
+      const updateLinksMetadataPayload = _map(
+        linksWithNewUrl,
+        ({ id, url }) => ({ id, url })
       );
-    } finally {
-      dispatch(setLoaderVisibility(false));
+      dispatch(
+        updateLinksMetadata({ linksDetails: updateLinksMetadataPayload })
+      );
     }
   };
 };
