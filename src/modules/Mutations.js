@@ -71,7 +71,7 @@ const updateLinksMetadataMutation = gql`
         id
         title
         description
-        url
+        thumbnail
       }
     }
   }
