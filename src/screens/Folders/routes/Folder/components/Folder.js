@@ -45,9 +45,9 @@ const Folder = (props) => {
         </div>
         <AddButton onClick={openModal} />
       </div>
-      <div className={classes.middleContainer}>
-        <Links folderId={folderId} isCompleted={linkStatus !== 'PENDING'} />
-      </div>
+
+      <Links folderId={folderId} isCompleted={linkStatus !== 'PENDING'} />
+
       {showEditOrCreateLinkModal && (
         <EditOrCreateLinkModal closeModal={closeModal} folderId={folderId} />
       )}

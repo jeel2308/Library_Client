@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
@@ -11,7 +11,7 @@ import _find from 'lodash/find';
 import _size from 'lodash/size';
 
 /**--internal-- */
-import { withQuery } from '#components';
+import { withQuery, withPagination } from '#components';
 import { deleteLink, updateLink } from '#modules/Module';
 import { compose, copyToClipboard } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
@@ -23,10 +23,18 @@ import { getLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
+import { loaderStyle } from './LinksStyles';
 
 const Links = (props) => {
-  const { folderDetails, folderId, deleteLink, isCompleted, updateLink } =
-    props;
+  const {
+    folderDetails,
+    folderId,
+    deleteLink,
+    isCompleted,
+    updateLink,
+    onPageScroll,
+    renderLoader,
+  } = props;
   const { links } = folderDetails;
 
   const [showEditLinkModal, setShowEditLinkModal] = useState(false);
@@ -200,23 +208,30 @@ const Links = (props) => {
           totalSelectedLinks={_size(selectedLinks)}
         />
       )}
-      <div className={classes.listContainer}>
-        {renderLinks()}
-        {showEditLinkModal && (
-          <EditOrCreateLinkModal
-            linkId={selectedLinks?.[0] ?? ''}
-            closeModal={closeEditLinkModal}
-            folderId={folderId}
-          />
-        )}
-        {showFolderList && (
-          <FolderListModal
-            selectedLinks={selectedLinks}
-            closeModal={closeFolderList}
-            currentFolderId={folderId}
-            onUpdateFolder={onUpdateFolder}
-          />
-        )}
+      {renderLoader && renderLoader()}
+      <div
+        className={classes.scrollContainer}
+        onScroll={onPageScroll ? onPageScroll : () => {}}
+      >
+        <div className={classes.listContainer}>
+          {renderLinks()}
+
+          {showEditLinkModal && (
+            <EditOrCreateLinkModal
+              linkId={selectedLinks?.[0] ?? ''}
+              closeModal={closeEditLinkModal}
+              folderId={folderId}
+            />
+          )}
+          {showFolderList && (
+            <FolderListModal
+              selectedLinks={selectedLinks}
+              closeModal={closeFolderList}
+              currentFolderId={folderId}
+              onUpdateFolder={onUpdateFolder}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -245,7 +260,8 @@ export default compose(
       const isData = !_isEmpty(data);
       const isLoading = _includes([1, 2], networkStatus);
       const folderDetails = _get(data, 'node', {});
-      return { isData, isLoading, folderDetails };
+      return { isData, isLoading, folderDetails, networkStatus };
     },
-  })
+  }),
+  withPagination({ direction: 'TOP', loaderContainerStyle: loaderStyle })
 )(Links);
