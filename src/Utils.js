@@ -80,6 +80,24 @@ const copyToClipboard = ({ text }) => {
   window.navigator.clipboard.writeText(text);
 };
 
+const checkScrollAtBottom = (container) => {
+  const { scrollHeight, clientHeight, scrollTop } = container;
+  return clientHeight + scrollTop >= scrollHeight;
+};
+
+const checkScrollAtTop = (container) => {
+  return container.scrollTop === 0;
+};
+
+const checkScrollAtRight = (container) => {
+  const { scrollWidth, clientWidth, scrollLeft } = container;
+  return clientWidth + scrollLeft >= scrollWidth;
+};
+
+const checkScrollAtLeft = (container) => {
+  return container.scrollLeft === 0;
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -90,4 +108,8 @@ export {
   combineClasses,
   getMatchingResults,
   copyToClipboard,
+  checkScrollAtBottom,
+  checkScrollAtTop,
+  checkScrollAtLeft,
+  checkScrollAtRight,
 };
