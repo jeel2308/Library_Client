@@ -17,7 +17,9 @@ import classes from './withPagination.module.scss';
 const withPagination = (configurations) => (WrappedComponent) => {
   const WithPagination = (props) => {
     const { networkStatus, fetchMore, hasNextPage } = props;
-    const showLoader = networkStatus === 3;
+    //BUG: Apollo client always return network status 1 when query is going on
+
+    const showLoader = networkStatus === 1;
     const {
       direction,
       loaderContainerStyle,
@@ -52,7 +54,7 @@ const withPagination = (configurations) => (WrappedComponent) => {
             fetchMore();
           }
         }, throttleTime),
-      []
+      [hasNextPage]
     );
 
     const renderLoader = () => {

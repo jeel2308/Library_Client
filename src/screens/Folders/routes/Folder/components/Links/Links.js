@@ -9,6 +9,8 @@ import { Checkbox } from '@chakra-ui/react';
 import _filter from 'lodash/filter';
 import _find from 'lodash/find';
 import _size from 'lodash/size';
+import _pipe from 'lodash/flow';
+import _reverse from 'lodash/reverse';
 
 /**--internal-- */
 import { withQuery, withPagination } from '#components';
@@ -35,7 +37,7 @@ const Links = (props) => {
     onPageScroll,
     renderLoader,
   } = props;
-  const { links } = folderDetails;
+  const { linksV2 } = folderDetails;
 
   const [showEditLinkModal, setShowEditLinkModal] = useState(false);
 
@@ -44,6 +46,18 @@ const Links = (props) => {
   const [showBulkSelection, setShowBulkSelection] = useState(false);
 
   const [showFolderList, setShowFolderList] = useState(false);
+
+  const listScrollRef = useRef();
+
+  const links = _pipe((data) => {
+    const edges = _get(data, 'edges', []);
+    return _map(edges, ({ node }) => node);
+  }, _reverse)(linksV2);
+
+  useEffect(() => {
+    listScrollRef.current.scrollTop =
+      listScrollRef.current.scrollHeight - listScrollRef.current.clientHeight;
+  }, []);
 
   useEffect(() => {
     disableBulkSelectionMode();
@@ -211,6 +225,7 @@ const Links = (props) => {
       {renderLoader && renderLoader()}
       <div
         className={classes.scrollContainer}
+        ref={listScrollRef}
         onScroll={onPageScroll ? onPageScroll : () => {}}
       >
         <div className={classes.listContainer}>
@@ -245,22 +260,74 @@ const mapActionCreators = {
 export default compose(
   connect(null, mapActionCreators),
   withQuery(getFolderDetailsQuery, {
-    name: 'getFolderDetailsQuery',
-    displayName: 'getFolderDetailsQuery',
+    name: 'getFolderDetails',
+    displayName: 'getFolderDetails',
     fetchPolicy: 'cache-and-network',
     getVariables: ({ folderId, isCompleted }) => {
       return {
         input: { id: folderId, type: 'FOLDER' },
-        linkFilterInput: { isCompleted },
+        linkFilterInputV2: { isCompleted, first: 3 },
       };
     },
     getSkipQueryState: ({ folderId }) => !folderId,
-    mapQueryDataToProps: ({ getFolderDetailsQuery }) => {
-      const { data, networkStatus } = getFolderDetailsQuery;
+    mapQueryDataToProps: ({
+      getFolderDetails,
+      ownProps: { folderId, isCompleted },
+    }) => {
+      const { data, networkStatus } = getFolderDetails;
       const isData = !_isEmpty(data);
       const isLoading = _includes([1, 2], networkStatus);
       const folderDetails = _get(data, 'node', {});
-      return { isData, isLoading, folderDetails, networkStatus };
+      const pageInfo = _get(folderDetails, 'linksV2.pageInfo', {});
+      const { endCursor, hasNextPage } = pageInfo;
+
+      const fetchMore = ({ first = 9 } = {}) => {
+        return getFolderDetails.fetchMore({
+          query: getFolderDetailsQuery,
+          variables: {
+            input: {
+              id: folderId,
+              type: 'FOLDER',
+            },
+            linkFilterInputV2: { isCompleted, first, after: endCursor },
+          },
+          updateQuery: (previousFeed, { fetchMoreResult }) => {
+            const { node: oldNode } = previousFeed;
+            const { node: newNode } = fetchMoreResult;
+
+            const { linksV2: oldLinksV2 } = oldNode;
+            const { linksV2: newLinksV2 } = newNode;
+
+            const { edges: oldEdges } = oldLinksV2;
+            const { edges: newEdges } = newLinksV2;
+
+            const updatedEdges = [...oldEdges, ...newEdges];
+
+            const { pageInfo: updatedPageInfo } = newLinksV2;
+
+            return {
+              ...previousFeed,
+              node: {
+                ...oldNode,
+                linksV2: {
+                  ...oldLinksV2,
+                  edges: updatedEdges,
+                  pageInfo: updatedPageInfo,
+                },
+              },
+            };
+          },
+        });
+      };
+
+      return {
+        isData,
+        isLoading,
+        folderDetails,
+        networkStatus,
+        hasNextPage,
+        fetchMore,
+      };
     },
   }),
   withPagination({ direction: 'TOP', loaderContainerStyle: loaderStyle })

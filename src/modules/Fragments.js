@@ -24,8 +24,17 @@ export const folderFragments = {
     fragment folderDetailsItem on Folder {
       id
       name
-      links(input: $linkFilterInput) {
-        ...linkDetailsItem
+      linksV2(input: $linkFilterInputV2) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        edges {
+          node {
+            ...linkDetailsItem
+          }
+        }
       }
     }
     ${linkFragments.linkDetails}

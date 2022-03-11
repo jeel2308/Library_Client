@@ -21,7 +21,7 @@ export const getUserFoldersQuery = gql`
 export const getFolderDetailsQuery = gql`
   query getFolderDetails(
     $input: NodeInput!
-    $linkFilterInput: FolderLinkFilters
+    $linkFilterInputV2: FolderLinkFiltersV2
   ) {
     node(input: $input) {
       ... on Folder {
