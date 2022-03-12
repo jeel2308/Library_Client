@@ -51,18 +51,24 @@ const withPagination = (configurations) => (WrappedComponent) => {
       }
     };
 
-    const renderLoader = () => {
-      return showLoader ? (
-        <div className={classes.spinnerContainer} style={loaderContainerStyle}>
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-          />
-        </div>
-      ) : null;
+    const renderLoader = ({ showLoader: showLoadingIcon = true }) => {
+      return (
+        showLoader &&
+        showLoadingIcon && (
+          <div
+            className={classes.spinnerContainer}
+            style={loaderContainerStyle}
+          >
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          </div>
+        )
+      );
     };
 
     return (
