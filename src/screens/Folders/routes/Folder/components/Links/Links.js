@@ -36,6 +36,7 @@ const Links = (props) => {
     updateLink,
     onPageScroll,
     renderLoader,
+    networkStatus,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -49,15 +50,44 @@ const Links = (props) => {
 
   const listScrollRef = useRef();
 
+  const linksNodeRefs = useRef([]);
+
+  const updateLinksNodeRefs = (node, index) => {
+    linksNodeRefs.current[index] = node;
+  };
+
   const links = _pipe((data) => {
     const edges = _get(data, 'edges', []);
     return _map(edges, ({ node }) => node);
   }, _reverse)(linksV2);
 
+  const totalPresentLinks = _size(links);
+
+  const previousTotalPresentLinksRef = useRef(_size(links));
+
+  useEffect(() => {
+    if (totalPresentLinks <= previousTotalPresentLinksRef.current) {
+      return;
+    }
+
+    const addedLinksCount =
+      totalPresentLinks - previousTotalPresentLinksRef.current;
+
+    const totalVerticalDistance =
+      linksNodeRefs.current?.[addedLinksCount]?.getBoundingClientRect().top ??
+      0;
+
+    listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
+  }, [totalPresentLinks, networkStatus]);
+
   useEffect(() => {
     listScrollRef.current.scrollTop =
       listScrollRef.current.scrollHeight - listScrollRef.current.clientHeight;
   }, []);
+
+  useEffect(() => {
+    previousTotalPresentLinksRef.current = totalPresentLinks;
+  }, [totalPresentLinks, networkStatus]);
 
   useEffect(() => {
     disableBulkSelectionMode();
@@ -174,7 +204,7 @@ const Links = (props) => {
       return 'No links';
     }
     const linkActions = getLinkActions({ isCompleted });
-    return _map(links, (link) => {
+    return _map(links, (link, index) => {
       const { id } = link;
       const isLinkSelected = _includes(selectedLinks, id);
 
@@ -184,7 +214,11 @@ const Links = (props) => {
       };
 
       return (
-        <div className={classes.linkOption} key={id}>
+        <div
+          className={classes.linkOption}
+          key={id}
+          ref={(node) => updateLinksNodeRefs(node, index)}
+        >
           {showBulkSelection && (
             <Checkbox
               size="lg"
@@ -274,16 +308,16 @@ export default compose(
       getFolderDetails,
       ownProps: { folderId, isCompleted },
     }) => {
-      const { data, networkStatus } = getFolderDetails;
+      const { data, networkStatus, loading } = getFolderDetails;
       const isData = !_isEmpty(data);
       const isLoading = _includes([1, 2], networkStatus);
       const folderDetails = _get(data, 'node', {});
       const pageInfo = _get(folderDetails, 'linksV2.pageInfo', {});
       const { endCursor, hasNextPage } = pageInfo;
 
-      const fetchMore = ({ first = 9 } = {}) => {
-        return getFolderDetails.fetchMore({
-          query: getFolderDetailsQuery,
+      const fetchMore = async ({ first = 3 } = {}) => {
+        return await getFolderDetails.fetchMore({
+          //BUG: setting query option will not update network status while refetching
           variables: {
             input: {
               id: folderId,
@@ -291,7 +325,7 @@ export default compose(
             },
             linkFilterInputV2: { isCompleted, first, after: endCursor },
           },
-          updateQuery: (previousFeed, { fetchMoreResult }) => {
+          updateQuery: (previousFeed, { fetchMoreResult, ...rest }) => {
             const { node: oldNode } = previousFeed;
             const { node: newNode } = fetchMoreResult;
 
