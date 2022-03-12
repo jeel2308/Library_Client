@@ -15,8 +15,9 @@ import _reverse from 'lodash/reverse';
 /**--internal-- */
 import { withQuery, withPagination } from '#components';
 import { deleteLink, updateLink } from '#modules/Module';
-import { compose, copyToClipboard } from '#Utils';
+import { compose, copyToClipboard, scrollToBottom } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
+import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
 
 /**--relative-- */
 import classes from './Links.module.scss';
@@ -52,6 +53,8 @@ const Links = (props) => {
 
   const linksNodeRefs = useRef([]);
 
+  const previousFolderId = useRef(folderId);
+
   const updateLinksNodeRefs = (node, index) => {
     linksNodeRefs.current[index] = node;
   };
@@ -66,7 +69,10 @@ const Links = (props) => {
   const previousTotalPresentLinksRef = useRef(_size(links));
 
   useEffect(() => {
-    if (totalPresentLinks <= previousTotalPresentLinksRef.current) {
+    if (
+      totalPresentLinks <= previousTotalPresentLinksRef.current ||
+      previousFolderId.current !== folderId
+    ) {
       return;
     }
 
@@ -78,12 +84,11 @@ const Links = (props) => {
       0;
 
     listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
-  }, [totalPresentLinks, networkStatus]);
+  }, [totalPresentLinks, folderId]);
 
   useEffect(() => {
-    listScrollRef.current.scrollTop =
-      listScrollRef.current.scrollHeight - listScrollRef.current.clientHeight;
-  }, []);
+    listScrollRef.current && scrollToBottom(listScrollRef.current);
+  }, [folderId]);
 
   useEffect(() => {
     previousTotalPresentLinksRef.current = totalPresentLinks;
@@ -91,6 +96,10 @@ const Links = (props) => {
 
   useEffect(() => {
     disableBulkSelectionMode();
+  }, [folderId]);
+
+  useEffect(() => {
+    previousFolderId.current = folderId;
   }, [folderId]);
 
   const openEditLinkModal = useCallback(({ linkId }) => {
@@ -308,10 +317,19 @@ export default compose(
       getFolderDetails,
       ownProps: { folderId, isCompleted },
     }) => {
-      const { data, networkStatus, loading } = getFolderDetails;
-      const isData = !_isEmpty(data);
+      const { networkStatus } = getFolderDetails;
+
+      /**
+       * Reading from cache is needed as sometimes getFolderDetails returns wrong cached data
+       */
+      const folderDetails = getFolderDetailsFromCache({
+        folderId,
+        linkFilters: { isCompleted, first: 3 },
+      });
+
+      const isData = !_isEmpty(folderDetails);
       const isLoading = _includes([1, 2], networkStatus);
-      const folderDetails = _get(data, 'node', {});
+
       const pageInfo = _get(folderDetails, 'linksV2.pageInfo', {});
       const { endCursor, hasNextPage } = pageInfo;
 

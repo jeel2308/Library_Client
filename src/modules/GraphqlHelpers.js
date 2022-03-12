@@ -87,7 +87,7 @@ export const getFolderDetailsFromCache = ({ folderId, linkFilters }) => {
       query: getFolderDetailsQuery,
       variables: {
         input: { id: folderId, type: 'FOLDER' },
-        ...(linkFilters ? { linkFilterInput: linkFilters } : {}),
+        ...(linkFilters ? { linkFilterInputV2: linkFilters } : {}),
       },
     });
   } catch (e) {
