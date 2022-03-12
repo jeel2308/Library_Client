@@ -22,6 +22,8 @@ import {
   updateLinksMetadataMutation,
 } from './Mutations';
 
+export const DEFAULT_PAGE_SIZE = 9;
+
 export const addFolder =
   ({ name }) =>
   async (dispatch, getState) => {

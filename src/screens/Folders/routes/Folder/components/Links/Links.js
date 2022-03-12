@@ -14,7 +14,7 @@ import _reverse from 'lodash/reverse';
 
 /**--internal-- */
 import { withQuery, withPagination } from '#components';
-import { deleteLink, updateLink } from '#modules/Module';
+import { deleteLink, updateLink, DEFAULT_PAGE_SIZE } from '#modules/Module';
 import { compose, copyToClipboard, scrollToBottom } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
@@ -309,7 +309,7 @@ export default compose(
     getVariables: ({ folderId, isCompleted }) => {
       return {
         input: { id: folderId, type: 'FOLDER' },
-        linkFilterInputV2: { isCompleted, first: 3 },
+        linkFilterInputV2: { isCompleted, first: DEFAULT_PAGE_SIZE },
       };
     },
     getSkipQueryState: ({ folderId }) => !folderId,
@@ -324,7 +324,7 @@ export default compose(
        */
       const folderDetails = getFolderDetailsFromCache({
         folderId,
-        linkFilters: { isCompleted, first: 3 },
+        linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE },
       });
 
       const isData = !_isEmpty(folderDetails);
