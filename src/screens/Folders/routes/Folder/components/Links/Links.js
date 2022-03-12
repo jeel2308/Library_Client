@@ -290,7 +290,10 @@ const Links = (props) => {
           totalSelectedLinks={_size(selectedLinks)}
         />
       )}
-      {renderLoader && renderLoader()}
+      {renderLoader &&
+        renderLoader({
+          showLoader: lastFeedOperation !== DELETE_LINK_OPERATION,
+        })}
       <div
         className={classes.scrollContainer}
         ref={listScrollRef}
