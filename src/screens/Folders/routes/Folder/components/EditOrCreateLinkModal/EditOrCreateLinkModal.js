@@ -26,11 +26,13 @@ const EditOrCreateLink = (props) => {
     linkId,
     updateLink,
     folders,
+    defaultLinkStatus,
   } = props;
 
   const dynamicFormFields = getDynamicFormFields({
     formFields,
     data: {
+      isCompleted: defaultLinkStatus,
       ...linkDetails,
       options: folders,
       folderId,
@@ -90,7 +92,7 @@ const EnhancedEditOrCreateLink = compose(
 )(EditOrCreateLink);
 
 const EditOrCreateLinkModal = (props) => {
-  const { closeModal, folderId, linkId } = props;
+  const { closeModal, folderId, linkId, defaultLinkStatus } = props;
 
   return (
     <Modal onClickOutside={closeModal}>
@@ -99,6 +101,7 @@ const EditOrCreateLinkModal = (props) => {
           closeModal={closeModal}
           folderId={folderId}
           linkId={linkId}
+          defaultLinkStatus={defaultLinkStatus}
         />
       </div>
     </Modal>
