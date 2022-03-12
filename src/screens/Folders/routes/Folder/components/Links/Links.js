@@ -96,7 +96,7 @@ const Links = (props) => {
 
   useEffect(() => {
     listScrollRef.current && scrollToBottom(listScrollRef.current);
-  }, [folderId]);
+  }, [folderId, isCompleted]);
 
   useEffect(() => {
     previousTotalPresentLinksRef.current = totalPresentLinks;
