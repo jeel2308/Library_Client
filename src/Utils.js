@@ -98,6 +98,10 @@ const checkScrollAtLeft = (container) => {
   return container.scrollLeft === 0;
 };
 
+const scrollToBottom = (container) => {
+  container.scrollTop = container.scrollHeight - container.clientHeight;
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -112,4 +116,5 @@ export {
   checkScrollAtTop,
   checkScrollAtLeft,
   checkScrollAtRight,
+  scrollToBottom,
 };
