@@ -1,6 +1,6 @@
 /**--external-- */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
@@ -31,13 +31,15 @@ const Resources = (props) => {
   const [showEditOrCreateFolderModal, setShowEditOrCreateFolderModal] =
     useState(false);
 
+  const params = useParams();
+
   const [showDeleteWarningModal, setShowDeleteWarningModal] = useState(false);
 
   const [folderId, setFolderId] = useState(null);
 
-  const [selectedFolderId, setSelectedFolderId] = useState(
-    () => folders[0]?.id
-  );
+  const [selectedFolderId, setSelectedFolderId] = useState(() => {
+    return params.folderId ? params.folderId : folders[0]?.id;
+  });
 
   const navigate = useNavigate();
 
