@@ -21,7 +21,7 @@ const withPagination = (configurations) => (WrappedComponent) => {
     const showLoader = networkStatus === 3;
     const { direction, loaderContainerStyle } = configurations;
 
-    const onPageScroll = async (e, callback) => {
+    const onPageScroll = (e, callback) => {
       const { target } = e;
       let isScrollCriteriaMet;
       switch (direction) {
@@ -44,7 +44,7 @@ const withPagination = (configurations) => (WrappedComponent) => {
       }
 
       if (hasNextPage && !showLoader && isScrollCriteriaMet) {
-        await fetchMore();
+        fetchMore();
         if (!!callback) {
           callback();
         }
