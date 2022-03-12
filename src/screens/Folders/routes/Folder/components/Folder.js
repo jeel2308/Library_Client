@@ -32,6 +32,8 @@ const Folder = (props) => {
   const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
   const folderId = _get(folderBasicDetails, 'id', '');
 
+  const isCompleted = linkStatus !== 'PENDING';
+
   return (
     <div className={classes.container}>
       <div className={classes.header}>
@@ -46,10 +48,14 @@ const Folder = (props) => {
         <AddButton onClick={openModal} />
       </div>
 
-      <Links folderId={folderId} isCompleted={linkStatus !== 'PENDING'} />
+      <Links folderId={folderId} isCompleted={isCompleted} />
 
       {showEditOrCreateLinkModal && (
-        <EditOrCreateLinkModal closeModal={closeModal} folderId={folderId} />
+        <EditOrCreateLinkModal
+          closeModal={closeModal}
+          folderId={folderId}
+          defaultLinkStatus={isCompleted}
+        />
       )}
     </div>
   );

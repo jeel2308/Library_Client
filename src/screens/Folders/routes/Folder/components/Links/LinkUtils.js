@@ -27,6 +27,10 @@ export const LINK_ACTIONS = [
   },
 ];
 
+export const FETCH_MORE_LINKS_OPERATION = 'FETCH_MORE_LINKS_OPERATION';
+
+export const DELETE_LINK_OPERATION = 'DELETE_LINK_OPERATION';
+
 export const getLinkActions = (data) => {
   return _filter(LINK_ACTIONS, (link) => {
     const { getVisibilityStatus } = link;

@@ -22,7 +22,11 @@ import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
-import { getLinkActions } from './LinkUtils';
+import {
+  getLinkActions,
+  FETCH_MORE_LINKS_OPERATION,
+  DELETE_LINK_OPERATION,
+} from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
@@ -51,6 +55,8 @@ const Links = (props) => {
 
   const [showFolderList, setShowFolderList] = useState(false);
 
+  const [lastFeedOperation, setLastFeedOperation] = useState(null);
+
   const listScrollRef = useRef();
 
   const linksNodeRefs = useRef([]);
@@ -72,7 +78,7 @@ const Links = (props) => {
 
   useEffect(() => {
     if (
-      totalPresentLinks <= previousTotalPresentLinksRef.current ||
+      lastFeedOperation !== FETCH_MORE_LINKS_OPERATION ||
       previousFolderId.current !== folderId
     ) {
       return;
@@ -144,6 +150,7 @@ const Links = (props) => {
         break;
       }
       case 'DELETE': {
+        setLastFeedOperation(DELETE_LINK_OPERATION);
         await deleteLink({ linkIds: [linkId], isCompleted, folderId });
         if (hasNextPage) {
           fetchMore({ first: 1 });
@@ -177,8 +184,10 @@ const Links = (props) => {
   const handleBulkSelectionActions = async ({ type }) => {
     switch (type) {
       case 'DELETE': {
+        setLastFeedOperation(DELETE_LINK_OPERATION);
         await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
         disableBulkSelectionMode();
+
         if (hasNextPage) {
           fetchMore({ first: _size(selectedLinks) });
         }
@@ -216,6 +225,7 @@ const Links = (props) => {
       return filteredLinks;
     });
   };
+
   const renderLinks = () => {
     if (_isEmpty(links)) {
       return 'No links';
@@ -257,6 +267,13 @@ const Links = (props) => {
     });
   };
 
+  const onScroll = (e) => {
+    const fetchMoreCallback = () =>
+      setLastFeedOperation(FETCH_MORE_LINKS_OPERATION);
+
+    onPageScroll && onPageScroll(e, fetchMoreCallback);
+  };
+
   return (
     <div className={classes.container}>
       {showBulkSelection && (
@@ -277,7 +294,7 @@ const Links = (props) => {
       <div
         className={classes.scrollContainer}
         ref={listScrollRef}
-        onScroll={onPageScroll ? onPageScroll : () => {}}
+        onScroll={onScroll}
       >
         <div className={classes.listContainer}>
           {renderLinks()}
