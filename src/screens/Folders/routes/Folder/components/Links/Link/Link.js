@@ -1,5 +1,5 @@
 /**--external-- */
-import React from 'react';
+import React, { useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 import { Heading, Text } from '@chakra-ui/react';
@@ -13,6 +13,13 @@ import { dotsStyle } from './LinkStyles';
 
 const Metadata = (props) => {
   const { title, description, thumbnail } = props;
+
+  const [showThumbnail, setShowThumbnail] = useState(() => !!thumbnail);
+
+  const onImageLoadError = () => {
+    setShowThumbnail(false);
+  };
+
   return (
     <div className={classes.linkMetadataContainer}>
       {title && (
@@ -25,9 +32,9 @@ const Metadata = (props) => {
           {description}
         </Text>
       )}
-      {thumbnail && (
+      {showThumbnail && (
         <figure className={classes.thumbnail}>
-          <img src={thumbnail} alt={title} />
+          <img src={thumbnail} alt={title} onError={onImageLoadError} />
         </figure>
       )}
     </div>
