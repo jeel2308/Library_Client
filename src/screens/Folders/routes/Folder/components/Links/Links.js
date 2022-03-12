@@ -333,7 +333,7 @@ export default compose(
   withQuery(getFolderDetailsQuery, {
     name: 'getFolderDetails',
     displayName: 'getFolderDetails',
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
     getVariables: ({ folderId, isCompleted }) => {
       return {
         input: { id: folderId, type: 'FOLDER' },
