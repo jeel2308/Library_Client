@@ -19,42 +19,34 @@ const withPagination = (configurations) => (WrappedComponent) => {
     const { networkStatus, fetchMore, hasNextPage } = props;
 
     const showLoader = networkStatus === 3;
-    const {
-      direction,
-      loaderContainerStyle,
-      throttleTime = 300,
-    } = configurations;
+    const { direction, loaderContainerStyle } = configurations;
 
-    const onPageScroll = useMemo(
-      () =>
-        _throttle((e) => {
-          const { target } = e;
-          let isScrollCriteriaMet;
-          switch (direction) {
-            case 'LEFT': {
-              isScrollCriteriaMet = checkScrollAtLeft(target);
-              break;
-            }
-            case 'RIGHT': {
-              isScrollCriteriaMet = checkScrollAtRight(target);
-              break;
-            }
-            case 'TOP': {
-              isScrollCriteriaMet = checkScrollAtTop(target);
-              break;
-            }
-            case 'BOTTOM': {
-              isScrollCriteriaMet = checkScrollAtBottom(target);
-              break;
-            }
-          }
+    const onPageScroll = (e) => {
+      const { target } = e;
+      let isScrollCriteriaMet;
+      switch (direction) {
+        case 'LEFT': {
+          isScrollCriteriaMet = checkScrollAtLeft(target);
+          break;
+        }
+        case 'RIGHT': {
+          isScrollCriteriaMet = checkScrollAtRight(target);
+          break;
+        }
+        case 'TOP': {
+          isScrollCriteriaMet = checkScrollAtTop(target);
+          break;
+        }
+        case 'BOTTOM': {
+          isScrollCriteriaMet = checkScrollAtBottom(target);
+          break;
+        }
+      }
 
-          if (hasNextPage && !showLoader && isScrollCriteriaMet) {
-            fetchMore();
-          }
-        }, throttleTime),
-      [hasNextPage]
-    );
+      if (hasNextPage && !showLoader && isScrollCriteriaMet) {
+        fetchMore();
+      }
+    };
 
     const renderLoader = () => {
       return showLoader ? (
