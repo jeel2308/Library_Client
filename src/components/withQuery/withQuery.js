@@ -34,6 +34,11 @@ const withQuery = (query, configuration) => (WrappedComponent) => {
       skip,
       variables,
       updateQuery,
+      /**
+       * This is required to detect different network status.
+       * Specially, network status 3 won't be detected without it
+       */
+      notifyOnNetworkStatusChange: true,
     });
 
     const { error } = queryObject;
