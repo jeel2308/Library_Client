@@ -4,6 +4,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _map from 'lodash/map';
 import _includes from 'lodash/includes';
 import _filter from 'lodash/filter';
+import _size from 'lodash/size';
 import { getFolderDetailsQuery, getUserFoldersQuery } from './Queries';
 import { folderFragments, linkFragments } from './Fragments';
 export const getUserFoldersFromCache = ({
@@ -79,17 +80,24 @@ export const getFolderBasicDetailsFromCache = ({ folderId }) => {
   return fragmentData;
 };
 
-export const getFolderDetailsFromCache = ({ folderId, linkFilters }) => {
+export const getFolderDetailsFromCache = ({
+  folderId,
+  linkFilters,
+  showOptimistic = false,
+}) => {
   let queryData;
 
   try {
-    queryData = client.readQuery({
-      query: getFolderDetailsQuery,
-      variables: {
-        input: { id: folderId, type: 'FOLDER' },
-        ...(linkFilters ? { linkFilterInputV2: linkFilters } : {}),
+    queryData = client.readQuery(
+      {
+        query: getFolderDetailsQuery,
+        variables: {
+          input: { id: folderId, type: 'FOLDER' },
+          ...(linkFilters ? { linkFilterInputV2: linkFilters } : {}),
+        },
       },
-    });
+      showOptimistic
+    );
   } catch (e) {
     console.error(e);
   }
@@ -102,7 +110,7 @@ export const writeFolderDetailsToCache = ({ folderId, linkFilters, data }) => {
       query: getFolderDetailsQuery,
       variables: {
         input: { id: folderId, type: 'FOLDER' },
-        ...(linkFilters ? { linkFilterInput: linkFilters } : {}),
+        ...(linkFilters ? { linkFilterInputV2: linkFilters } : {}),
       },
       data: { node: data },
     });
@@ -121,9 +129,20 @@ export const addLinkInCache = ({ folderId, linkFilters, linkData }) => {
     return;
   }
 
-  const { links } = oldFolderDetails;
-  const updatedLinks = [...links, linkData];
-  const updatedFolderDetails = { ...oldFolderDetails, links: updatedLinks };
+  const { linksV2 } = oldFolderDetails;
+  const { edges, totalCount } = linksV2;
+
+  const updatedEdges = [{ node: linkData }, ...edges];
+  const updatedTotalCount = totalCount + 1;
+
+  const updatedLinksV2 = {
+    ...linksV2,
+    edges: updatedEdges,
+    totalCount: updatedTotalCount,
+  };
+
+  const updatedFolderDetails = { ...oldFolderDetails, linksV2: updatedLinksV2 };
+
   writeFolderDetailsToCache({
     folderId,
     linkFilters,
@@ -155,10 +174,22 @@ export const deleteLinkFromCache = ({ folderId, linkFilters, linkIds }) => {
     return;
   }
 
-  const { links } = oldFolderDetails;
-  const updatedLinks = _filter(links, ({ id }) => !_includes(linkIds, id));
+  const { linksV2 } = oldFolderDetails;
+  const { edges, totalCount } = linksV2;
 
-  const updatedFolderDetails = { ...oldFolderDetails, links: updatedLinks };
+  const updatedEdges = _filter(
+    edges,
+    ({ node: { id } }) => !_includes(linkIds, id)
+  );
+  const updatedTotalCount = totalCount - _size(linkIds);
+
+  const updatedLinksV2 = {
+    ...linksV2,
+    edges: updatedEdges,
+    totalCount: updatedTotalCount,
+  };
+
+  const updatedFolderDetails = { ...oldFolderDetails, linksV2: updatedLinksV2 };
   writeFolderDetailsToCache({
     folderId,
     linkFilters,

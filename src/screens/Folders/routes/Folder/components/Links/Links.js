@@ -38,6 +38,8 @@ const Links = (props) => {
     onPageScroll,
     renderLoader,
     networkStatus,
+    hasNextPage,
+    fetchMore,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -135,14 +137,17 @@ const Links = (props) => {
     closeFolderList();
   };
 
-  const handleActions = ({ value, linkId }) => {
+  const handleActions = async ({ value, linkId }) => {
     switch (value) {
       case 'EDIT': {
         openEditLinkModal({ linkId });
         break;
       }
       case 'DELETE': {
-        deleteLink({ linkIds: [linkId], isCompleted, folderId });
+        await deleteLink({ linkIds: [linkId], isCompleted, folderId });
+        if (hasNextPage) {
+          fetchMore({ first: 1 });
+        }
         break;
       }
 
@@ -169,11 +174,14 @@ const Links = (props) => {
     }
   };
 
-  const handleBulkSelectionActions = ({ type }) => {
+  const handleBulkSelectionActions = async ({ type }) => {
     switch (type) {
       case 'DELETE': {
-        deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
+        await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
         disableBulkSelectionMode();
+        if (hasNextPage) {
+          fetchMore({ first: _size(selectedLinks) });
+        }
         break;
       }
       case 'CANCEL': {
@@ -325,6 +333,7 @@ export default compose(
       const folderDetails = getFolderDetailsFromCache({
         folderId,
         linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE },
+        showOptimistic: true,
       });
 
       const isData = !_isEmpty(folderDetails);
@@ -333,7 +342,7 @@ export default compose(
       const pageInfo = _get(folderDetails, 'linksV2.pageInfo', {});
       const { endCursor, hasNextPage } = pageInfo;
 
-      const fetchMore = async ({ first = 3 } = {}) => {
+      const fetchMore = async ({ first = DEFAULT_PAGE_SIZE } = {}) => {
         return await getFolderDetails.fetchMore({
           //BUG: setting query option will not update network status while refetching
           variables: {
@@ -343,7 +352,7 @@ export default compose(
             },
             linkFilterInputV2: { isCompleted, first, after: endCursor },
           },
-          updateQuery: (previousFeed, { fetchMoreResult, ...rest }) => {
+          updateQuery: (previousFeed, { fetchMoreResult }) => {
             const { node: oldNode } = previousFeed;
             const { node: newNode } = fetchMoreResult;
 

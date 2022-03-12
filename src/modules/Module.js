@@ -5,6 +5,8 @@ import _uniqueId from 'lodash/uniqueId';
 import _map from 'lodash/map';
 import _find from 'lodash/find';
 import _filter from 'lodash/filter';
+import _pipe from 'lodash/flow';
+
 import { setUserInfoInStorage } from '../Utils';
 import {
   updateUserFoldersInCache,
@@ -142,7 +144,7 @@ export const addLinkBasicDetails = ({ url, isCompleted, folderId }) => {
         ) => {
           addLinkInCache({
             folderId,
-            linkFilters: { isCompleted },
+            linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE },
             linkData: addLink,
           });
         },
@@ -215,10 +217,14 @@ export const addLink = ({ url, isCompleted, folderId }) => {
 
     const folderDetails = getFolderDetailsFromCache({
       folderId,
-      linkFilters: { isCompleted },
+      linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE },
     });
 
-    const { links } = folderDetails;
+    const links = _pipe(
+      (data) => _get(data, 'linksV2.edges', []),
+      (data) => _map(data, ({ node }) => node)
+    )(folderDetails);
+
     const { id } = _find(links, ({ url: linkUrl }) => url === linkUrl);
     dispatch(updateLinksMetadata({ linksDetails: [{ url, id }] }));
   };
@@ -262,7 +268,7 @@ export const deleteLink = ({ isCompleted, folderId, linkIds }) => {
         update: () => {
           deleteLinkFromCache({
             folderId,
-            linkFilters: { isCompleted },
+            linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE },
             linkIds,
           });
         },
