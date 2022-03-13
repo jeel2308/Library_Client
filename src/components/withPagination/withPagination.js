@@ -51,7 +51,7 @@ const withPagination = (configurations) => (WrappedComponent) => {
       }
     };
 
-    const renderLoader = ({ showLoader: showLoadingIcon = true }) => {
+    const renderLoader = ({ showLoader: showLoadingIcon = true } = {}) => {
       return (
         showLoader &&
         showLoadingIcon && (
@@ -71,11 +71,18 @@ const withPagination = (configurations) => (WrappedComponent) => {
       );
     };
 
+    const fetchMoreFeed = (params) => {
+      if (hasNextPage && !showLoader) {
+        fetchMore(params);
+      }
+    };
+
     return (
       <WrappedComponent
         {...props}
         renderLoader={renderLoader}
         onPageScroll={onPageScroll}
+        fetchMoreFeed={fetchMoreFeed}
       />
     );
   };
