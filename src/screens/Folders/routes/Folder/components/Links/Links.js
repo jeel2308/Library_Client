@@ -41,9 +41,7 @@ const Links = (props) => {
     updateLink,
     onPageScroll,
     renderLoader,
-    networkStatus,
-    hasNextPage,
-    fetchMore,
+    fetchMoreFeed,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -55,7 +53,7 @@ const Links = (props) => {
 
   const [showFolderList, setShowFolderList] = useState(false);
 
-  const [lastFeedOperation, setLastFeedOperation] = useState(null);
+  const [feedOperation, setFeedOperation] = useState(null);
 
   const listScrollRef = useRef();
 
@@ -78,7 +76,7 @@ const Links = (props) => {
 
   useEffect(() => {
     if (
-      lastFeedOperation !== FETCH_MORE_LINKS_OPERATION ||
+      feedOperation !== FETCH_MORE_LINKS_OPERATION ||
       previousFolderId.current !== folderId
     ) {
       return;
@@ -100,7 +98,7 @@ const Links = (props) => {
 
   useEffect(() => {
     previousTotalPresentLinksRef.current = totalPresentLinks;
-  }, [totalPresentLinks, networkStatus]);
+  }, [totalPresentLinks]);
 
   useEffect(() => {
     disableBulkSelectionMode();
@@ -136,11 +134,21 @@ const Links = (props) => {
     disableBulkSelectionMode();
   }, []);
 
-  const onUpdateFolder = ({ folderId }) => {
-    updateLink({
-      linksDetails: _map(selectedLinks, (id) => ({ id, folderId })),
+  const onUpdateFolder = async ({ folderId: updatedFolderId }) => {
+    await updateLink({
+      linksDetails: _map(selectedLinks, (id) => ({
+        id,
+        folderId: updatedFolderId,
+      })),
+      oldStatus: isCompleted,
+      oldFolderId: folderId,
     });
+
     closeFolderList();
+
+    if (_size(links) <= DEFAULT_PAGE_SIZE) {
+      fetchMoreFeed();
+    }
   };
 
   const handleActions = async ({ value, linkId }) => {
@@ -149,31 +157,44 @@ const Links = (props) => {
         openEditLinkModal({ linkId });
         break;
       }
+
       case 'DELETE': {
-        setLastFeedOperation(DELETE_LINK_OPERATION);
+        setFeedOperation(DELETE_LINK_OPERATION);
         await deleteLink({ linkIds: [linkId], isCompleted, folderId });
-        if (hasNextPage) {
-          fetchMore({ first: 1 });
+
+        if (_size(links) <= DEFAULT_PAGE_SIZE) {
+          fetchMoreFeed();
         }
+
         break;
       }
 
       case 'MARK_AS_PENDING':
       case 'MARK_AS_COMPLETE': {
-        updateLink({
+        await updateLink({
           linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
+          oldStatus: isCompleted,
+          oldFolderId: folderId,
         });
+
+        if (_size(links) <= DEFAULT_PAGE_SIZE) {
+          fetchMoreFeed();
+        }
+
         break;
       }
+
       case 'SELECT': {
         enableBulkSelectionMode({ linkId });
         break;
       }
+
       case 'MOVE': {
         setShowFolderList(true);
         setSelectedLinks([linkId]);
         break;
       }
+
       case 'COPY': {
         const { url } = _find(links, ({ id }) => id == linkId);
         copyToClipboard({ text: url });
@@ -184,12 +205,14 @@ const Links = (props) => {
   const handleBulkSelectionActions = async ({ type }) => {
     switch (type) {
       case 'DELETE': {
-        setLastFeedOperation(DELETE_LINK_OPERATION);
+        setFeedOperation(DELETE_LINK_OPERATION);
+
         await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
+
         disableBulkSelectionMode();
 
-        if (hasNextPage) {
-          fetchMore({ first: _size(selectedLinks) });
+        if (_size(links) <= DEFAULT_PAGE_SIZE) {
+          fetchMoreFeed();
         }
         break;
       }
@@ -198,13 +221,21 @@ const Links = (props) => {
         break;
       }
       case 'UPDATE_STATUS': {
-        updateLink({
+        await updateLink({
           linksDetails: _map(selectedLinks, (id) => ({
             id,
             isCompleted: !isCompleted,
           })),
+          oldStatus: isCompleted,
+          oldFolderId: folderId,
         });
+
         disableBulkSelectionMode();
+
+        if (_size(links) <= DEFAULT_PAGE_SIZE) {
+          fetchMoreFeed();
+        }
+
         break;
       }
       case 'MOVE': {
@@ -269,9 +300,26 @@ const Links = (props) => {
 
   const onScroll = (e) => {
     const fetchMoreCallback = () =>
-      setLastFeedOperation(FETCH_MORE_LINKS_OPERATION);
+      setFeedOperation(FETCH_MORE_LINKS_OPERATION);
 
     onPageScroll && onPageScroll(e, fetchMoreCallback);
+  };
+
+  const linkAddedOrUpdatedCallback = ({
+    isCompleted: updatedStatus,
+    folderId: updatedFolderId,
+  }) => {
+    const isLinkStatusUpdated =
+      updatedStatus != null && updatedStatus != undefined;
+
+    const isFolderUpdated =
+      updatedFolderId != null && updatedFolderId != undefined;
+
+    if (isLinkStatusUpdated || isFolderUpdated) {
+      if (_size(links) <= DEFAULT_PAGE_SIZE) {
+        fetchMoreFeed();
+      }
+    }
   };
 
   return (
@@ -290,10 +338,7 @@ const Links = (props) => {
           totalSelectedLinks={_size(selectedLinks)}
         />
       )}
-      {renderLoader &&
-        renderLoader({
-          showLoader: lastFeedOperation !== DELETE_LINK_OPERATION,
-        })}
+      {renderLoader && renderLoader()}
       <div
         className={classes.scrollContainer}
         ref={listScrollRef}
@@ -307,6 +352,7 @@ const Links = (props) => {
               linkId={selectedLinks?.[0] ?? ''}
               closeModal={closeEditLinkModal}
               folderId={folderId}
+              linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
             />
           )}
           {showFolderList && (
