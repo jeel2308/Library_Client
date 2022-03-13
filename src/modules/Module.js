@@ -163,16 +163,42 @@ export const addLinkBasicDetails = ({ url, isCompleted, folderId }) => {
   };
 };
 
-export const updateLinkBasicDetails = ({ linksDetails }) => {
+export const updateLinkBasicDetails = ({
+  linksDetails,
+  oldStatus,
+  oldFolderId,
+}) => {
   return async (dispatch) => {
+    const linksToBeRemovedFromCurrentFolder = _pipe(
+      (data) => {
+        return _filter(data, (link) => {
+          const { isCompleted, folderId } = link;
+          const isStatusFilterPresent =
+            isCompleted != null && isCompleted != undefined;
+
+          const isFolderPresent = folderId != null && folderId != undefined;
+
+          return isStatusFilterPresent || isFolderPresent;
+        });
+      },
+      (data) => _map(data, ({ id }) => id)
+    )(linksDetails);
+
     try {
       await client.mutate({
         mutation: updateLinkMutation,
         variables: {
           input: linksDetails,
         },
-        refetchQueries: ['getFolderDetails'],
-        awaitRefetchQueries: true,
+        update: () => {
+          if (!_isEmpty(linksToBeRemovedFromCurrentFolder)) {
+            deleteLinkFromCache({
+              folderId: oldFolderId,
+              linkFilters: { isCompleted: oldStatus, first: DEFAULT_PAGE_SIZE },
+              linkIds: linksToBeRemovedFromCurrentFolder,
+            });
+          }
+        },
       });
     } catch (e) {
       console.error(e);
@@ -230,12 +256,14 @@ export const addLink = ({ url, isCompleted, folderId }) => {
   };
 };
 
-export const updateLink = ({ linksDetails }) => {
+export const updateLink = ({ linksDetails, oldStatus, oldFolderId }) => {
   return async (dispatch) => {
     const linksWithNewUrl = _filter(linksDetails, ({ url }) => !!url);
 
     dispatch(setLoaderVisibility(true));
-    await dispatch(updateLinkBasicDetails({ linksDetails }));
+    await dispatch(
+      updateLinkBasicDetails({ linksDetails, oldStatus, oldFolderId })
+    );
     dispatch(setLoaderVisibility(false));
 
     if (!_isEmpty(linksWithNewUrl)) {
