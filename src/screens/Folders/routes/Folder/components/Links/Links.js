@@ -15,7 +15,12 @@ import _reverse from 'lodash/reverse';
 /**--internal-- */
 import { withQuery, withPagination } from '#components';
 import { deleteLink, updateLink, DEFAULT_PAGE_SIZE } from '#modules/Module';
-import { compose, copyToClipboard, scrollToBottom } from '#Utils';
+import {
+  compose,
+  copyToClipboard,
+  scrollToBottom,
+  getFieldPresenceStatus,
+} from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
 
@@ -309,11 +314,9 @@ const Links = (props) => {
     isCompleted: updatedStatus,
     folderId: updatedFolderId,
   }) => {
-    const isLinkStatusUpdated =
-      updatedStatus != null && updatedStatus != undefined;
+    const isLinkStatusUpdated = getFieldPresenceStatus(updatedStatus);
 
-    const isFolderUpdated =
-      updatedFolderId != null && updatedFolderId != undefined;
+    const isFolderUpdated = getFieldPresenceStatus(updatedFolderId);
 
     if (isLinkStatusUpdated || isFolderUpdated) {
       if (_size(links) <= DEFAULT_PAGE_SIZE) {

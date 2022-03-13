@@ -7,7 +7,7 @@ import _find from 'lodash/find';
 import _filter from 'lodash/filter';
 import _pipe from 'lodash/flow';
 
-import { setUserInfoInStorage } from '../Utils';
+import { setUserInfoInStorage, getFieldPresenceStatus } from '../Utils';
 import {
   updateUserFoldersInCache,
   addLinkInCache,
@@ -173,10 +173,9 @@ export const updateLinkBasicDetails = ({
       (data) => {
         return _filter(data, (link) => {
           const { isCompleted, folderId } = link;
-          const isStatusFilterPresent =
-            isCompleted != null && isCompleted != undefined;
+          const isStatusFilterPresent = getFieldPresenceStatus(isCompleted);
 
-          const isFolderPresent = folderId != null && folderId != undefined;
+          const isFolderPresent = getFieldPresenceStatus(folderId);
 
           return isStatusFilterPresent || isFolderPresent;
         });

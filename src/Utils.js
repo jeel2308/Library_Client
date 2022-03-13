@@ -102,6 +102,10 @@ const scrollToBottom = (container) => {
   container.scrollTop = container.scrollHeight - container.clientHeight;
 };
 
+const getFieldPresenceStatus = (field) => {
+  return field != null && field != undefined;
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -117,4 +121,5 @@ export {
   checkScrollAtLeft,
   checkScrollAtRight,
   scrollToBottom,
+  getFieldPresenceStatus,
 };
