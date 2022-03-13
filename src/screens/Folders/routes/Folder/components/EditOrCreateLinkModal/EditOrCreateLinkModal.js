@@ -27,6 +27,7 @@ const EditOrCreateLink = (props) => {
     updateLink,
     folders,
     defaultLinkStatus,
+    linkAddedOrUpdatedCallback,
   } = props;
 
   const dynamicFormFields = getDynamicFormFields({
@@ -39,19 +40,54 @@ const EditOrCreateLink = (props) => {
     },
   });
 
-  const getUpdatedLinkData = ({ link, isCompleted, folderId }) => {
-    const linkData = { folderId, isCompleted, id: linkId };
+  const getUpdatedLinkData = ({
+    link,
+    isCompleted: updatedStatus,
+    folderId: updatedFolderId,
+  }) => {
+    const linkData = { id: linkId };
+
     const isLinkUrlUpdated = link !== linkDetails.url;
-    return isLinkUrlUpdated ? { ...linkData, url: link } : linkData;
+    const isLinkStatusUpdated = updatedStatus !== linkDetails.isCompleted;
+    const isFolderUpdated = updatedFolderId !== folderId;
+
+    if (isLinkUrlUpdated) {
+      linkData.url = link;
+    }
+
+    if (isLinkStatusUpdated) {
+      linkData.isCompleted = updatedStatus;
+    }
+
+    if (isFolderUpdated) {
+      linkData.folderId = updatedFolderId;
+    }
+
+    return linkData;
   };
 
-  const onSubmit = ({ link, isCompleted = false, folderId }) => {
+  const onSubmit = async ({
+    link,
+    isCompleted = false,
+    folderId: updatedFolderId,
+  }) => {
     if (mode === 'CREATE') {
-      addLink({ url: link, isCompleted, folderId });
+      await addLink({ url: link, isCompleted, folderId });
     } else {
-      updateLink({
-        linksDetails: [getUpdatedLinkData({ link, isCompleted, folderId })],
+      const updatedLinkDetails = getUpdatedLinkData({
+        link,
+        isCompleted,
+        folderId: updatedFolderId,
       });
+
+      await updateLink({
+        linksDetails: [updatedLinkDetails],
+        oldStatus: linkDetails.isCompleted,
+        oldFolderId: folderId,
+      });
+
+      linkAddedOrUpdatedCallback &&
+        linkAddedOrUpdatedCallback(updatedLinkDetails);
     }
 
     closeModal();
@@ -92,7 +128,13 @@ const EnhancedEditOrCreateLink = compose(
 )(EditOrCreateLink);
 
 const EditOrCreateLinkModal = (props) => {
-  const { closeModal, folderId, linkId, defaultLinkStatus } = props;
+  const {
+    closeModal,
+    folderId,
+    linkId,
+    defaultLinkStatus,
+    linkAddedOrUpdatedCallback,
+  } = props;
 
   return (
     <Modal onClickOutside={closeModal}>
@@ -102,6 +144,7 @@ const EditOrCreateLinkModal = (props) => {
           folderId={folderId}
           linkId={linkId}
           defaultLinkStatus={defaultLinkStatus}
+          linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
         />
       </div>
     </Modal>
