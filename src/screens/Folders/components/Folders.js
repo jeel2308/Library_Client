@@ -4,7 +4,7 @@ import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _find from 'lodash/find';
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, Button } from '@chakra-ui/react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
@@ -100,13 +100,19 @@ const Resources = (props) => {
     }
   };
 
+  const onAvatarClick = () => {
+    navigate('/profile');
+  };
+
   const { name } = userBasicDetails;
 
   return (
     <div className={classes.container}>
       <div className={classes.leftContainer}>
         <div className={classes.header}>
-          <Avatar name={name} size="sm" />
+          <Button variant="link" onClick={onAvatarClick}>
+            <Avatar name={name} size="sm" />
+          </Button>
           <Dropdown
             variant="unstyled"
             options={USER_ACTIONS}
