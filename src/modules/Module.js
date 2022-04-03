@@ -356,7 +356,8 @@ export const deleteLink = ({ isCompleted, folderId, linkIds }) => {
 export const updateUser = ({ input }) => {
   return async (dispatch, getState) => {
     try {
-      const newUserDetails = await client.mutate({
+      dispatch(setLoaderVisibility(true));
+      const response = await client.mutate({
         mutation: updateUserMutation,
         variables: { input },
       });
@@ -369,9 +370,18 @@ export const updateUser = ({ input }) => {
         })
       );
 
+      const newUserDetails = _get(
+        response,
+        'data.userManagement.updateUser',
+        {}
+      );
       const userDetails = getState().userDetails;
 
-      dispatch(setUserDetails({ ...userDetails, ...newUserDetails }));
+      const updatedUserDetails = { ...userDetails, ...newUserDetails };
+
+      dispatch(setUserDetails(updatedUserDetails));
+
+      setUserInfoInStorage({ userInfo: updatedUserDetails });
     } catch (e) {
       dispatch(
         setToastMessage({
@@ -382,6 +392,8 @@ export const updateUser = ({ input }) => {
         })
       );
       throw e;
+    } finally {
+      dispatch(setLoaderVisibility(false));
     }
   };
 };
