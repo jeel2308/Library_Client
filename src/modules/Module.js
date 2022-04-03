@@ -22,6 +22,7 @@ import {
   updateLinkMutation,
   deleteLinkMutation,
   updateLinksMetadataMutation,
+  updateUserMutation,
 } from './Mutations';
 
 export const DEFAULT_PAGE_SIZE = 9;
@@ -348,6 +349,39 @@ export const deleteLink = ({ isCompleted, folderId, linkIds }) => {
           position: 'bottom-left',
         })
       );
+    }
+  };
+};
+
+export const updateUser = ({ input }) => {
+  return async (dispatch, getState) => {
+    try {
+      const newUserDetails = await client.mutate({
+        mutation: updateUserMutation,
+        variables: { input },
+      });
+      dispatch(
+        setToastMessage({
+          title: 'User details updated successfully',
+          status: 'success',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+
+      const userDetails = getState().userDetails;
+
+      dispatch(setUserDetails({ ...userDetails, ...newUserDetails }));
+    } catch (e) {
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+      throw e;
     }
   };
 };

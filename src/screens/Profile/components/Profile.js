@@ -7,6 +7,9 @@ import { Button, Avatar, Input, Text, ButtonGroup } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 import { get as _get } from 'lodash';
 
+/**--internal-- */
+import { updateUser } from '#modules/Module';
+
 /**--relative-- */
 import classes from './Profile.module.scss';
 import { backIconStyle } from './ProfileStyles';
@@ -18,7 +21,7 @@ const EDIT_MODE = 'EDIT';
 const Profile = (props) => {
   const [mode, setMode] = useState(VIEW_MODE);
 
-  const { name, email } = props;
+  const { name, email, updateUser, id } = props;
 
   const [nameLocal, setNameLocal] = useState(null);
 
@@ -43,8 +46,14 @@ const Profile = (props) => {
     setMode(VIEW_MODE);
   };
 
-  const onSaveClick = () => {
+  const onSaveClick = async () => {
     setMode(VIEW_MODE);
+    try {
+      await updateUser({ input: { name: nameLocal, email: emailLocal, id } });
+      setMode(VIEW_MODE);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const onNameChange = (e) => {
@@ -119,9 +128,15 @@ const Profile = (props) => {
 
 const mapStateToProps = (state) => {
   const userDetails = _get(state, 'userDetails', {});
-  return { name: userDetails.name, email: userDetails.email };
+  return {
+    name: userDetails.name,
+    email: userDetails.email,
+    id: userDetails.id,
+  };
 };
 
-export default connect(mapStateToProps)(Profile);
+const mapActionCreators = { updateUser };
+
+export default connect(mapStateToProps, mapActionCreators)(Profile);
 
 Profile.displayName = 'Profile';

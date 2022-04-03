@@ -40,3 +40,13 @@ export const folderFragments = {
     ${linkFragments.linkDetails}
   `,
 };
+
+export const userFragments = {
+  userBasicDetails: gql`
+    fragment userBasicDetailsItem on User {
+      id
+      name
+      email
+    }
+  `,
+};
