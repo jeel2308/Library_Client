@@ -44,6 +44,8 @@ const Profile = (props) => {
 
   const onCancelClick = () => {
     setMode(VIEW_MODE);
+    setEmailLocal(email);
+    setNameLocal(name);
   };
 
   const onSaveClick = async () => {
