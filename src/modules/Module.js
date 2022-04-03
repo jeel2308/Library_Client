@@ -153,7 +153,7 @@ export const addLinkBasicDetails = ({ url, isCompleted, folderId }) => {
       dispatch(
         setToastMessage({
           title: 'Added link successfully',
-          status: 'error',
+          status: 'success',
           isClosable: true,
           position: 'bottom-left',
         })
