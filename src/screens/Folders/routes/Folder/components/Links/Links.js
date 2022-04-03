@@ -34,8 +34,8 @@ import { getLinkActions, DELETE_LINK_OPERATION } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
-import { loaderStyle } from './LinksStyles';
-
+import DeleteLinkModal from './DeleteLinkModal';
+import _ from 'lodash';
 const Links = (props) => {
   const {
     folderDetails,
@@ -59,6 +59,8 @@ const Links = (props) => {
   const [showBulkSelection, setShowBulkSelection] = useState(false);
 
   const [showFolderList, setShowFolderList] = useState(false);
+
+  const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
 
   const listScrollRef = useRef();
 
@@ -144,6 +146,27 @@ const Links = (props) => {
     disableBulkSelectionMode();
   }, []);
 
+  const toggleDeleteLinkModalVisibility = useCallback(() => {
+    setDeleteLinkModalVisibility((prev) => !prev);
+  }, []);
+
+  const onDeleteLinks = async () => {
+    toggleDeleteLinkModalVisibility();
+    disableBulkSelectionMode();
+    setLinkOperation(DELETE_LINK_OPERATION);
+
+    await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
+
+    if (_size(links) <= DEFAULT_PAGE_SIZE) {
+      fetchMoreFeed();
+    }
+  };
+
+  const onCancelLinkDelete = () => {
+    toggleDeleteLinkModalVisibility();
+    setSelectedLinks([]);
+  };
+
   const onUpdateFolder = async ({ folderId: updatedFolderId }) => {
     await updateLink({
       linksDetails: _map(selectedLinks, (id) => ({
@@ -169,12 +192,9 @@ const Links = (props) => {
       }
 
       case 'DELETE': {
-        setLinkOperation(DELETE_LINK_OPERATION);
-        await deleteLink({ linkIds: [linkId], isCompleted, folderId });
+        setSelectedLinks([linkId]);
 
-        if (_size(links) <= DEFAULT_PAGE_SIZE) {
-          fetchMoreFeed();
-        }
+        toggleDeleteLinkModalVisibility();
 
         break;
       }
@@ -220,15 +240,8 @@ const Links = (props) => {
   const handleBulkSelectionActions = async ({ type }) => {
     switch (type) {
       case 'DELETE': {
-        setLinkOperation(DELETE_LINK_OPERATION);
+        toggleDeleteLinkModalVisibility();
 
-        await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
-
-        disableBulkSelectionMode();
-
-        if (_size(links) <= DEFAULT_PAGE_SIZE) {
-          fetchMoreFeed();
-        }
         break;
       }
       case 'CANCEL': {
@@ -419,6 +432,13 @@ const Links = (props) => {
               closeModal={closeFolderList}
               currentFolderId={folderId}
               onUpdateFolder={onUpdateFolder}
+            />
+          )}
+          {showDeleteLinkModal && (
+            <DeleteLinkModal
+              totalLinks={_.size(selectedLinks)}
+              onCancelClick={onCancelLinkDelete}
+              onDeleteClick={onDeleteLinks}
             />
           )}
         </div>
