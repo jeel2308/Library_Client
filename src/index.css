@@ -16,6 +16,6 @@ code {
   box-sizing: border-box;
 }
 
-* {
-  /* scroll-behavior: smooth; */
+html {
+  overflow-y: hidden;
 }

@@ -56,23 +56,17 @@ const Link = (props) => {
     description,
     id,
     onLinkMetadataLoaded,
+    onLinkClick,
   } = props;
 
   const handleActions = ({ value }) => {
     props.handleActions({ value, linkId: id });
   };
 
-  const onClick = (e) => {
-    if (e.defaultPrevented) {
-      return;
-    }
-    window.open(url, '_blank');
-  };
-
   const showMetadata = title || thumbnail || description;
 
   return (
-    <div className={classes.container} onClick={onClick}>
+    <div className={classes.container} onClick={onLinkClick}>
       <div className={classes.firstRow}>
         <Text className={classes.link}>{url}</Text>
 

@@ -347,6 +347,16 @@ const Links = (props) => {
         setLinkOperation(null);
       };
 
+      const onLinkClick = (e) => {
+        if (e.defaultPrevented) {
+          return;
+        } else if (showBulkSelection) {
+          updateSelectedLinks({ id });
+        } else {
+          window.open(link.url, '_blank');
+        }
+      };
+
       return (
         <div
           className={classes.linkOption}
@@ -368,6 +378,7 @@ const Links = (props) => {
               dropDownOptions={linkActions}
               handleActions={handleActions}
               onLinkMetadataLoaded={onLinkMetadataLoaded}
+              onLinkClick={onLinkClick}
             />
           </div>
         </div>
