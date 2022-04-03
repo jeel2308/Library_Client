@@ -16,6 +16,7 @@ import {
   NoMatch,
   Home,
   ProtectedRoute,
+  profileRoutes,
 } from './screens';
 function App(props) {
   const { showLoader, setUserDetails, updateUserLoggedInStatus } = props;
@@ -46,7 +47,7 @@ function App(props) {
     },
     {
       element: <ProtectedRoute />,
-      children: [foldersRoutes],
+      children: [foldersRoutes, profileRoutes],
     },
     authenticationRoutes,
     {
