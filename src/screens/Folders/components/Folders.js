@@ -4,22 +4,25 @@ import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _find from 'lodash/find';
+import { Avatar } from '@chakra-ui/react';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
+import { IconContext } from 'react-icons';
 
 /**--internal-- */
-import { compose, getMatchingResults } from '#Utils';
-import { Sidebar } from '#components';
+import { compose, getMatchingResults, clearStorage } from '#Utils';
+import { Sidebar, Dropdown } from '#components';
 import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
 
 /**--relative-- */
 import classes from './Folders.module.scss';
-import AddButton from './AddButton';
 import Search from './Search';
 import EditOrCreateFolderModal from './EditOrCreateFolderModal';
 import DeleteWarningModal from './DeleteWarningModal';
-import { loadingContainerStyle } from './FoldersStyles';
+import { loadingContainerStyle, dotsStyle } from './FoldersStyles';
+import { USER_ACTIONS } from './FoldersUtils';
 
 const Resources = (props) => {
-  const { folders } = props;
+  const { folders, userBasicDetails } = props;
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -80,13 +83,40 @@ const Resources = (props) => {
     }
   };
 
+  const handleUserActions = ({ value }) => {
+    switch (value) {
+      case 'CREATE': {
+        setShowEditOrCreateFolderModal(true);
+        break;
+      }
+      case 'LOGOUT': {
+        clearStorage();
+        window.location.href = '/';
+        break;
+      }
+      default: {
+        return;
+      }
+    }
+  };
+
+  const { name } = userBasicDetails;
+
   return (
     <div className={classes.container}>
       <div className={classes.leftContainer}>
         <div className={classes.header}>
-          <AddButton
-            tooltipLabel="Create folder"
-            onClick={() => setShowEditOrCreateFolderModal(true)}
+          <Avatar name={name} size="sm" />
+          <Dropdown
+            variant="unstyled"
+            options={USER_ACTIONS}
+            dropdownButtonType="icon"
+            handleActions={handleUserActions}
+            icon={
+              <IconContext.Provider value={dotsStyle}>
+                <BiDotsVerticalRounded />
+              </IconContext.Provider>
+            }
           />
         </div>
         <div className={classes.searchContainer}>

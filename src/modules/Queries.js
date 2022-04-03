@@ -9,6 +9,7 @@ export const getUserFoldersQuery = gql`
     node(input: $input) {
       ... on User {
         id
+        name
         folders {
           ...folderBasicDetailsItem
         }

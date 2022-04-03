@@ -1,7 +1,6 @@
 /**--external-- */
 import _isEmpty from 'lodash/isEmpty';
 import _includes from 'lodash/includes';
-import _pipe from 'lodash/flow';
 import _get from 'lodash/get';
 import _map from 'lodash/map';
 
@@ -23,12 +22,13 @@ export const getUserFoldersEnhancer = (customConfigurations) => {
 
       const isLoading = _includes([1, 2], networkStatus);
 
-      const folderList = _pipe([
-        (data) => _get(data, 'node.folders', []),
-        (data) => _map(data, ({ id, name }) => ({ id, label: name })),
-      ])(data);
+      const { folders, name } = _get(data, 'node', {});
 
-      return { folders: folderList, isData, isLoading };
+      const folderList = _map(folders, ({ id, name }) => ({ id, label: name }));
+
+      const userBasicDetails = { name };
+
+      return { folders: folderList, isData, isLoading, userBasicDetails };
     },
     ...(customConfigurations ? customConfigurations : {}),
   });

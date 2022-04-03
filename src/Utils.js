@@ -29,7 +29,7 @@ const getToken = () => {
 };
 
 const clearStorage = () => {
-  setUserInfoInStorage({ userInfo: {} });
+  localStorage.clear();
 };
 
 //for POC only, use compose util from Apollo
