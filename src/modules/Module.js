@@ -1,7 +1,7 @@
 import client from '../apolloClient';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
-import _uniqueId from 'lodash/uniqueId';
+import _size from 'lodash/size';
 import _map from 'lodash/map';
 import _find from 'lodash/find';
 import _filter from 'lodash/filter';
@@ -149,6 +149,15 @@ export const addLinkBasicDetails = ({ url, isCompleted, folderId }) => {
           });
         },
       });
+
+      dispatch(
+        setToastMessage({
+          title: 'Added link successfully',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } catch (e) {
       console.error(e);
       dispatch(
@@ -169,7 +178,7 @@ export const updateLinkBasicDetails = ({
   oldFolderId,
 }) => {
   return async (dispatch) => {
-    const linksToBeRemovedFromCurrentFolder = _pipe(
+    const linksToBeRemovedFromCurrentFeed = _pipe(
       (data) => {
         return _filter(data, (link) => {
           const { isCompleted, folderId } = link;
@@ -183,6 +192,10 @@ export const updateLinkBasicDetails = ({
       (data) => _map(data, ({ id }) => id)
     )(linksDetails);
 
+    const areLinksMovedToAnotherFeed = !_isEmpty(
+      linksToBeRemovedFromCurrentFeed
+    );
+
     try {
       await client.mutate({
         mutation: updateLinkMutation,
@@ -190,15 +203,30 @@ export const updateLinkBasicDetails = ({
           input: linksDetails,
         },
         update: () => {
-          if (!_isEmpty(linksToBeRemovedFromCurrentFolder)) {
+          if (areLinksMovedToAnotherFeed) {
             deleteLinkFromCache({
               folderId: oldFolderId,
               linkFilters: { isCompleted: oldStatus, first: DEFAULT_PAGE_SIZE },
-              linkIds: linksToBeRemovedFromCurrentFolder,
+              linkIds: linksToBeRemovedFromCurrentFeed,
             });
           }
         },
       });
+
+      const toastMessage = areLinksMovedToAnotherFeed
+        ? _size(linksToBeRemovedFromCurrentFeed) > 1
+          ? 'Links moved successfully'
+          : 'Link moved successfully'
+        : 'Links updated successfully';
+
+      dispatch(
+        setToastMessage({
+          title: toastMessage,
+          status: 'success',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } catch (e) {
       console.error(e);
       dispatch(
@@ -300,6 +328,16 @@ export const deleteLink = ({ isCompleted, folderId, linkIds }) => {
           });
         },
       });
+      dispatch(
+        setToastMessage({
+          title: `Deleted ${
+            _size(linkIds) === 1 ? 'link' : 'links'
+          } successfully`,
+          status: 'success',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } catch (e) {
       console.error(e);
       dispatch(
