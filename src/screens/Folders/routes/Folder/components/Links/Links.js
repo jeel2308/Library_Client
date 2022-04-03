@@ -24,16 +24,12 @@ import {
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
-import { ADD_LINK, DELETE_LINK } from '../FolderUtils';
+import { ADD_LINK, DELETE_LINK, FETCH_MORE_LINK } from '../FolderUtils';
 
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
-import {
-  getLinkActions,
-  FETCH_MORE_LINKS_OPERATION,
-  DELETE_LINK_OPERATION,
-} from './LinkUtils';
+import { getLinkActions, DELETE_LINK_OPERATION } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
@@ -62,8 +58,6 @@ const Links = (props) => {
 
   const [showFolderList, setShowFolderList] = useState(false);
 
-  const [feedOperation, setFeedOperation] = useState(null);
-
   const listScrollRef = useRef();
 
   const linksNodeRefs = useRef([]);
@@ -84,22 +78,27 @@ const Links = (props) => {
   const previousTotalPresentLinksRef = useRef(_size(links));
 
   useEffect(() => {
-    if (
-      feedOperation !== FETCH_MORE_LINKS_OPERATION ||
-      previousFolderId.current !== folderId
-    ) {
+    if (previousFolderId.current !== folderId) {
       return;
     }
 
-    const addedLinksCount =
-      totalPresentLinks - previousTotalPresentLinksRef.current;
+    if (linkOperation === FETCH_MORE_LINK) {
+      const addedLinksCount =
+        totalPresentLinks - previousTotalPresentLinksRef.current;
 
-    const totalVerticalDistance =
-      linksNodeRefs.current?.[addedLinksCount]?.getBoundingClientRect().top ??
-      0;
+      if (!addedLinksCount) {
+        return;
+      }
 
-    listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
-  }, [totalPresentLinks, folderId]);
+      const totalVerticalDistance =
+        linksNodeRefs.current?.[addedLinksCount]?.getBoundingClientRect().top ??
+        0;
+
+      listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
+
+      setLinkOperation(null);
+    }
+  }, [totalPresentLinks, linkOperation, folderId]);
 
   useEffect(() => {
     listScrollRef.current && scrollToBottom(listScrollRef.current);
@@ -168,7 +167,7 @@ const Links = (props) => {
       }
 
       case 'DELETE': {
-        setFeedOperation(DELETE_LINK_OPERATION);
+        setLinkOperation(DELETE_LINK_OPERATION);
         await deleteLink({ linkIds: [linkId], isCompleted, folderId });
 
         if (_size(links) <= DEFAULT_PAGE_SIZE) {
@@ -219,7 +218,7 @@ const Links = (props) => {
   const handleBulkSelectionActions = async ({ type }) => {
     switch (type) {
       case 'DELETE': {
-        setFeedOperation(DELETE_LINK_OPERATION);
+        setLinkOperation(DELETE_LINK_OPERATION);
 
         await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
 
@@ -330,8 +329,7 @@ const Links = (props) => {
   };
 
   const onScroll = (e) => {
-    const fetchMoreCallback = () =>
-      setFeedOperation(FETCH_MORE_LINKS_OPERATION);
+    const fetchMoreCallback = () => setLinkOperation(FETCH_MORE_LINK);
 
     onPageScroll && onPageScroll(e, fetchMoreCallback);
   };
