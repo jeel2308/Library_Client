@@ -23,9 +23,9 @@ const Profile = (props) => {
 
   const { name, email, updateUser, id } = props;
 
-  const [nameLocal, setNameLocal] = useState(null);
+  const [nameLocal, setNameLocal] = useState('');
 
-  const [emailLocal, setEmailLocal] = useState(null);
+  const [emailLocal, setEmailLocal] = useState('');
 
   useEffect(() => {
     setNameLocal(name);
