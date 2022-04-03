@@ -43,7 +43,6 @@ const Links = (props) => {
     deleteLink,
     isCompleted,
     updateLink,
-    renderLoader,
     linkOperation,
     setLinkOperation,
     networkStatus,
@@ -107,6 +106,12 @@ const Links = (props) => {
   useEffect(() => {
     listScrollRef.current && scrollToBottom(listScrollRef.current);
   }, [folderId, isCompleted]);
+
+  useEffect(() => {
+    if (showBulkSelection) {
+      listScrollRef.current && scrollToBottom(listScrollRef.current);
+    }
+  }, [showBulkSelection]);
 
   useEffect(() => {
     previousTotalPresentLinksRef.current = totalPresentLinks;
