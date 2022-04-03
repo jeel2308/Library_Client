@@ -1,9 +1,9 @@
 /**--external-- */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiChevronLeft } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
-import { Button, Avatar, Input, Text } from '@chakra-ui/react';
+import { Button, Avatar, Input, Text, ButtonGroup } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 import { get as _get } from 'lodash';
 
@@ -11,13 +11,69 @@ import { get as _get } from 'lodash';
 import classes from './Profile.module.scss';
 import { backIconStyle } from './ProfileStyles';
 
+const VIEW_MODE = 'VIEW';
+
+const EDIT_MODE = 'EDIT';
+
 const Profile = (props) => {
-  const navigate = useNavigate();
+  const [mode, setMode] = useState(VIEW_MODE);
 
   const { name, email } = props;
 
+  const [nameLocal, setNameLocal] = useState(null);
+
+  const [emailLocal, setEmailLocal] = useState(null);
+
+  useEffect(() => {
+    setNameLocal(name);
+    setEmailLocal(email);
+  }, [name, email]);
+
+  const navigate = useNavigate();
+
   const onBackButtonClick = () => {
     navigate(-1);
+  };
+
+  const onEditClick = () => {
+    setMode(EDIT_MODE);
+  };
+
+  const onCancelClick = () => {
+    setMode(VIEW_MODE);
+  };
+
+  const onSaveClick = () => {
+    setMode(VIEW_MODE);
+  };
+
+  const onNameChange = (e) => {
+    setNameLocal(e.target.value);
+  };
+
+  const onEmailChange = (e) => {
+    setEmailLocal(e.target.value);
+  };
+
+  const renderActionButtonsElement = () => {
+    if (mode === VIEW_MODE) {
+      return (
+        <Button colorScheme="blue" onClick={onEditClick}>
+          Edit
+        </Button>
+      );
+    }
+
+    return (
+      <>
+        <Button variant={'outline'} colorScheme="blue" onClick={onCancelClick}>
+          Cancel
+        </Button>
+        <Button colorScheme="blue" onClick={onSaveClick}>
+          Save
+        </Button>
+      </>
+    );
   };
 
   return (
@@ -29,20 +85,31 @@ const Profile = (props) => {
           </IconContext.Provider>
           Back
         </Button>
-        <Button variant="outline" colorScheme="blue">
-          Edit
-        </Button>
+        <ButtonGroup spacing={'3'}>{renderActionButtonsElement()}</ButtonGroup>
       </header>
+
       <main className={classes.userDetailsContainer}>
-        <Avatar name={name} size="2xl" />
+        <Avatar name={nameLocal} size="2xl" />
         <div className={classes.userDetails}>
           <div className={classes.userDetailsItem}>
             <Text mb="3">Name</Text>
-            <Input value={name} disabled borderColor="black" color="black" />
+            <Input
+              value={nameLocal}
+              disabled={mode === VIEW_MODE}
+              borderColor="black"
+              color="black"
+              onChange={onNameChange}
+            />
           </div>
           <div className={classes.userDetailsItem}>
             <Text mb="3">Email</Text>
-            <Input value={email} disabled borderColor="black" color="black" />
+            <Input
+              value={emailLocal}
+              disabled={mode === VIEW_MODE}
+              borderColor="black"
+              color="black"
+              onChange={onEmailChange}
+            />
           </div>
         </div>
       </main>
