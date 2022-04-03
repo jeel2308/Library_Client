@@ -1,8 +1,8 @@
-export const searchIconStyle = { size: '20', color: 'white' };
+export const searchIconStyle = { size: '22', color: 'white' };
 
 export const inputLeftElementStyle = {
   height: 'auto',
-  marginTop: '4px',
+  marginTop: '8px',
 };
 
 export const inputStyle = {
@@ -11,4 +11,5 @@ export const inputStyle = {
 
 export const inputGroupStyle = {
   backgroundColor: '#2b313c',
+  borderRadius: '8px',
 };

@@ -3,11 +3,6 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
-import _get from 'lodash/get';
-import _map from 'lodash/map';
-import _pipe from 'lodash/flow';
-import _filter from 'lodash/filter';
-import _includes from 'lodash/includes';
 import _find from 'lodash/find';
 
 /**--internal-- */
@@ -79,6 +74,9 @@ const Resources = (props) => {
         setShowDeleteWarningModal(true);
         break;
       }
+      default: {
+        return;
+      }
     }
   };
 
@@ -86,11 +84,13 @@ const Resources = (props) => {
     <div className={classes.container}>
       <div className={classes.leftContainer}>
         <div className={classes.header}>
-          <Search value={searchValue} onChange={setSearchValue} />
           <AddButton
             tooltipLabel="Create folder"
             onClick={() => setShowEditOrCreateFolderModal(true)}
           />
+        </div>
+        <div className={classes.searchContainer}>
+          <Search value={searchValue} onChange={setSearchValue} />
         </div>
         <div className={classes.sidebarContainer}>
           {!_isEmpty(matchingFolders) ? (

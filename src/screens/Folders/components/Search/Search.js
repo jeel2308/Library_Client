@@ -14,14 +14,14 @@ import {
 const Search = (props) => {
   const { value, onChange } = props;
   return (
-    <InputGroup style={inputGroupStyle}>
+    <InputGroup style={inputGroupStyle} padding={1} size="md">
       <InputLeftElement style={inputLeftElementStyle}>
         <IconContext.Provider value={searchIconStyle}>
           <BiSearch />
         </IconContext.Provider>
       </InputLeftElement>
       <Input
-        placeholder="search"
+        placeholder="Search"
         value={value}
         variant="unstyled"
         onChange={(e) => onChange(e.target.value)}
