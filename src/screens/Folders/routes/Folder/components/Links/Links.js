@@ -5,7 +5,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _includes from 'lodash/includes';
 import _map from 'lodash/map';
-import { Checkbox } from '@chakra-ui/react';
+import { Checkbox, Spinner } from '@chakra-ui/react';
 import _filter from 'lodash/filter';
 import _find from 'lodash/find';
 import _size from 'lodash/size';
@@ -13,7 +13,7 @@ import _pipe from 'lodash/flow';
 import _reverse from 'lodash/reverse';
 
 /**--internal-- */
-import { withQuery, withPagination } from '#components';
+import { withQuery } from '#components';
 import { deleteLink, updateLink, DEFAULT_PAGE_SIZE } from '#modules/Module';
 import {
   compose,
@@ -21,10 +21,11 @@ import {
   scrollToBottom,
   getFieldPresenceStatus,
   combineClasses,
+  checkScrollAtTop,
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
-import { ADD_LINK, DELETE_LINK, FETCH_MORE_LINK } from '../FolderUtils';
+import { ADD_LINK, FETCH_MORE_LINK } from '../FolderUtils';
 
 /**--relative-- */
 import classes from './Links.module.scss';
@@ -42,11 +43,12 @@ const Links = (props) => {
     deleteLink,
     isCompleted,
     updateLink,
-    onPageScroll,
     renderLoader,
-    fetchMoreFeed,
     linkOperation,
     setLinkOperation,
+    networkStatus,
+    hasNextPage,
+    fetchMore,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -277,6 +279,38 @@ const Links = (props) => {
 
   const totalLinks = _size(links);
 
+  const isPaginationQueryRunning = networkStatus === 3;
+
+  const fetchMoreFeed = () => {
+    if (!isPaginationQueryRunning && hasNextPage) {
+      fetchMore();
+    }
+  };
+
+  const onScroll = (e) => {
+    const isContainerAtTop = checkScrollAtTop(e.target);
+
+    if (isContainerAtTop && hasNextPage && !isPaginationQueryRunning) {
+      fetchMore();
+      setLinkOperation(FETCH_MORE_LINK);
+    }
+  };
+
+  const linkAddedOrUpdatedCallback = ({
+    isCompleted: updatedStatus,
+    folderId: updatedFolderId,
+  }) => {
+    const isLinkStatusUpdated = getFieldPresenceStatus(updatedStatus);
+
+    const isFolderUpdated = getFieldPresenceStatus(updatedFolderId);
+
+    if (isLinkStatusUpdated || isFolderUpdated) {
+      if (_size(links) <= DEFAULT_PAGE_SIZE) {
+        fetchMoreFeed();
+      }
+    }
+  };
+
   const renderLinks = () => {
     if (_isEmpty(links)) {
       return 'No links';
@@ -328,25 +362,18 @@ const Links = (props) => {
     });
   };
 
-  const onScroll = (e) => {
-    const fetchMoreCallback = () => setLinkOperation(FETCH_MORE_LINK);
-
-    onPageScroll && onPageScroll(e, fetchMoreCallback);
-  };
-
-  const linkAddedOrUpdatedCallback = ({
-    isCompleted: updatedStatus,
-    folderId: updatedFolderId,
-  }) => {
-    const isLinkStatusUpdated = getFieldPresenceStatus(updatedStatus);
-
-    const isFolderUpdated = getFieldPresenceStatus(updatedFolderId);
-
-    if (isLinkStatusUpdated || isFolderUpdated) {
-      if (_size(links) <= DEFAULT_PAGE_SIZE) {
-        fetchMoreFeed();
-      }
-    }
+  const renderPaginationLoader = () => {
+    return isPaginationQueryRunning ? (
+      <div className={classes.spinnerContainer}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </div>
+    ) : null;
   };
 
   const scrollContainerClasses = combineClasses(classes.scrollContainer, {
@@ -369,7 +396,7 @@ const Links = (props) => {
           totalSelectedLinks={_size(selectedLinks)}
         />
       )}
-      {renderLoader && renderLoader()}
+      {renderPaginationLoader()}
       <div
         className={scrollContainerClasses}
         ref={listScrollRef}
@@ -487,6 +514,5 @@ export default compose(
         fetchMore,
       };
     },
-  }),
-  withPagination({ direction: 'TOP', loaderContainerStyle: loaderStyle })
+  })
 )(Links);

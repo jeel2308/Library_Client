@@ -6,7 +6,6 @@ import ToastMessage from './ToastMessage';
 import withQuery from './withQuery';
 import withTooltip from './withTooltip';
 import withRouter from './withRouter';
-import withPagination from './withPagination';
 import Sidebar from './Sidebar';
 import SegmentControl from './SegmentControl';
 import Dropdown from './Dropdown';
@@ -20,7 +19,6 @@ export {
   withQuery,
   withTooltip,
   withRouter,
-  withPagination,
   Sidebar,
   SegmentControl,
   Dropdown,
