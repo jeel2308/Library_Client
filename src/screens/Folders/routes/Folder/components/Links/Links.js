@@ -20,9 +20,11 @@ import {
   copyToClipboard,
   scrollToBottom,
   getFieldPresenceStatus,
+  combineClasses,
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
+import { ADD_LINK, DELETE_LINK } from '../FolderUtils';
 
 /**--relative-- */
 import classes from './Links.module.scss';
@@ -47,6 +49,8 @@ const Links = (props) => {
     onPageScroll,
     renderLoader,
     fetchMoreFeed,
+    linkOperation,
+    setLinkOperation,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -203,6 +207,11 @@ const Links = (props) => {
       case 'COPY': {
         const { url } = _find(links, ({ id }) => id == linkId);
         copyToClipboard({ text: url });
+        break;
+      }
+
+      default: {
+        return;
       }
     }
   };
@@ -245,6 +254,11 @@ const Links = (props) => {
       }
       case 'MOVE': {
         setShowFolderList(true);
+        break;
+      }
+
+      default: {
+        return;
       }
     }
   };
@@ -262,6 +276,8 @@ const Links = (props) => {
     });
   };
 
+  const totalLinks = _size(links);
+
   const renderLinks = () => {
     if (_isEmpty(links)) {
       return 'No links';
@@ -274,6 +290,15 @@ const Links = (props) => {
       const onChange = (e) => {
         e.stopPropagation();
         updateSelectedLinks({ id });
+      };
+
+      const onLinkMetadataLoaded = () => {
+        if (linkOperation !== ADD_LINK || index !== totalLinks - 1) {
+          return;
+        }
+
+        scrollToBottom(listScrollRef.current);
+        setLinkOperation(null);
       };
 
       return (
@@ -296,6 +321,7 @@ const Links = (props) => {
               {...link}
               dropDownOptions={linkActions}
               handleActions={handleActions}
+              onLinkMetadataLoaded={onLinkMetadataLoaded}
             />
           </div>
         </div>
@@ -325,6 +351,10 @@ const Links = (props) => {
     }
   };
 
+  const scrollContainerClasses = combineClasses(classes.scrollContainer, {
+    [classes.scrollContainerWithSmoothScrolling]: linkOperation === ADD_LINK,
+  });
+
   return (
     <div className={classes.container}>
       {showBulkSelection && (
@@ -343,7 +373,7 @@ const Links = (props) => {
       )}
       {renderLoader && renderLoader()}
       <div
-        className={classes.scrollContainer}
+        className={scrollContainerClasses}
         ref={listScrollRef}
         onScroll={onScroll}
       >

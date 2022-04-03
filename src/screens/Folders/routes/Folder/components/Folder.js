@@ -12,6 +12,7 @@ import classes from './Folder.module.scss';
 import AddButton from './AddButton';
 import EditOrCreateLinkModal from './EditOrCreateLinkModal';
 import Links from './Links';
+import { ADD_LINK } from './FolderUtils';
 
 const segmentControlOptions = [
   { label: 'Pending', value: 'PENDING' },
@@ -25,6 +26,8 @@ const Folder = (props) => {
   const [showEditOrCreateLinkModal, setShowEditOrCreateLinkModal] =
     useState(false);
 
+  const [linkOperation, setLinkOperation] = useState(null);
+
   const closeModal = useCallback(() => setShowEditOrCreateLinkModal(false), []);
   const openModal = useCallback(() => setShowEditOrCreateLinkModal(true), []);
 
@@ -33,6 +36,10 @@ const Folder = (props) => {
   const folderId = _get(folderBasicDetails, 'id', '');
 
   const isCompleted = linkStatus !== 'PENDING';
+
+  const linkAddedOrUpdatedCallback = () => {
+    setLinkOperation(ADD_LINK);
+  };
 
   return (
     <div className={classes.container}>
@@ -48,13 +55,19 @@ const Folder = (props) => {
         <AddButton onClick={openModal} />
       </div>
 
-      <Links folderId={folderId} isCompleted={isCompleted} />
+      <Links
+        folderId={folderId}
+        isCompleted={isCompleted}
+        linkOperation={linkOperation}
+        setLinkOperation={setLinkOperation}
+      />
 
       {showEditOrCreateLinkModal && (
         <EditOrCreateLinkModal
           closeModal={closeModal}
           folderId={folderId}
           defaultLinkStatus={isCompleted}
+          linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
         />
       )}
     </div>

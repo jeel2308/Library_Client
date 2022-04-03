@@ -72,7 +72,12 @@ const EditOrCreateLink = (props) => {
     folderId: updatedFolderId,
   }) => {
     if (mode === 'CREATE') {
-      await addLink({ url: link, isCompleted, folderId });
+      const createLinkPayload = { url: link, isCompleted, folderId };
+
+      await addLink(createLinkPayload);
+
+      linkAddedOrUpdatedCallback &&
+        linkAddedOrUpdatedCallback(createLinkPayload);
     } else {
       const updatedLinkDetails = getUpdatedLinkData({
         link,
