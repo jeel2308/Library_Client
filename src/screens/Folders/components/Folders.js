@@ -142,9 +142,11 @@ const Resources = (props) => {
             }
           />
         </div>
-        <div className={classes.searchContainer}>
-          <Search value={searchValue} onChange={setSearchValue} />
-        </div>
+        {!_isEmpty(folders) && (
+          <div className={classes.searchContainer}>
+            <Search value={searchValue} onChange={setSearchValue} />
+          </div>
+        )}
         <div className={classes.sidebarContainer}>
           {!_isEmpty(matchingFolders) ? (
             <Sidebar
@@ -155,9 +157,7 @@ const Resources = (props) => {
             />
           ) : !_isEmpty(searchValue) ? (
             <div className={classes.noMatchText}>{'No match found'}</div>
-          ) : (
-            <div className={classes.noMatchText}>{'No folders created'}</div>
-          )}
+          ) : null}
         </div>
       </div>
       <Outlet context={selectedFolder} />
