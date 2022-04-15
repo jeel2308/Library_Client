@@ -14,12 +14,18 @@ const SegmentControl = (props) => {
       {_map(options, (option, index) => {
         const { label, value } = option;
 
+        const backgroundColor = value === activeValue ? 'purple.500' : 'white';
+
+        const color = value === activeValue ? 'white' : 'black';
+
         return (
           <Button
             isFullWidth
             key={value}
-            colorScheme={value === activeValue ? 'purple' : 'gray'}
             onClick={() => onOptionClick(option)}
+            color={color}
+            backgroundColor={backgroundColor}
+            _hover={{ backgroundColor }}
           >
             {label}
           </Button>
