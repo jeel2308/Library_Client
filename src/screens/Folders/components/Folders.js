@@ -35,9 +35,7 @@ const Resources = (props) => {
 
   const [folderId, setFolderId] = useState(null);
 
-  const [selectedFolderId, setSelectedFolderId] = useState(() => {
-    return params.folderId ? params.folderId : folders[0]?.id;
-  });
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -46,6 +44,11 @@ const Resources = (props) => {
       navigate(`${selectedFolderId}`);
     }
   }, [selectedFolderId]);
+
+  useEffect(() => {
+    const folderId = params.folderId ? params.folderId : folders[0]?.id;
+    setSelectedFolderId(folderId);
+  }, [folders]);
 
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
