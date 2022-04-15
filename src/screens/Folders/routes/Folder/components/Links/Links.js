@@ -411,20 +411,6 @@ const Links = (props) => {
 
   return (
     <div className={classes.container}>
-      {showBulkSelection && (
-        <Actions
-          onCancelClick={() => handleBulkSelectionActions({ type: 'CANCEL' })}
-          onDeleteClick={() => handleBulkSelectionActions({ type: 'DELETE' })}
-          onMoveClick={() => handleBulkSelectionActions({ type: 'MOVE' })}
-          onUpdateStatusClick={() =>
-            handleBulkSelectionActions({ type: 'UPDATE_STATUS' })
-          }
-          statusButtonLabel={
-            isCompleted ? 'Mark as pending' : 'Mark as completed'
-          }
-          totalSelectedLinks={_size(selectedLinks)}
-        />
-      )}
       {renderPaginationLoader()}
       <div
         className={scrollContainerClasses}
@@ -459,6 +445,20 @@ const Links = (props) => {
           )}
         </div>
       </div>
+      {showBulkSelection && (
+        <Actions
+          onCancelClick={() => handleBulkSelectionActions({ type: 'CANCEL' })}
+          onDeleteClick={() => handleBulkSelectionActions({ type: 'DELETE' })}
+          onMoveClick={() => handleBulkSelectionActions({ type: 'MOVE' })}
+          onUpdateStatusClick={() =>
+            handleBulkSelectionActions({ type: 'UPDATE_STATUS' })
+          }
+          statusButtonLabel={
+            isCompleted ? 'Mark as pending' : 'Mark as completed'
+          }
+          totalSelectedLinks={_size(selectedLinks)}
+        />
+      )}
     </div>
   );
 };
