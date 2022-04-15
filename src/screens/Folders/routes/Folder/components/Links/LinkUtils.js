@@ -22,7 +22,7 @@ export const LINK_ACTIONS = [
     value: 'MOVE',
   },
   {
-    label: 'Copy',
+    label: 'Copy url',
     value: 'COPY',
   },
 ];
