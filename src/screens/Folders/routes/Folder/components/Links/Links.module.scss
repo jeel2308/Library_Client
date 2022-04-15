@@ -29,12 +29,13 @@
   display: flex;
   gap: 20px;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .linkContainer {
   display: flex;
   gap: 20px;
-  max-width: 720px;
+  max-width: 50%;
 }
 
 .spinnerContainer {
