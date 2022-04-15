@@ -1,10 +1,10 @@
 import Component from './components';
-import { folderRoutes } from './routes';
+import { folderRoutes, noFolderRoutes } from './routes';
 
 const plainRoutes = {
   path: 'folders',
   element: <Component />,
-  children: [folderRoutes],
+  children: [folderRoutes, noFolderRoutes],
 };
 
 export default plainRoutes;
