@@ -42,7 +42,9 @@ const Resources = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(`${selectedFolderId}`);
+    if (selectedFolderId) {
+      navigate(`${selectedFolderId}`);
+    }
   }, [selectedFolderId]);
 
   const closeEditOrCreateFolderModal = useCallback(() => {
@@ -148,8 +150,10 @@ const Resources = (props) => {
               onClickOption={({ id }) => setSelectedFolderId(id)}
               handleAction={handleAction}
             />
-          ) : (
+          ) : !_isEmpty(searchValue) ? (
             <div className={classes.noMatchText}>{'No match found'}</div>
+          ) : (
+            <div className={classes.noMatchText}>{'No folders created'}</div>
           )}
         </div>
       </div>
