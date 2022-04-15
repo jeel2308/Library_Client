@@ -103,12 +103,6 @@ export const deleteFolder = ({ id }) => {
       await client.mutate({
         mutation: deleteFolderMutation,
         variables: { input: { id } },
-        optimisticResponse: {
-          folderManagement: {
-            deleteFolder: { id, __typename: 'Folder' },
-            __typename: 'FolderMutations',
-          },
-        },
         update: (_, { data }) => {
           const id = _get(data, 'folderManagement.deleteFolder.id', '');
           const removedFolders = [id];

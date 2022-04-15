@@ -19,7 +19,7 @@ import Search from './Search';
 import EditOrCreateFolderModal from './EditOrCreateFolderModal';
 import DeleteWarningModal from './DeleteWarningModal';
 import { loadingContainerStyle, dotsStyle } from './FoldersStyles';
-import { USER_ACTIONS } from './FoldersUtils';
+import { USER_ACTIONS, getNextAvailableFolderId } from './FoldersUtils';
 
 const Resources = (props) => {
   const { folders, userBasicDetails } = props;
@@ -54,6 +54,18 @@ const Resources = (props) => {
     setShowDeleteWarningModal(false);
     setFolderId(null);
   }, []);
+
+  const deleteFolderCallback = ({ folderId: deletedFolderId }) => {
+    if (deletedFolderId === selectedFolderId) {
+      const nextFolderId = getNextAvailableFolderId({ folderId, folders });
+
+      if (nextFolderId) {
+        setSelectedFolderId(nextFolderId);
+      } else {
+        navigate('../folders', { replace: true });
+      }
+    }
+  };
 
   const matchingFolders = getMatchingResults({
     list: folders,
@@ -152,6 +164,7 @@ const Resources = (props) => {
         <DeleteWarningModal
           closeModal={closeDeleteWarningModal}
           folderId={folderId}
+          deleteFolderCallback={deleteFolderCallback}
         />
       )}
     </div>

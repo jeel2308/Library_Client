@@ -11,11 +11,12 @@ import { deleteFolder } from '#modules/Module';
 import classes from './DeleteWarningModal.module.scss';
 
 const DeleteWarningModal = (props) => {
-  const { closeModal, deleteFolder, folderId } = props;
+  const { closeModal, deleteFolder, folderId, deleteFolderCallback } = props;
 
-  const onDeleteClick = () => {
-    deleteFolder({ id: folderId });
+  const onDeleteClick = async () => {
     closeModal();
+    await deleteFolder({ id: folderId });
+    deleteFolderCallback({ folderId });
   };
 
   return (
