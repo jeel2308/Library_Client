@@ -1,45 +1,32 @@
 /**--external-- */
 import React from 'react';
 import { Button } from '@chakra-ui/react';
+import _map from 'lodash/map';
 
 /**--relative-- */
 import classes from './Actions.module.scss';
 
 const Actions = (props) => {
-  const {
-    onCancelClick,
-    onDeleteClick,
-    totalSelectedLinks,
-    statusButtonLabel,
-    onUpdateStatusClick,
-    onMoveClick,
-  } = props;
+  const { allowedBulkActions, onActionClick } = props;
   return (
     <div className={classes.container}>
-      <Button variant="unstyled" onClick={onCancelClick} marginRight="auto">
-        Cancel
-      </Button>
-      <Button
-        colorScheme="blue"
-        disabled={!totalSelectedLinks}
-        onClick={onUpdateStatusClick}
-      >
-        {statusButtonLabel}
-      </Button>
-      <Button
-        colorScheme="blue"
-        disabled={!totalSelectedLinks}
-        onClick={onMoveClick}
-      >
-        Move
-      </Button>
-      <Button
-        colorScheme="red"
-        onClick={onDeleteClick}
-        disabled={!totalSelectedLinks}
-      >
-        Delete
-      </Button>
+      {_map(
+        allowedBulkActions,
+        ({ value, label, disabled = false, variant, colorScheme, style }) => {
+          return (
+            <Button
+              key={value}
+              disabled={disabled}
+              variant={variant}
+              colorScheme={colorScheme}
+              style={style}
+              onClick={() => onActionClick({ type: value })}
+            >
+              {label}
+            </Button>
+          );
+        }
+      )}
     </div>
   );
 };

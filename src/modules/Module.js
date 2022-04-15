@@ -13,6 +13,7 @@ import {
   addLinkInCache,
   deleteLinkFromCache,
   getFolderDetailsFromCache,
+  getUserFoldersFromCache,
 } from './GraphqlHelpers';
 import {
   addFolderMutation,
@@ -390,6 +391,12 @@ export const updateUser = ({ input }) => {
       dispatch(setLoaderVisibility(false));
     }
   };
+};
+
+export const getTotalFolders = ({ userId }) => {
+  const { folders } = getUserFoldersFromCache({ userId });
+
+  return _size(folders);
 };
 
 const origin = process.env.REACT_APP_SERVER_URL;

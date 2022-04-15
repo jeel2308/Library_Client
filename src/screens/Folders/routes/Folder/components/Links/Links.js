@@ -14,7 +14,12 @@ import _reverse from 'lodash/reverse';
 
 /**--internal-- */
 import { withQuery } from '#components';
-import { deleteLink, updateLink, DEFAULT_PAGE_SIZE } from '#modules/Module';
+import {
+  deleteLink,
+  updateLink,
+  DEFAULT_PAGE_SIZE,
+  getTotalFolders,
+} from '#modules/Module';
 import {
   compose,
   copyToClipboard,
@@ -30,7 +35,11 @@ import { ADD_LINK, FETCH_MORE_LINK } from '../FolderUtils';
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
-import { getLinkActions, DELETE_LINK_OPERATION } from './LinkUtils';
+import {
+  getLinkActions,
+  DELETE_LINK_OPERATION,
+  getBulkLinkActions,
+} from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
@@ -48,6 +57,7 @@ const Links = (props) => {
     networkStatus,
     hasNextPage,
     fetchMore,
+    showMoveAction,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -333,7 +343,7 @@ const Links = (props) => {
     if (_isEmpty(links)) {
       return 'No links';
     }
-    const linkActions = getLinkActions({ isCompleted });
+    const linkActions = getLinkActions({ isCompleted, showMoveAction });
     return _map(links, (link, index) => {
       const { id } = link;
       const isLinkSelected = _includes(selectedLinks, id);
@@ -405,6 +415,34 @@ const Links = (props) => {
     ) : null;
   };
 
+  const allowedBulkActions = [
+    {
+      key: 'CANCEL',
+      disabled: false,
+      variant: 'unstyled',
+      label: 'Cancel',
+      style: { marginRight: 'auto' },
+    },
+    {
+      key: 'UPDATE_STATUS',
+      disabled: !totalLinks,
+      colorScheme: 'blue',
+      label: isCompleted ? 'Mark as pending' : 'Mark as completed',
+    },
+    {
+      key: 'MOVE',
+      disabled: !totalLinks,
+      colorScheme: 'blue',
+      label: 'Move',
+    },
+    {
+      key: 'DELETE',
+      disabled: !totalLinks,
+      colorScheme: 'red',
+      label: 'Delete',
+    },
+  ];
+
   const scrollContainerClasses = combineClasses(classes.scrollContainer, {
     [classes.scrollContainerWithSmoothScrolling]: linkOperation === ADD_LINK,
   });
@@ -447,20 +485,26 @@ const Links = (props) => {
       </div>
       {showBulkSelection && (
         <Actions
-          onCancelClick={() => handleBulkSelectionActions({ type: 'CANCEL' })}
-          onDeleteClick={() => handleBulkSelectionActions({ type: 'DELETE' })}
-          onMoveClick={() => handleBulkSelectionActions({ type: 'MOVE' })}
-          onUpdateStatusClick={() =>
-            handleBulkSelectionActions({ type: 'UPDATE_STATUS' })
-          }
-          statusButtonLabel={
-            isCompleted ? 'Mark as pending' : 'Mark as completed'
-          }
-          totalSelectedLinks={_size(selectedLinks)}
+          allowedBulkActions={getBulkLinkActions({
+            isCompleted,
+            totalLinks,
+            showMoveAction,
+          })}
+          onActionClick={handleBulkSelectionActions}
         />
       )}
     </div>
   );
+};
+
+const mapStateToProps = (state) => {
+  const userId = _get(state, 'userDetails.id', null);
+
+  const totalFolders = getTotalFolders({ userId });
+
+  const showMoveAction = totalFolders > 1;
+
+  return { showMoveAction };
 };
 
 const mapActionCreators = {
@@ -469,7 +513,7 @@ const mapActionCreators = {
 };
 
 export default compose(
-  connect(null, mapActionCreators),
+  connect(mapStateToProps, mapActionCreators),
   withQuery(getFolderDetailsQuery, {
     name: 'getFolderDetails',
     displayName: 'getFolderDetails',
