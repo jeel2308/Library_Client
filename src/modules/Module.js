@@ -58,6 +58,15 @@ export const addFolder =
           });
         },
       });
+
+      dispatch(
+        setToastMessage({
+          title: `Created folder successfully`,
+          status: 'success',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } catch (e) {
       console.error(e);
       dispatch(
@@ -86,6 +95,15 @@ export const updateFolder = ({ name, id }) => {
           },
         },
       });
+
+      dispatch(
+        setToastMessage({
+          title: `Updated folder successfully`,
+          status: 'success',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } catch (e) {
       console.error(e);
       dispatch(
@@ -262,11 +280,7 @@ export const updateLinkBasicDetails = ({
         },
       });
 
-      const toastMessage = areLinksMovedToAnotherFeed
-        ? _size(linksToBeRemovedFromCurrentFeed) > 1
-          ? 'Links moved successfully'
-          : 'Link moved successfully'
-        : 'Links updated successfully';
+      const toastMessage = 'Links updated successfully';
 
       dispatch(
         setToastMessage({
