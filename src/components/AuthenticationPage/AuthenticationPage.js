@@ -41,11 +41,12 @@ const AuthenticationPage = (props) => {
     formFields,
     onSubmit,
     linkButtonHref,
+    footerElement,
   } = props;
 
   return (
     <div className={classes.container}>
-      <Heading as="h2" size="lg" mb="8">
+      <Heading as="h2" size="lg">
         {headingText}
       </Heading>
       <Form
@@ -59,6 +60,7 @@ const AuthenticationPage = (props) => {
           />
         }
       />
+      {footerElement}
     </div>
   );
 };
@@ -72,6 +74,11 @@ AuthenticationPage.propTypes = {
   formFields: PropTypes.array,
   onSubmit: PropTypes.func,
   linkButtonHref: PropTypes.string,
+  footerElement: PropTypes.element,
+};
+
+AuthenticationPage.defaultProps = {
+  footerElement: null,
 };
 
 AuthenticationPage.displayName = 'AuthenticationPage';
