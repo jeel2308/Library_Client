@@ -518,16 +518,20 @@ export default compose(
     name: 'getFolderDetails',
     displayName: 'getFolderDetails',
     fetchPolicy: 'cache-and-network',
-    getVariables: ({ folderId, isCompleted }) => {
+    getVariables: ({ folderId, isCompleted, searchText }) => {
       return {
         input: { id: folderId, type: 'FOLDER' },
-        linkFilterInputV2: { isCompleted, first: DEFAULT_PAGE_SIZE },
+        linkFilterInputV2: {
+          isCompleted,
+          first: DEFAULT_PAGE_SIZE,
+          searchText,
+        },
       };
     },
     getSkipQueryState: ({ folderId }) => !folderId,
     mapQueryDataToProps: ({
       getFolderDetails,
-      ownProps: { folderId, isCompleted },
+      ownProps: { folderId, isCompleted, searchText },
     }) => {
       const { networkStatus } = getFolderDetails;
 
@@ -536,7 +540,7 @@ export default compose(
        */
       const folderDetails = getFolderDetailsFromCache({
         folderId,
-        linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE },
+        linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE, searchText },
         showOptimistic: true,
       });
 

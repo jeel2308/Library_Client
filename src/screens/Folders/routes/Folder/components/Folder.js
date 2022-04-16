@@ -69,6 +69,8 @@ const Folder = (props) => {
         isCompleted={isCompleted}
         linkOperation={linkOperation}
         setLinkOperation={setLinkOperation}
+        searchText={searchText}
+        updateSearchText={setSearchText}
       />
 
       {showEditOrCreateLinkModal && (
