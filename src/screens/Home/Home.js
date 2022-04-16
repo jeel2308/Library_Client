@@ -33,22 +33,22 @@ const Home = () => {
         </ButtonGroup>
         <div className={classes.heroContainer}>
           <Heading as={TITLE_ELEMENT} size={TITLE_FONT_SIZE}>
-            One place to keep all online articles
+            One place to keep all links
           </Heading>
           <UnorderedList mt={'6'}>
             <ListItem>
               <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE}>
-                Manage articles easily
+                Manage links easily
               </Heading>
             </ListItem>
             <ListItem>
               <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE} mt={'2'}>
-                Group articles by subject
+                Group links by subject
               </Heading>
             </ListItem>
             <ListItem>
               <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE} mt={'2'}>
-                Track articles status
+                Track link status
               </Heading>
             </ListItem>
           </UnorderedList>

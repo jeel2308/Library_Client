@@ -26,7 +26,7 @@ const DeleteWarningModal = (props) => {
           Delete Folder
         </Heading>
         <Text mt={'4'}>
-          Are you sure you want to delete this folder?You will lose all articles
+          Are you sure you want to delete this folder?You will lose all links
           that belong to this folder
         </Text>
         <ButtonGroup mt={'10'} display={'flex'} justifyContent={'flex-end'}>
