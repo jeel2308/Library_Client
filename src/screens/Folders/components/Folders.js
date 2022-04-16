@@ -1,9 +1,16 @@
 /**--external-- */
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _find from 'lodash/find';
+import _size from 'lodash/size';
 import { Avatar, Button } from '@chakra-ui/react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
@@ -29,6 +36,10 @@ const Resources = (props) => {
   const [showEditOrCreateFolderModal, setShowEditOrCreateFolderModal] =
     useState(false);
 
+  const totalFolders = _size(folders);
+
+  const totalFoldersRef = useRef(totalFolders);
+
   const params = useParams();
 
   const [showDeleteWarningModal, setShowDeleteWarningModal] = useState(false);
@@ -45,10 +56,22 @@ const Resources = (props) => {
     }
   }, [selectedFolderId]);
 
+  /**
+   * This effect will update state on initial mound and
+   * when first folder is created
+   */
   useEffect(() => {
-    const folderId = params.folderId ? params.folderId : folders[0]?.id;
-    setSelectedFolderId(folderId);
-  }, [folders]);
+    if (!selectedFolderId) {
+      const folderId = params.folderId ? params.folderId : folders[0]?.id;
+      setSelectedFolderId(folderId);
+    } else if (totalFolders === 1 && totalFoldersRef.current === 0) {
+      setSelectedFolderId(folders[0].id);
+    }
+  }, [totalFolders]);
+
+  useEffect(() => {
+    totalFoldersRef.current = totalFolders;
+  }, [totalFolders]);
 
   const closeEditOrCreateFolderModal = useCallback(() => {
     setShowEditOrCreateFolderModal(false);
