@@ -57,7 +57,7 @@ const Dropdown = (props) => {
         {...getDropdownButtonProps()}
         variant={variant}
       />
-      <MenuList>
+      <MenuList zIndex="5">
         {_map(options, (option) => {
           const { label, value } = option;
           const onClick = (e) => {
