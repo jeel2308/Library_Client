@@ -58,6 +58,7 @@ const Links = (props) => {
     hasNextPage,
     fetchMore,
     showMoveAction,
+    searchText,
   } = props;
   const { linksV2 } = folderDetails;
 
@@ -115,7 +116,7 @@ const Links = (props) => {
 
   useEffect(() => {
     listScrollRef.current && scrollToBottom(listScrollRef.current);
-  }, [folderId, isCompleted]);
+  }, [folderId, isCompleted, searchText]);
 
   useEffect(() => {
     if (showBulkSelection) {

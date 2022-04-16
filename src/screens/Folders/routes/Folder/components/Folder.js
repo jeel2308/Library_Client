@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
 import _debounce from 'lodash/debounce';
@@ -44,6 +44,10 @@ const Folder = () => {
   const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
   const folderId = _get(folderBasicDetails, 'id', '');
 
+  useEffect(() => {
+    setSearchText('');
+  }, [folderId]);
+
   const isCompleted = linkStatus !== 'PENDING';
 
   const linkAddedOrUpdatedCallback = () => {
@@ -65,11 +69,7 @@ const Folder = () => {
           <AddButton onClick={openModal} />
         </div>
         <div className={classes.headerSecondRow}>
-          <SearchBar
-            key={folderId}
-            value={searchText}
-            onChange={updateSearchText}
-          />
+          <SearchBar key={folderId} onChange={updateSearchText} />
         </div>
       </div>
 

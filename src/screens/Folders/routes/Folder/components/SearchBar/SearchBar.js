@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Input,
   InputGroup,
@@ -13,15 +13,11 @@ import { BiSearch, BiX } from 'react-icons/bi';
 import { iconStyle, inputStyle, inputAddonStyle } from './SearchBarStyles';
 
 const SearchBar = (props) => {
-  const { value, onChange } = props;
+  const { onChange } = props;
 
   const inputRef = useRef();
 
   const [searchText, setSearchText] = useState('');
-
-  useEffect(() => {
-    setSearchText(value);
-  }, []);
 
   const updateSearchText = (value) => {
     setSearchText(value);
