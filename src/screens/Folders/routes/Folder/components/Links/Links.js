@@ -118,6 +118,15 @@ const Links = (props) => {
     listScrollRef.current && scrollToBottom(listScrollRef.current);
   }, [folderId, isCompleted, searchText]);
 
+  /**
+   * This effect is needed when network data is different from cached data
+   */
+  useEffect(() => {
+    if (networkStatus === 7) {
+      listScrollRef.current && scrollToBottom(listScrollRef.current);
+    }
+  }, [networkStatus]);
+
   useEffect(() => {
     if (showBulkSelection) {
       listScrollRef.current && scrollToBottom(listScrollRef.current);
