@@ -12,6 +12,7 @@ import classes from './Folder.module.scss';
 import AddButton from './AddButton';
 import EditOrCreateLinkModal from './EditOrCreateLinkModal';
 import Links from './Links';
+import SearchBar from './SearchBar';
 import { ADD_LINK } from './FolderUtils';
 
 const segmentControlOptions = [
@@ -28,10 +29,13 @@ const Folder = (props) => {
 
   const [linkOperation, setLinkOperation] = useState(null);
 
+  const [searchText, setSearchText] = useState('');
+
   const closeModal = useCallback(() => setShowEditOrCreateLinkModal(false), []);
   const openModal = useCallback(() => setShowEditOrCreateLinkModal(true), []);
 
   const folderBasicDetails = useOutletContext();
+
   const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
   const folderId = _get(folderBasicDetails, 'id', '');
 
@@ -44,15 +48,20 @@ const Folder = (props) => {
   return (
     <div className={classes.container}>
       <div className={classes.header}>
-        <Text fontSize="xl">{folderName}</Text>
-        <div className={classes.segmentContainer}>
-          <SegmentControl
-            options={segmentControlOptions}
-            activeValue={linkStatus}
-            onOptionClick={({ value }) => setLinkStatus(value)}
-          />
+        <div className={classes.headerFirstRow}>
+          <Text fontSize="xl">{folderName}</Text>
+          <div className={classes.segmentContainer}>
+            <SegmentControl
+              options={segmentControlOptions}
+              activeValue={linkStatus}
+              onOptionClick={({ value }) => setLinkStatus(value)}
+            />
+          </div>
+          <AddButton onClick={openModal} />
         </div>
-        <AddButton onClick={openModal} />
+        <div className={classes.headerSecondRow}>
+          <SearchBar value={searchText} onChange={setSearchText} />
+        </div>
       </div>
 
       <Links
