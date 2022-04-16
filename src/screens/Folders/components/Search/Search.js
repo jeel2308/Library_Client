@@ -14,7 +14,7 @@ import {
 const Search = (props) => {
   const { value, onChange } = props;
   return (
-    <InputGroup style={inputGroupStyle} padding={1} size="md">
+    <InputGroup style={inputGroupStyle} size="md">
       <InputLeftElement style={inputLeftElementStyle}>
         <IconContext.Provider value={searchIconStyle}>
           <BiSearch />
@@ -23,9 +23,9 @@ const Search = (props) => {
       <Input
         placeholder="Search"
         value={value}
-        variant="unstyled"
         onChange={(e) => onChange(e.target.value)}
         style={inputStyle}
+        border="none"
       />
     </InputGroup>
   );

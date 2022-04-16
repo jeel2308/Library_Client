@@ -2,7 +2,7 @@ export const searchIconStyle = { size: '22', color: 'white' };
 
 export const inputLeftElementStyle = {
   height: 'auto',
-  marginTop: '8px',
+  marginTop: '10px',
 };
 
 export const inputStyle = {
