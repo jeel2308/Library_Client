@@ -104,6 +104,7 @@ export const deleteFolder = ({ id }) => {
   return async (dispatch, getState) => {
     const state = getState();
     const userId = _get(state, 'userDetails.id', '');
+    dispatch(setLoaderVisibility(true));
     try {
       await client.mutate({
         mutation: deleteFolderMutation,
@@ -113,6 +114,13 @@ export const deleteFolder = ({ id }) => {
           const removedFolders = [id];
           updateUserFoldersInCache({ removedFolders, userId });
         },
+      });
+
+      setToastMessage({
+        title: `Deleted folder successfully`,
+        status: 'success',
+        isClosable: true,
+        position: 'bottom-left',
       });
     } catch (e) {
       console.error(e);
@@ -124,6 +132,8 @@ export const deleteFolder = ({ id }) => {
           position: 'bottom-left',
         })
       );
+    } finally {
+      dispatch(setLoaderVisibility(false));
     }
   };
 };
