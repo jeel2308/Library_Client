@@ -49,6 +49,8 @@ const updateLinkMutation = gql`
     linkManagement {
       updateLink(input: $input) {
         id
+        url
+        isCompleted
       }
     }
   }

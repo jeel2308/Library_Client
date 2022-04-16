@@ -28,6 +28,7 @@ const EditOrCreateLink = (props) => {
     folders,
     defaultLinkStatus,
     linkAddedOrUpdatedCallback,
+    searchText,
   } = props;
 
   const dynamicFormFields = getDynamicFormFields({
@@ -72,7 +73,12 @@ const EditOrCreateLink = (props) => {
     folderId: updatedFolderId,
   }) => {
     if (mode === 'CREATE') {
-      const createLinkPayload = { url: link, isCompleted, folderId };
+      const createLinkPayload = {
+        url: link,
+        isCompleted,
+        folderId,
+        searchText,
+      };
 
       await addLink(createLinkPayload);
 
@@ -89,6 +95,7 @@ const EditOrCreateLink = (props) => {
         linksDetails: [updatedLinkDetails],
         oldStatus: linkDetails.isCompleted,
         oldFolderId: folderId,
+        searchText,
       });
 
       linkAddedOrUpdatedCallback &&
@@ -139,6 +146,7 @@ const EditOrCreateLinkModal = (props) => {
     linkId,
     defaultLinkStatus,
     linkAddedOrUpdatedCallback,
+    searchText,
   } = props;
 
   return (
@@ -150,6 +158,7 @@ const EditOrCreateLinkModal = (props) => {
           linkId={linkId}
           defaultLinkStatus={defaultLinkStatus}
           linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
+          searchText={searchText}
         />
       </div>
     </Modal>

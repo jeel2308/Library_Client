@@ -171,7 +171,12 @@ const Links = (props) => {
     disableBulkSelectionMode();
     setLinkOperation(DELETE_LINK_OPERATION);
 
-    await deleteLink({ linkIds: selectedLinks, isCompleted, folderId });
+    await deleteLink({
+      linkIds: selectedLinks,
+      isCompleted,
+      folderId,
+      searchText,
+    });
 
     if (_size(links) <= DEFAULT_PAGE_SIZE) {
       fetchMoreFeed();
@@ -191,6 +196,7 @@ const Links = (props) => {
       })),
       oldStatus: isCompleted,
       oldFolderId: folderId,
+      searchText,
     });
 
     closeFolderList();
@@ -221,6 +227,7 @@ const Links = (props) => {
           linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
           oldStatus: isCompleted,
           oldFolderId: folderId,
+          searchText,
         });
 
         if (_size(links) <= DEFAULT_PAGE_SIZE) {
@@ -272,6 +279,7 @@ const Links = (props) => {
           })),
           oldStatus: isCompleted,
           oldFolderId: folderId,
+          searchText,
         });
 
         disableBulkSelectionMode();
@@ -465,6 +473,7 @@ const Links = (props) => {
               closeModal={closeEditLinkModal}
               folderId={folderId}
               linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
+              searchText={searchText}
             />
           )}
           {showFolderList && (
@@ -559,7 +568,12 @@ export default compose(
               id: folderId,
               type: 'FOLDER',
             },
-            linkFilterInputV2: { isCompleted, first, after: endCursor },
+            linkFilterInputV2: {
+              isCompleted,
+              first,
+              after: endCursor,
+              searchText,
+            },
           },
           updateQuery: (previousFeed, { fetchMoreResult }) => {
             const { node: oldNode } = previousFeed;

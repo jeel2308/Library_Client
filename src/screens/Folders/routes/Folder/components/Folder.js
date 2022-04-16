@@ -88,6 +88,7 @@ const Folder = () => {
           folderId={folderId}
           defaultLinkStatus={isCompleted}
           linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
+          searchText={searchText}
         />
       )}
     </div>
