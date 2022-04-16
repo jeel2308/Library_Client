@@ -69,10 +69,9 @@ const combineClasses = (...classes) => {
 };
 
 const getMatchingResults = ({ list, field, searchText }) => {
-  const searchRegex = new RegExp(searchText, 'i');
   return _filter(list, (listItem) => {
     const fieldValue = listItem[field];
-    return fieldValue.search(searchRegex) > -1;
+    return localSearch({ text: fieldValue, searchText }) > -1;
   });
 };
 
@@ -106,6 +105,19 @@ const getFieldPresenceStatus = (field) => {
   return field != null && field != undefined;
 };
 
+const localSearch = ({ text, searchText }) => {
+  //Sanitize search text
+  const sanitizedSearchText = searchText.replace(
+    /([.?*+^$[\]\\(){}|-])/g,
+    '\\$1'
+  );
+
+  //create regex from sanitized search text
+  const searchRegex = new RegExp(sanitizedSearchText, 'i');
+
+  return text.search(searchRegex);
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -122,4 +134,5 @@ export {
   checkScrollAtRight,
   scrollToBottom,
   getFieldPresenceStatus,
+  localSearch,
 };

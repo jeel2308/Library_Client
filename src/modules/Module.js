@@ -7,7 +7,11 @@ import _find from 'lodash/find';
 import _filter from 'lodash/filter';
 import _pipe from 'lodash/flow';
 
-import { setUserInfoInStorage, getFieldPresenceStatus } from '../Utils';
+import {
+  setUserInfoInStorage,
+  getFieldPresenceStatus,
+  localSearch,
+} from '../Utils';
 import {
   updateUserFoldersInCache,
   addLinkInCache,
@@ -143,9 +147,7 @@ export const addLinkBasicDetails = ({
             },
           }
         ) => {
-          const normalizedSearchText = searchText.toLowerCase();
-
-          const shouldUpdateCache = url.search(normalizedSearchText) > -1;
+          const shouldUpdateCache = localSearch({ text: url, searchText }) > -1;
 
           if (shouldUpdateCache) {
             addLinkInCache({
@@ -209,10 +211,8 @@ export const updateLinkBasicDetails = ({
 
           const isUrlPresent = getFieldPresenceStatus(url);
 
-          const normalizedSearchText = searchText.toLowerCase();
-
           const doesUrlMatchWithSearchText = isUrlPresent
-            ? url.search(normalizedSearchText) > -1
+            ? localSearch({ text: url, searchText }) > -1
             : true;
 
           return (
