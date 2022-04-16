@@ -1,7 +1,8 @@
 /**--external-- */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
+import _debounce from 'lodash/debounce';
 import { Text } from '@chakra-ui/react';
 
 /**--internal-- */
@@ -19,7 +20,7 @@ const segmentControlOptions = [
   { label: 'Pending', value: 'PENDING' },
   { label: 'Completed', value: 'COMPLETED' },
 ];
-const Folder = (props) => {
+const Folder = () => {
   const [linkStatus, setLinkStatus] = useState(
     () => segmentControlOptions[0].value
   );
@@ -30,6 +31,10 @@ const Folder = (props) => {
   const [linkOperation, setLinkOperation] = useState(null);
 
   const [searchText, setSearchText] = useState('');
+
+  const updateSearchText = useMemo(() => {
+    return _debounce((value) => setSearchText(value), 300);
+  }, []);
 
   const closeModal = useCallback(() => setShowEditOrCreateLinkModal(false), []);
   const openModal = useCallback(() => setShowEditOrCreateLinkModal(true), []);
@@ -60,7 +65,11 @@ const Folder = (props) => {
           <AddButton onClick={openModal} />
         </div>
         <div className={classes.headerSecondRow}>
-          <SearchBar value={searchText} onChange={setSearchText} />
+          <SearchBar
+            key={folderId}
+            value={searchText}
+            onChange={updateSearchText}
+          />
         </div>
       </div>
 

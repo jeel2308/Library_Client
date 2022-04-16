@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   Input,
   InputGroup,
@@ -17,15 +17,26 @@ const SearchBar = (props) => {
 
   const inputRef = useRef();
 
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    setSearchText(value);
+  }, []);
+
+  const updateSearchText = (value) => {
+    setSearchText(value);
+    onChange(value);
+  };
+
   const onCloseIconClick = () => {
-    onChange('');
+    updateSearchText('');
     if (inputRef.current) {
       inputRef.current.focus();
     }
   };
 
   const onInputChange = (e) => {
-    onChange(e.target.value);
+    updateSearchText(e.target.value);
   };
 
   return (
@@ -36,7 +47,7 @@ const SearchBar = (props) => {
         </IconContext.Provider>
       </InputLeftElement>
       <Input
-        value={value}
+        value={searchText}
         onChange={onInputChange}
         style={inputStyle}
         ref={inputRef}
