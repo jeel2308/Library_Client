@@ -116,12 +116,14 @@ export const deleteFolder = ({ id }) => {
         },
       });
 
-      setToastMessage({
-        title: `Deleted folder successfully`,
-        status: 'success',
-        isClosable: true,
-        position: 'bottom-left',
-      });
+      dispatch(
+        setToastMessage({
+          title: `Deleted folder successfully`,
+          status: 'success',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
     } catch (e) {
       console.error(e);
       dispatch(
