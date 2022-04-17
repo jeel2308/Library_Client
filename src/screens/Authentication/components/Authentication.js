@@ -16,7 +16,7 @@ const Authentication = (props) => {
 
   useEffect(() => {
     if (isUserLoggedIn) {
-      navigate('/folder');
+      navigate('/folders');
     }
   }, [isUserLoggedIn]);
 
