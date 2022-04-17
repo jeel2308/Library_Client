@@ -510,7 +510,7 @@ export const updateUser = ({ input }) => {
   };
 };
 
-export const loginUser = (data) => {
+export const loginUser = (data, successCallback) => {
   return async (dispatch, getState) => {
     let responseData = {};
 
@@ -529,17 +529,15 @@ export const loginUser = (data) => {
 
       responseData = await res.json();
 
-      const { message, ...userInfo } = responseData;
+      const { message, showResetPasswordFlow, ...userInfo } = responseData;
       if (res.ok) {
-        setUserInfoInStorage({ userInfo });
-        dispatch(setUserDetails(userInfo));
-
-        /**
-         * When we redirect using following approach, it will unmount App and
-         * remount it. This is necessary because without it App won't be able to
-         * use updated localStorage data.
-         */
-        window.location.href = '/';
+        if (showResetPasswordFlow) {
+          dispatch(setUserDetails(userInfo));
+        } else {
+          setUserInfoInStorage({ userInfo });
+          dispatch(setUserDetails(userInfo));
+        }
+        successCallback && successCallback({ showResetPasswordFlow });
       } else {
         dispatch(
           setToastMessage({
