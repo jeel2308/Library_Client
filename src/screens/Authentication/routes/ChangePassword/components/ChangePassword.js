@@ -2,7 +2,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _get from 'lodash/get';
-import { useNavigate } from 'react-router-dom';
 
 /**--internal-- */
 import { AuthenticationPage } from '#components';
@@ -14,10 +13,8 @@ import { formFields } from './ChangePasswordUtils';
 const ChangePassword = (props) => {
   const { userId, changePassword } = props;
 
-  const navigate = useNavigate();
-
   const onChangePassword = () => {
-    navigate('/login');
+    window.location.href = '/';
   };
 
   const onSubmit = (data) => {

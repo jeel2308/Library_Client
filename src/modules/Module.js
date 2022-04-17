@@ -670,11 +670,13 @@ export const changePassword = (data, successCallback) => {
         data,
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
+        setUserInfoInStorage({ userInfo: responseData });
+        dispatch(setUserDetails({ userInfo: responseData }));
         successCallback && successCallback();
       } else {
-        const responseData = await response.json();
-
         dispatch(
           setToastMessage({
             title: responseData.message || response.statusText,
