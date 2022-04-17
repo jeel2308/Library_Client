@@ -1,5 +1,6 @@
 /**--external-- */
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 
 /**--relative-- */
@@ -10,8 +11,21 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: schema,
 });
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = getToken();
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? token : '',
+    },
+  };
+});
+
+const client = new ApolloClient({
   cache: new InMemoryCache({
     fragmentMatcher,
     typePolicies: {
@@ -42,9 +56,10 @@ const client = new ApolloClient({
       },
     },
   },
-  headers: {
-    authorization: getToken(),
-  },
+  /**
+   * Apollo links will be recalculated for each operation.
+   */
+  link: authLink.concat(httpLink),
 });
 
 export default client;
