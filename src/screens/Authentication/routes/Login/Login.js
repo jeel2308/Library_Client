@@ -24,12 +24,7 @@ const Login = (props) => {
 
   const onLoginSuccess = ({ showResetPasswordFlow }) => {
     if (!showResetPasswordFlow) {
-      /**
-       * When we redirect using following approach, it will unmount App and
-       * remount it. This is necessary because without it App won't be able to
-       * use updated localStorage data.
-       */
-      window.location.href = '/';
+      navigate('/folders');
     } else {
       navigate('/changePassword');
     }

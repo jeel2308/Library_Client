@@ -536,6 +536,7 @@ export const loginUser = (data, successCallback) => {
         } else {
           setUserInfoInStorage({ userInfo });
           dispatch(setUserDetails(userInfo));
+          dispatch(updateUserLoggedInStatus(true));
         }
         successCallback && successCallback({ showResetPasswordFlow });
       } else {
@@ -675,6 +676,7 @@ export const changePassword = (data, successCallback) => {
       if (response.ok) {
         setUserInfoInStorage({ userInfo: responseData });
         dispatch(setUserDetails({ userInfo: responseData }));
+        dispatch(updateUserLoggedInStatus(true));
         successCallback && successCallback();
       } else {
         dispatch(
