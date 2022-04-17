@@ -3,7 +3,6 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _size from 'lodash/size';
 import _map from 'lodash/map';
-import _find from 'lodash/find';
 import _filter from 'lodash/filter';
 import _pipe from 'lodash/flow';
 
@@ -16,7 +15,6 @@ import {
   updateUserFoldersInCache,
   addLinkInCache,
   deleteLinkFromCache,
-  getFolderDetailsFromCache,
   getUserFoldersFromCache,
 } from './GraphqlHelpers';
 import {
@@ -30,8 +28,44 @@ import {
   updateUserMutation,
 } from './Mutations';
 
+/**--CONSTANTS AND UTILS-- */
 export const DEFAULT_PAGE_SIZE = 9;
 
+const origin = process.env.REACT_APP_SERVER_URL;
+
+export const getTotalFolders = ({ userId }) => {
+  const { folders } = getUserFoldersFromCache({ userId });
+
+  return _size(folders);
+};
+
+/**--REDUX ACTIONS-- */
+const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';
+
+const UPDATE_USER_LOGGED_IN_STATUS = 'UPDATE_USER_LOGGED_IN_STATUS';
+
+const SET_USER_DETAILS = 'SET_USER_DETAILS';
+
+const SET_TOAST_MESSAGE = 'SET_TOAST_MESSAGE';
+
+/**--REDUX ACTION GENERATORS-- */
+export const setLoaderVisibility = (payload) => {
+  return { type: SET_LOADER_VISIBILITY, payload };
+};
+
+export const updateUserLoggedInStatus = (payload) => {
+  return { type: UPDATE_USER_LOGGED_IN_STATUS, payload };
+};
+
+export const setUserDetails = (payload) => {
+  return { type: SET_USER_DETAILS, payload };
+};
+
+export const setToastMessage = (payload) => {
+  return { type: SET_TOAST_MESSAGE, payload };
+};
+
+/**--REDUX THUNKS-- */
 export const addFolder =
   ({ name }) =>
   async (dispatch, getState) => {
@@ -463,38 +497,6 @@ export const updateUser = ({ input }) => {
       dispatch(setLoaderVisibility(false));
     }
   };
-};
-
-export const getTotalFolders = ({ userId }) => {
-  const { folders } = getUserFoldersFromCache({ userId });
-
-  return _size(folders);
-};
-
-const origin = process.env.REACT_APP_SERVER_URL;
-
-const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';
-
-const UPDATE_USER_LOGGED_IN_STATUS = 'UPDATE_USER_LOGGED_IN_STATUS';
-
-const SET_USER_DETAILS = 'SET_USER_DETAILS';
-
-const SET_TOAST_MESSAGE = 'SET_TOAST_MESSAGE';
-
-export const setLoaderVisibility = (payload) => {
-  return { type: SET_LOADER_VISIBILITY, payload };
-};
-
-export const updateUserLoggedInStatus = (payload) => {
-  return { type: UPDATE_USER_LOGGED_IN_STATUS, payload };
-};
-
-export const setUserDetails = (payload) => {
-  return { type: SET_USER_DETAILS, payload };
-};
-
-export const setToastMessage = (payload) => {
-  return { type: SET_TOAST_MESSAGE, payload };
 };
 
 export const loginUser = (data) => {
