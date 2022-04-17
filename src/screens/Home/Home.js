@@ -33,7 +33,7 @@ const Home = () => {
         </ButtonGroup>
         <div className={classes.heroContainer}>
           <Heading as={TITLE_ELEMENT} size={TITLE_FONT_SIZE}>
-            One place to keep all links
+            LinkManagement: One place to keep all links
           </Heading>
           <UnorderedList mt={'6'}>
             <ListItem>
