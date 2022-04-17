@@ -661,6 +661,44 @@ export const resetPassword = (data, successCallback) => {
   };
 };
 
+export const changePassword = (data, successCallback) => {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoaderVisibility(true));
+      const response = await getRequestPromise({
+        route: 'change-password',
+        data,
+      });
+
+      if (response.ok) {
+        successCallback && successCallback();
+      } else {
+        const responseData = await response.json();
+
+        dispatch(
+          setToastMessage({
+            title: responseData.message || response.statusText,
+            status: 'error',
+            isClosable: true,
+            position: 'bottom-left',
+          })
+        );
+      }
+    } catch (e) {
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    } finally {
+      dispatch(setLoaderVisibility(false));
+    }
+  };
+};
+
 const reducerHandlers = {
   [SET_LOADER_VISIBILITY]: (state, action) => {
     const { payload } = action;
