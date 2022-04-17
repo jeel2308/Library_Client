@@ -39,6 +39,17 @@ export const getTotalFolders = ({ userId }) => {
   return _size(folders);
 };
 
+const getRequestPromise = ({ route, data }) => {
+  return fetch(`${origin}/${route}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    referrerPolicy: 'no-referrer',
+  });
+};
+
 /**--REDUX ACTIONS-- */
 const SET_LOADER_VISIBILITY = 'SET_LOADER_VISIBILITY';
 
@@ -598,6 +609,44 @@ export const registerUser = (data, successCallback) => {
             position: 'bottom-left',
           })
         );
+      }
+    } catch (e) {
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+    } finally {
+      dispatch(setLoaderVisibility(false));
+    }
+  };
+};
+
+export const resetPassword = (data, successCallback) => {
+  return async (dispatch) => {
+    let response = {};
+
+    try {
+      dispatch(setLoaderVisibility(true));
+
+      response = await getRequestPromise({ route: 'reset-password', data });
+
+      if (!response.ok) {
+        const responseData = await response.json();
+
+        dispatch(
+          setToastMessage({
+            title: responseData.message || response.statusText,
+            status: 'error',
+            isClosable: true,
+            position: 'bottom-left',
+          })
+        );
+      } else {
+        successCallback && successCallback();
       }
     } catch (e) {
       dispatch(
