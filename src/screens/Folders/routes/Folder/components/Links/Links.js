@@ -433,34 +433,6 @@ const Links = (props) => {
     ) : null;
   };
 
-  const allowedBulkActions = [
-    {
-      key: 'CANCEL',
-      disabled: false,
-      variant: 'unstyled',
-      label: 'Cancel',
-      style: { marginRight: 'auto' },
-    },
-    {
-      key: 'UPDATE_STATUS',
-      disabled: !totalLinks,
-      colorScheme: 'blue',
-      label: isCompleted ? 'Mark as pending' : 'Mark as completed',
-    },
-    {
-      key: 'MOVE',
-      disabled: !totalLinks,
-      colorScheme: 'blue',
-      label: 'Move',
-    },
-    {
-      key: 'DELETE',
-      disabled: !totalLinks,
-      colorScheme: 'red',
-      label: 'Delete',
-    },
-  ];
-
   const scrollContainerClasses = combineClasses(classes.scrollContainer, {
     [classes.scrollContainerWithSmoothScrolling]: linkOperation === ADD_LINK,
   });
