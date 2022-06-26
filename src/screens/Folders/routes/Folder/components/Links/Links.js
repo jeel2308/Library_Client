@@ -26,6 +26,7 @@ import {
   scrollToBottom,
   getFieldPresenceStatus,
   checkScrollAtTop,
+  mergeRefs,
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
@@ -344,35 +345,43 @@ const Links = (props) => {
       };
 
       if (index === totalLinks - 1) {
-        const isMetaDataLoaded = link.title || link.url || link.thumbnail;
-
         return (
           <ScrollIntoViewWrapper
             key={id}
-            dependencyForChangingScrollPosition={[isMetaDataLoaded]}
+            dependencyForChangingScrollPosition={[]}
           >
-            <div
-              className={classes.linkOption}
-              ref={(node) => updateLinksNodeRefs(node, index)}
-            >
-              {showBulkSelection && (
-                <Checkbox
-                  size="lg"
-                  isChecked={isLinkSelected}
-                  backgroundColor="white"
-                  borderColor="rgba(0,0,0,0.5)"
-                  onChange={onChange}
-                />
-              )}
-              <div className={classes.linkContainer}>
-                <Link
-                  {...link}
-                  dropDownOptions={linkActions}
-                  handleActions={handleActions}
-                  onLinkClick={onLinkClick}
-                />
-              </div>
-            </div>
+            {({ ref, scrollIntoView }) => {
+              return (
+                <div
+                  className={classes.linkOption}
+                  ref={(node) =>
+                    mergeRefs({
+                      node,
+                      refs: [ref, (node) => updateLinksNodeRefs(node, index)],
+                    })
+                  }
+                >
+                  {showBulkSelection && (
+                    <Checkbox
+                      size="lg"
+                      isChecked={isLinkSelected}
+                      backgroundColor="white"
+                      borderColor="rgba(0,0,0,0.5)"
+                      onChange={onChange}
+                    />
+                  )}
+                  <div className={classes.linkContainer}>
+                    <Link
+                      {...link}
+                      dropDownOptions={linkActions}
+                      handleActions={handleActions}
+                      onLinkClick={onLinkClick}
+                      onMetadataLoaded={scrollIntoView}
+                    />
+                  </div>
+                </div>
+              );
+            }}
           </ScrollIntoViewWrapper>
         );
       }

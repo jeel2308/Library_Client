@@ -1,23 +1,27 @@
 /**--external-- */
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import propTypes from 'prop-types';
-
-/**--internal-- */
-import { mergeRefs } from '#Utils';
 
 const ScrollIntoViewWrapper = (props) => {
   const { dependencyForChangingScrollPosition, children } = props;
 
   const childrenRef = useRef(null);
 
-  const updateRefs = (node) =>
-    mergeRefs({ node, refs: [childrenRef, children.ref] });
+  const scrollIntoView = () => {
+    childrenRef.current &&
+      childrenRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    childrenRef.current.scrollIntoView({ bahavior: 'smooth' });
+    scrollIntoView();
   }, dependencyForChangingScrollPosition);
 
-  return React.cloneElement(children, { ref: updateRefs });
+  return children({ ref: childrenRef, scrollIntoView });
+
+  // return React.cloneElement(children, {
+  //   ref: updateRefs,
+  //   scrollIntoView,
+  // });
 };
 
 export default ScrollIntoViewWrapper;

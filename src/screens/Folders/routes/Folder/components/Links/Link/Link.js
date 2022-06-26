@@ -1,8 +1,9 @@
 /**--external-- */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 import { Heading, Text } from '@chakra-ui/react';
+import _noop from 'lodash/noop';
 
 /**--internal-- */
 import { Dropdown } from '#components';
@@ -12,16 +13,25 @@ import classes from './Link.module.scss';
 import { dotsStyle } from './LinkStyles';
 
 const Metadata = (props) => {
-  const { title, description, thumbnail } = props;
+  const { title, description, thumbnail, onMetadataLoaded } = props;
 
   const [showThumbnail, setShowThumbnail] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(() => !!thumbnail);
+
+  useEffect(() => {
+    if (!isImageLoading) {
+      onMetadataLoaded();
+    }
+  }, [isImageLoading]);
 
   const onImageLoadError = () => {
     setShowThumbnail(false);
+    setIsImageLoading(false);
   };
 
   const onImageLoad = () => {
     setShowThumbnail(true);
+    setIsImageLoading(false);
   };
 
   return (
@@ -60,6 +70,7 @@ const Link = (props) => {
     description,
     id,
     onLinkClick,
+    onMetadataLoaded,
   } = props;
 
   const handleActions = ({ value }) => {
@@ -92,6 +103,7 @@ const Link = (props) => {
           title={title}
           description={description}
           thumbnail={thumbnail}
+          onMetadataLoaded={onMetadataLoaded}
         />
       )}
     </div>
@@ -99,5 +111,9 @@ const Link = (props) => {
 };
 
 Link.displayName = 'Link';
+
+Link.defaultProps = {
+  onMetadataLoaded: _noop,
+};
 
 export default Link;
