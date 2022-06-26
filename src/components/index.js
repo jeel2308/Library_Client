@@ -9,6 +9,7 @@ import withRouter from './withRouter';
 import Sidebar from './Sidebar';
 import SegmentControl from './SegmentControl';
 import Dropdown from './Dropdown';
+import ScrollIntoViewWrapper from './ScrollIntoViewWrapper';
 
 export {
   Form,
@@ -22,4 +23,5 @@ export {
   Sidebar,
   SegmentControl,
   Dropdown,
+  ScrollIntoViewWrapper,
 };
