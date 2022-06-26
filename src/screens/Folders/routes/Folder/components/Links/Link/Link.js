@@ -14,10 +14,14 @@ import { dotsStyle } from './LinkStyles';
 const Metadata = (props) => {
   const { title, description, thumbnail } = props;
 
-  const [showThumbnail, setShowThumbnail] = useState(() => !!thumbnail);
+  const [showThumbnail, setShowThumbnail] = useState(false);
 
   const onImageLoadError = () => {
     setShowThumbnail(false);
+  };
+
+  const onImageLoad = () => {
+    setShowThumbnail(true);
   };
 
   return (
@@ -32,11 +36,17 @@ const Metadata = (props) => {
           {description}
         </Text>
       )}
-      {showThumbnail && (
-        <figure className={classes.thumbnail}>
-          <img src={thumbnail} alt={title} onError={onImageLoadError} />
-        </figure>
-      )}
+      <figure
+        className={classes.thumbnail}
+        style={{ display: !showThumbnail ? 'none' : 'initial' }}
+      >
+        <img
+          src={thumbnail}
+          alt={title}
+          onError={onImageLoadError}
+          onLoad={onImageLoad}
+        />
+      </figure>
     </div>
   );
 };
