@@ -25,12 +25,12 @@ import {
   copyToClipboard,
   scrollToBottom,
   getFieldPresenceStatus,
-  combineClasses,
   checkScrollAtTop,
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
-import { ADD_LINK, FETCH_MORE_LINK } from '../FolderUtils';
+import { FETCH_MORE_LINK } from '../FolderUtils';
+import { ScrollIntoViewWrapper } from '#components';
 
 /**--relative-- */
 import classes from './Links.module.scss';
@@ -61,35 +61,26 @@ const Links = (props) => {
     searchText,
   } = props;
   const { linksV2 } = folderDetails;
-
-  const [showEditLinkModal, setShowEditLinkModal] = useState(false);
-
-  const [selectedLinks, setSelectedLinks] = useState([]);
-
-  const [showBulkSelection, setShowBulkSelection] = useState(false);
-
-  const [showFolderList, setShowFolderList] = useState(false);
-
-  const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
-
-  const listScrollRef = useRef();
-
-  const linksNodeRefs = useRef([]);
-
-  const previousFolderId = useRef(folderId);
-
-  const updateLinksNodeRefs = (node, index) => {
-    linksNodeRefs.current[index] = node;
-  };
-
   const links = _pipe((data) => {
     const edges = _get(data, 'edges', []);
     return _map(edges, ({ node }) => node);
   }, _reverse)(linksV2);
-
   const totalPresentLinks = _size(links);
 
+  const [showEditLinkModal, setShowEditLinkModal] = useState(false);
+  const [selectedLinks, setSelectedLinks] = useState([]);
+  const [showBulkSelection, setShowBulkSelection] = useState(false);
+  const [showFolderList, setShowFolderList] = useState(false);
+  const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
+
+  const listScrollRef = useRef();
+  const linksNodeRefs = useRef([]);
+
   const previousTotalPresentLinksRef = useRef(_size(links));
+
+  const updateLinksNodeRefs = (node, index) => {
+    linksNodeRefs.current[index] = node;
+  };
 
   useEffect(() => {
     if (linkOperation === FETCH_MORE_LINK) {
@@ -108,12 +99,6 @@ const Links = (props) => {
     }
   }, [totalPresentLinks, folderId, isCompleted, searchText]);
 
-  // useEffect(() => {
-  //   if (showBulkSelection) {
-  //     listScrollRef.current && scrollToBottom(listScrollRef.current);
-  //   }
-  // }, [showBulkSelection]);
-
   useEffect(() => {
     previousTotalPresentLinksRef.current = totalPresentLinks;
   }, [totalPresentLinks]);
@@ -121,10 +106,6 @@ const Links = (props) => {
   useEffect(() => {
     disableBulkSelectionMode();
     setLinkOperation(null);
-  }, [folderId]);
-
-  useEffect(() => {
-    previousFolderId.current = folderId;
   }, [folderId]);
 
   const openEditLinkModal = useCallback(({ linkId }) => {
@@ -353,15 +334,6 @@ const Links = (props) => {
         updateSelectedLinks({ id });
       };
 
-      const onLinkMetadataLoaded = () => {
-        if (linkOperation !== ADD_LINK || index !== totalLinks - 1) {
-          return;
-        }
-
-        scrollToBottom(listScrollRef.current);
-        setLinkOperation(null);
-      };
-
       const onLinkClick = (e) => {
         if (e.defaultPrevented) {
           return;
@@ -371,6 +343,40 @@ const Links = (props) => {
           window.open(link.url, '_blank');
         }
       };
+
+      if (index === totalLinks - 1) {
+        const isMetaDataLoaded = link.title || link.url || link.thumbnail;
+
+        return (
+          <ScrollIntoViewWrapper
+            key={id}
+            dependencyForChangingScrollPosition={[isMetaDataLoaded]}
+          >
+            <div
+              className={classes.linkOption}
+              ref={(node) => updateLinksNodeRefs(node, index)}
+            >
+              {showBulkSelection && (
+                <Checkbox
+                  size="lg"
+                  isChecked={isLinkSelected}
+                  backgroundColor="white"
+                  borderColor="rgba(0,0,0,0.5)"
+                  onChange={onChange}
+                />
+              )}
+              <div className={classes.linkContainer}>
+                <Link
+                  {...link}
+                  dropDownOptions={linkActions}
+                  handleActions={handleActions}
+                  onLinkClick={onLinkClick}
+                />
+              </div>
+            </div>
+          </ScrollIntoViewWrapper>
+        );
+      }
 
       return (
         <div
@@ -392,7 +398,6 @@ const Links = (props) => {
               {...link}
               dropDownOptions={linkActions}
               handleActions={handleActions}
-              onLinkMetadataLoaded={onLinkMetadataLoaded}
               onLinkClick={onLinkClick}
             />
           </div>
@@ -415,15 +420,11 @@ const Links = (props) => {
     ) : null;
   };
 
-  const scrollContainerClasses = combineClasses(classes.scrollContainer, {
-    [classes.scrollContainerWithSmoothScrolling]: linkOperation === ADD_LINK,
-  });
-
   return (
     <div className={classes.container}>
       {renderPaginationLoader()}
       <div
-        className={scrollContainerClasses}
+        className={classes.scrollContainer}
         ref={listScrollRef}
         onScroll={onScroll}
       >

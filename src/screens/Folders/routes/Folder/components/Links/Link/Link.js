@@ -12,13 +12,12 @@ import classes from './Link.module.scss';
 import { dotsStyle } from './LinkStyles';
 
 const Metadata = (props) => {
-  const { title, description, thumbnail, onLinkMetadataLoaded } = props;
+  const { title, description, thumbnail } = props;
 
   const [showThumbnail, setShowThumbnail] = useState(() => !!thumbnail);
 
   const onImageLoadError = () => {
     setShowThumbnail(false);
-    onLinkMetadataLoaded();
   };
 
   return (
@@ -35,12 +34,7 @@ const Metadata = (props) => {
       )}
       {showThumbnail && (
         <figure className={classes.thumbnail}>
-          <img
-            src={thumbnail}
-            alt={title}
-            onError={onImageLoadError}
-            onLoad={onLinkMetadataLoaded}
-          />
+          <img src={thumbnail} alt={title} onError={onImageLoadError} />
         </figure>
       )}
     </div>
@@ -55,7 +49,6 @@ const Link = (props) => {
     thumbnail,
     description,
     id,
-    onLinkMetadataLoaded,
     onLinkClick,
   } = props;
 
@@ -89,7 +82,6 @@ const Link = (props) => {
           title={title}
           description={description}
           thumbnail={thumbnail}
-          onLinkMetadataLoaded={onLinkMetadataLoaded}
         />
       )}
     </div>
