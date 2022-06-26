@@ -92,17 +92,9 @@ const Links = (props) => {
   const previousTotalPresentLinksRef = useRef(_size(links));
 
   useEffect(() => {
-    if (previousFolderId.current !== folderId) {
-      return;
-    }
-
     if (linkOperation === FETCH_MORE_LINK) {
       const addedLinksCount =
         totalPresentLinks - previousTotalPresentLinksRef.current;
-
-      if (!addedLinksCount) {
-        return;
-      }
 
       const totalVerticalDistance =
         linksNodeRefs.current?.[addedLinksCount]?.getBoundingClientRect().top ??
@@ -111,27 +103,16 @@ const Links = (props) => {
       listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
 
       setLinkOperation(null);
-    }
-  }, [totalPresentLinks, linkOperation, folderId]);
-
-  useEffect(() => {
-    listScrollRef.current && scrollToBottom(listScrollRef.current);
-  }, [folderId, isCompleted, searchText]);
-
-  /**
-   * This effect is needed when network data is different from cached data
-   */
-  useEffect(() => {
-    if (networkStatus === 7) {
+    } else {
       listScrollRef.current && scrollToBottom(listScrollRef.current);
     }
-  }, [networkStatus]);
+  }, [totalPresentLinks, folderId, isCompleted, searchText]);
 
-  useEffect(() => {
-    if (showBulkSelection) {
-      listScrollRef.current && scrollToBottom(listScrollRef.current);
-    }
-  }, [showBulkSelection]);
+  // useEffect(() => {
+  //   if (showBulkSelection) {
+  //     listScrollRef.current && scrollToBottom(listScrollRef.current);
+  //   }
+  // }, [showBulkSelection]);
 
   useEffect(() => {
     previousTotalPresentLinksRef.current = totalPresentLinks;
@@ -139,6 +120,7 @@ const Links = (props) => {
 
   useEffect(() => {
     disableBulkSelectionMode();
+    setLinkOperation(null);
   }, [folderId]);
 
   useEffect(() => {
