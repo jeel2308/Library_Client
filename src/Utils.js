@@ -2,6 +2,7 @@ import _reduceRight from 'lodash/reduceRight';
 import _reduce from 'lodash/reduce';
 import _keys from 'lodash/keys';
 import _filter from 'lodash/filter';
+import _forEach from 'lodash/forEach';
 
 const validateEmail = (email) => {
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/, 'i');
@@ -118,6 +119,16 @@ const localSearch = ({ text, searchText }) => {
   return text.search(searchRegex);
 };
 
+const mergeRefs = ({ node, refs }) => {
+  _forEach(refs, (ref) => {
+    if (typeof ref === 'function') {
+      ref(node);
+    } else {
+      ref.current = node;
+    }
+  });
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -135,4 +146,5 @@ export {
   scrollToBottom,
   getFieldPresenceStatus,
   localSearch,
+  mergeRefs,
 };
