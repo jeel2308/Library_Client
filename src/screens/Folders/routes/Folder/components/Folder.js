@@ -14,7 +14,6 @@ import AddButton from './AddButton';
 import EditOrCreateLinkModal from './EditOrCreateLinkModal';
 import Links from './Links';
 import SearchBar from './SearchBar';
-import { ADD_LINK } from './FolderUtils';
 
 const segmentControlOptions = [
   { label: 'Pending', value: 'PENDING' },
@@ -27,8 +26,6 @@ const Folder = () => {
 
   const [showEditOrCreateLinkModal, setShowEditOrCreateLinkModal] =
     useState(false);
-
-  const [linkOperation, setLinkOperation] = useState(null);
 
   const [searchText, setSearchText] = useState('');
 
@@ -49,10 +46,6 @@ const Folder = () => {
   }, [folderId]);
 
   const isCompleted = linkStatus !== 'PENDING';
-
-  const linkAddedOrUpdatedCallback = () => {
-    setLinkOperation(ADD_LINK);
-  };
 
   return (
     <div className={classes.container}>
@@ -76,8 +69,6 @@ const Folder = () => {
       <Links
         folderId={folderId}
         isCompleted={isCompleted}
-        linkOperation={linkOperation}
-        setLinkOperation={setLinkOperation}
         searchText={searchText}
         updateSearchText={setSearchText}
       />
@@ -87,7 +78,6 @@ const Folder = () => {
           closeModal={closeModal}
           folderId={folderId}
           defaultLinkStatus={isCompleted}
-          linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
           searchText={searchText}
         />
       )}

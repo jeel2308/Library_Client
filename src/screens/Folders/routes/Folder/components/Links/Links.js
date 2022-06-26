@@ -44,7 +44,7 @@ import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
 import DeleteLinkModal from './DeleteLinkModal';
-import _ from 'lodash';
+
 const Links = (props) => {
   const {
     folderDetails,
@@ -52,8 +52,6 @@ const Links = (props) => {
     deleteLink,
     isCompleted,
     updateLink,
-    linkOperation,
-    setLinkOperation,
     networkStatus,
     hasNextPage,
     fetchMore,
@@ -72,6 +70,7 @@ const Links = (props) => {
   const [showBulkSelection, setShowBulkSelection] = useState(false);
   const [showFolderList, setShowFolderList] = useState(false);
   const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
+  const [linkOperation, setLinkOperation] = useState(null);
 
   const listScrollRef = useRef();
   const linksNodeRefs = useRef([]);
@@ -450,7 +449,7 @@ const Links = (props) => {
           )}
           {showDeleteLinkModal && (
             <DeleteLinkModal
-              totalLinks={_.size(selectedLinks)}
+              totalLinks={_size(selectedLinks)}
               onCancelClick={onCancelLinkDelete}
               onDeleteClick={onDeleteLinks}
             />
