@@ -15,7 +15,7 @@ import { dotsStyle } from './LinkStyles';
 const Metadata = (props) => {
   const { title, description, thumbnail, onMetadataLoaded } = props;
 
-  const [showThumbnail, setShowThumbnail] = useState(false);
+  const [showThumbnail, setShowThumbnail] = useState(true);
   const [isImageLoading, setIsImageLoading] = useState(() => !!thumbnail);
 
   useEffect(() => {
