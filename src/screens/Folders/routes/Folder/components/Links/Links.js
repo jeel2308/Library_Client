@@ -69,6 +69,7 @@ const Links = (props) => {
   const [showBulkSelection, setShowBulkSelection] = useState(false);
   const [showFolderList, setShowFolderList] = useState(false);
   const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
+  const [showPaginationLoader, setShowPaginationLoader] = useState(false);
 
   const listScrollRef = useRef();
   const linksNodeRefs = useRef([]);
@@ -106,6 +107,12 @@ const Links = (props) => {
     disableBulkSelectionMode();
     setLinkOperation(null);
   }, [folderId]);
+
+  useEffect(() => {
+    if (networkStatus === 7) {
+      setShowPaginationLoader(false);
+    }
+  }, [networkStatus]);
 
   const openEditLinkModal = useCallback(({ linkId }) => {
     setShowEditLinkModal(true);
@@ -150,6 +157,7 @@ const Links = (props) => {
     });
 
     if (_size(links) <= DEFAULT_PAGE_SIZE) {
+      setShowPaginationLoader(false);
       fetchMoreFeed();
     }
   };
@@ -174,6 +182,7 @@ const Links = (props) => {
     closeFolderList();
 
     if (_size(links) <= DEFAULT_PAGE_SIZE) {
+      setShowPaginationLoader(false);
       fetchMoreFeed();
     }
   };
@@ -203,6 +212,7 @@ const Links = (props) => {
         });
 
         if (_size(links) <= DEFAULT_PAGE_SIZE) {
+          setShowPaginationLoader(false);
           fetchMoreFeed();
         }
 
@@ -258,6 +268,7 @@ const Links = (props) => {
         disableBulkSelectionMode();
 
         if (_size(links) <= DEFAULT_PAGE_SIZE) {
+          setShowPaginationLoader(false);
           fetchMoreFeed();
         }
 
@@ -297,12 +308,13 @@ const Links = (props) => {
     }
   };
 
-  const onScroll = (e) => {
+  const onScroll = async (e) => {
     const isContainerAtTop = checkScrollAtTop(e.target);
 
     if (isContainerAtTop && hasNextPage && !isPaginationQueryRunning) {
       fetchMore();
       setLinkOperation(FETCH_MORE_LINK);
+      setShowPaginationLoader(true);
     }
   };
 
@@ -316,6 +328,8 @@ const Links = (props) => {
 
     if (isLinkStatusUpdated || isFolderUpdated) {
       if (_size(links) <= DEFAULT_PAGE_SIZE) {
+        setShowPaginationLoader(false);
+        setLinkOperation(MOVE_OR_DELETE_LINK);
         fetchMoreFeed();
       }
     }
@@ -421,7 +435,7 @@ const Links = (props) => {
   };
 
   const renderPaginationLoader = () => {
-    return isPaginationQueryRunning ? (
+    return isPaginationQueryRunning && showPaginationLoader ? (
       <div className={classes.spinnerContainer}>
         <Spinner
           thickness="4px"
