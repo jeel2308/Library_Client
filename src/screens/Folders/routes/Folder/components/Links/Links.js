@@ -530,7 +530,7 @@ export default compose(
         },
       };
     },
-    getSkipQueryState: ({ folderId }) => !folderId,
+    getSkipQueryStatus: ({ folderId }) => !folderId,
     mapQueryDataToProps: ({
       getFolderDetails,
       ownProps: { folderId, isCompleted, searchText },
