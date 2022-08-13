@@ -30,7 +30,7 @@ import {
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
-import { FETCH_MORE_LINK } from '../FolderUtils';
+import { FETCH_MORE_LINK, ADD_LINK } from '../FolderUtils';
 import { ScrollIntoViewWrapper } from '#components';
 
 /**--relative-- */
@@ -58,6 +58,8 @@ const Links = (props) => {
     fetchMore,
     showMoveAction,
     searchText,
+    linkOperation,
+    setLinkOperation,
   } = props;
   const { linksV2 } = folderDetails;
   const links = _pipe((data) => {
@@ -71,7 +73,6 @@ const Links = (props) => {
   const [showBulkSelection, setShowBulkSelection] = useState(false);
   const [showFolderList, setShowFolderList] = useState(false);
   const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
-  const [linkOperation, setLinkOperation] = useState(null);
 
   const listScrollRef = useRef();
   const linksNodeRefs = useRef([]);
@@ -93,6 +94,8 @@ const Links = (props) => {
 
       listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
 
+      setLinkOperation(null);
+    } else if (linkOperation === DELETE_LINK_OPERATION) {
       setLinkOperation(null);
     } else {
       listScrollRef.current && scrollToBottom(listScrollRef.current);
@@ -344,13 +347,18 @@ const Links = (props) => {
         }
       };
 
-      if (index === totalLinks - 1) {
+      if (index === totalLinks - 1 && linkOperation === ADD_LINK) {
         return (
           <ScrollIntoViewWrapper
             key={id}
             dependencyForChangingScrollPosition={[]}
           >
             {({ ref, scrollIntoView }) => {
+              const onMetadataLoaded = () => {
+                scrollIntoView();
+                setLinkOperation(null);
+              };
+
               return (
                 <div
                   className={classes.linkOption}
@@ -376,7 +384,7 @@ const Links = (props) => {
                       dropDownOptions={linkActions}
                       handleActions={handleActions}
                       onLinkClick={onLinkClick}
-                      onMetadataLoaded={scrollIntoView}
+                      onMetadataLoaded={onMetadataLoaded}
                     />
                   </div>
                 </div>
