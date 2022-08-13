@@ -30,17 +30,13 @@ import {
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
-import { FETCH_MORE_LINK, ADD_LINK } from '../FolderUtils';
+import { FETCH_MORE_LINK, ADD_LINK, MOVE_OR_DELETE_LINK } from '../FolderUtils';
 import { ScrollIntoViewWrapper } from '#components';
 
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
-import {
-  getLinkActions,
-  DELETE_LINK_OPERATION,
-  getBulkLinkActions,
-} from './LinkUtils';
+import { getLinkActions, getBulkLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import FolderListModal from './FolderListModal';
@@ -95,7 +91,7 @@ const Links = (props) => {
       listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
 
       setLinkOperation(null);
-    } else if (linkOperation === DELETE_LINK_OPERATION) {
+    } else if (linkOperation === MOVE_OR_DELETE_LINK) {
       setLinkOperation(null);
     } else {
       listScrollRef.current && scrollToBottom(listScrollRef.current);
@@ -144,7 +140,7 @@ const Links = (props) => {
   const onDeleteLinks = async () => {
     toggleDeleteLinkModalVisibility();
     disableBulkSelectionMode();
-    setLinkOperation(DELETE_LINK_OPERATION);
+    setLinkOperation(MOVE_OR_DELETE_LINK);
 
     await deleteLink({
       linkIds: selectedLinks,
@@ -164,6 +160,7 @@ const Links = (props) => {
   };
 
   const onUpdateFolder = async ({ folderId: updatedFolderId }) => {
+    setLinkOperation(MOVE_OR_DELETE_LINK);
     await updateLink({
       linksDetails: _map(selectedLinks, (id) => ({
         id,
@@ -190,7 +187,6 @@ const Links = (props) => {
 
       case 'DELETE': {
         setSelectedLinks([linkId]);
-
         toggleDeleteLinkModalVisibility();
 
         break;
@@ -198,6 +194,7 @@ const Links = (props) => {
 
       case 'MARK_AS_PENDING':
       case 'MARK_AS_COMPLETE': {
+        setLinkOperation(MOVE_OR_DELETE_LINK);
         await updateLink({
           linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
           oldStatus: isCompleted,
@@ -247,6 +244,7 @@ const Links = (props) => {
         break;
       }
       case 'UPDATE_STATUS': {
+        setLinkOperation(MOVE_OR_DELETE_LINK);
         await updateLink({
           linksDetails: _map(selectedLinks, (id) => ({
             id,
