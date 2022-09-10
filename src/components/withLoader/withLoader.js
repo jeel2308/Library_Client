@@ -8,7 +8,6 @@ import classes from './withLoader.module.scss';
 const withLoader = (WrappedComponent) => {
   const GraphqlLoader = (props) => {
     const { isData, isLoading, loadingContainerStyle = {} } = props;
-    console.log({ isData, isLoading });
 
     if (!isData && isLoading) {
       return (
