@@ -146,8 +146,6 @@ const Resources = (props) => {
 
   const { name } = userBasicDetails;
 
-  console.log({ selectedFolder });
-
   return (
     <div className={classes.container}>
       <div className={classes.leftContainer}>
