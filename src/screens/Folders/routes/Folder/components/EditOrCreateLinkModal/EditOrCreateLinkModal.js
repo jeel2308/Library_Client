@@ -6,7 +6,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 
 /**--internal-- */
-import { Modal, Form } from '#components';
+import { Modal, Form, withLoader } from '#components';
 import { addLink, updateLink } from '#modules/Module';
 import { getLinkDetailsFromCache } from '#modules/GraphqlHelpers';
 import { compose } from '#Utils';
@@ -136,7 +136,8 @@ const mapActionCreators = {
 
 const EnhancedEditOrCreateLink = compose(
   connect(mapStateToProps, mapActionCreators),
-  getUserFoldersEnhancer()
+  getUserFoldersEnhancer(),
+  withLoader
 )(EditOrCreateLink);
 
 const EditOrCreateLinkModal = (props) => {

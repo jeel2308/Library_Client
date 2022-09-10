@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 /**--internal-- */
-import { Modal } from '#components';
+import { Modal, withLoader } from '#components';
 import { compose } from '#Utils';
 import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
 
@@ -73,7 +73,8 @@ const mapStateToProps = (state) => {
 
 const EnhancedFolderList = compose(
   connect(mapStateToProps),
-  getUserFoldersEnhancer()
+  getUserFoldersEnhancer(),
+  withLoader
 )(FolderList);
 
 const FolderListModal = (props) => {
