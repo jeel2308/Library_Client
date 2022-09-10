@@ -41,7 +41,7 @@ const EditOrCreateLink = (props) => {
     },
   });
 
-  const getUpdatedLinkData = ({
+  const getPayloadToUpdateLink = ({
     link,
     isCompleted: updatedStatus,
     folderId: updatedFolderId,
@@ -80,26 +80,26 @@ const EditOrCreateLink = (props) => {
         searchText,
       };
 
-      await addLink(createLinkPayload);
+      const data = await addLink(createLinkPayload);
 
       linkAddedOrUpdatedCallback &&
-        linkAddedOrUpdatedCallback(createLinkPayload);
+        linkAddedOrUpdatedCallback({ ...data, folderId });
     } else {
-      const updatedLinkDetails = getUpdatedLinkData({
+      const payloadToUpdateLink = getPayloadToUpdateLink({
         link,
         isCompleted,
         folderId: updatedFolderId,
       });
 
-      await updateLink({
-        linksDetails: [updatedLinkDetails],
+      const [data] = await updateLink({
+        linksDetails: [payloadToUpdateLink],
         oldStatus: linkDetails.isCompleted,
         oldFolderId: folderId,
         searchText,
       });
 
       linkAddedOrUpdatedCallback &&
-        linkAddedOrUpdatedCallback(updatedLinkDetails);
+        linkAddedOrUpdatedCallback({ ...data, folderId });
     }
 
     closeModal();

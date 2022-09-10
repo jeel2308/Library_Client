@@ -237,12 +237,6 @@ export const addLinkBasicDetails = ({
         },
       });
 
-      const linkId = _get(
-        mutationResponse,
-        'data.linkManagement.addLink.id',
-        null
-      );
-
       dispatch(
         setToastMessage({
           title: 'Added link successfully',
@@ -252,7 +246,7 @@ export const addLinkBasicDetails = ({
         })
       );
 
-      return linkId;
+      return _get(mutationResponse, 'data.linkManagement.addLink', {});
     } catch (e) {
       console.error(e);
       dispatch(
@@ -263,7 +257,7 @@ export const addLinkBasicDetails = ({
           position: 'bottom-left',
         })
       );
-      return null;
+      return {};
     }
   };
 };
@@ -303,8 +297,10 @@ export const updateLinkBasicDetails = ({
       linksToBeRemovedFromCurrentFeed
     );
 
+    let mutationResponse = {};
+
     try {
-      await client.mutate({
+      mutationResponse = await client.mutate({
         mutation: updateLinkMutation,
         variables: {
           input: linksDetails,
@@ -325,7 +321,6 @@ export const updateLinkBasicDetails = ({
       });
 
       const toastMessage = 'Links updated successfully';
-
       dispatch(
         setToastMessage({
           title: toastMessage,
@@ -334,6 +329,8 @@ export const updateLinkBasicDetails = ({
           position: 'bottom-left',
         })
       );
+
+      return _get(mutationResponse, 'data.linkManagement.updateLink', []);
     } catch (e) {
       console.error(e);
       dispatch(
@@ -344,6 +341,7 @@ export const updateLinkBasicDetails = ({
           position: 'bottom-left',
         })
       );
+      return [];
     }
   };
 };
@@ -351,10 +349,11 @@ export const updateLinkBasicDetails = ({
 export const addLink = ({ url, isCompleted, folderId, searchText }) => {
   return async (dispatch) => {
     dispatch(setLoaderVisibility(true));
-    await dispatch(
+    const data = await dispatch(
       addLinkBasicDetails({ url, isCompleted, folderId, searchText })
     );
     dispatch(setLoaderVisibility(false));
+    return data;
   };
 };
 
@@ -366,7 +365,7 @@ export const updateLink = ({
 }) => {
   return async (dispatch) => {
     dispatch(setLoaderVisibility(true));
-    await dispatch(
+    const data = await dispatch(
       updateLinkBasicDetails({
         linksDetails,
         oldStatus,
@@ -375,6 +374,7 @@ export const updateLink = ({
       })
     );
     dispatch(setLoaderVisibility(false));
+    return data;
   };
 };
 
