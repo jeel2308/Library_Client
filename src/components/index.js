@@ -10,6 +10,7 @@ import Sidebar from './Sidebar';
 import SegmentControl from './SegmentControl';
 import Dropdown from './Dropdown';
 import ScrollIntoViewWrapper from './ScrollIntoViewWrapper';
+import withLoader from './withLoader';
 
 export {
   Form,
@@ -24,4 +25,5 @@ export {
   SegmentControl,
   Dropdown,
   ScrollIntoViewWrapper,
+  withLoader,
 };
