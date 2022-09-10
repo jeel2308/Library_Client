@@ -1,12 +1,21 @@
 /**--external-- */
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
 import _debounce from 'lodash/debounce';
+import _isEmpty from 'lodash/isEmpty';
+import _size from 'lodash/size';
 import { Text } from '@chakra-ui/react';
 
 /**--internal-- */
 import { SegmentControl } from '#components';
+import { scrollToBottom } from '#Utils';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
@@ -14,7 +23,6 @@ import AddButton from './AddButton';
 import EditOrCreateLinkModal from './EditOrCreateLinkModal';
 import Links from './Links';
 import SearchBar from './SearchBar';
-import { ADD_LINK } from './FolderUtils';
 
 const segmentControlOptions = [
   { label: 'Pending', value: 'PENDING' },
@@ -24,21 +32,33 @@ const Folder = () => {
   const [linkStatus, setLinkStatus] = useState(
     () => segmentControlOptions[0].value
   );
-
   const [showEditOrCreateLinkModal, setShowEditOrCreateLinkModal] =
     useState(false);
-
   const [searchText, setSearchText] = useState('');
-  const [linkOperation, setLinkOperation] = useState(null);
 
   const updateSearchText = useMemo(() => {
     return _debounce((value) => setSearchText(value), 300);
   }, []);
-
   const closeModal = useCallback(() => setShowEditOrCreateLinkModal(false), []);
   const openModal = useCallback(() => setShowEditOrCreateLinkModal(true), []);
 
   const folderBasicDetails = useOutletContext();
+
+  const linkScrollRef = useRef(null);
+  const linksNodeRefs = useRef([]);
+  const previousFiltersRef = useRef({
+    folderId: '',
+    linkStatus: '',
+    searchText: '',
+  });
+
+  const setLinkScrollRef = (node) => {
+    linkScrollRef.current = node;
+  };
+
+  const setLinkNodesRef = (node, index) => {
+    linksNodeRefs.current[index] = node;
+  };
 
   const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
   const folderId = _get(folderBasicDetails, 'id', '');
@@ -48,6 +68,61 @@ const Folder = () => {
   }, [folderId]);
 
   const isCompleted = linkStatus !== 'PENDING';
+
+  const scrollLinkFeed = (operationDetails) => {
+    const { type } = operationDetails;
+    switch (type) {
+      case 'ADD_LINK': {
+        const allLinks = linksNodeRefs.current ?? [];
+        if (!_isEmpty(allLinks)) {
+          const lastLinkNode = allLinks[_size(allLinks) - 1];
+          lastLinkNode?.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+      }
+      case 'FETCH_MORE': {
+        const { oldCountOfLinks } = operationDetails;
+        const newLinks = linksNodeRefs.current ?? [];
+        if (!_isEmpty(newLinks)) {
+          const indexOfTopMostLink = _size(newLinks) - oldCountOfLinks - 1;
+          const totalVerticalDistance =
+            linksNodeRefs.current?.[indexOfTopMostLink]?.getBoundingClientRect()
+              .top ?? 0;
+          linkScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
+        }
+
+        break;
+      }
+      case 'DELETE_LINK': {
+        break;
+      }
+      case 'FEED_REFRESH': {
+        const {
+          folderId: previousFolderId,
+          linkStatus: previousLinkStatus,
+          searchText: previousSearchText,
+        } = previousFiltersRef.current;
+
+        if (
+          folderId !== previousFolderId ||
+          linkStatus !== previousLinkStatus ||
+          searchText !== previousSearchText
+        ) {
+          scrollToBottom(linkScrollRef.current);
+          previousFiltersRef.current = {
+            folderId,
+            linkStatus,
+            searchText,
+          };
+        }
+
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  };
 
   return (
     <div className={classes.container}>
@@ -73,8 +148,9 @@ const Folder = () => {
         isCompleted={isCompleted}
         searchText={searchText}
         updateSearchText={setSearchText}
-        linkOperation={linkOperation}
-        setLinkOperation={setLinkOperation}
+        setLinkScrollRef={setLinkScrollRef}
+        setLinkNodesRef={setLinkNodesRef}
+        scrollLinkFeed={scrollLinkFeed}
       />
 
       {showEditOrCreateLinkModal && (
@@ -84,7 +160,7 @@ const Folder = () => {
           defaultLinkStatus={isCompleted}
           searchText={searchText}
           linkAddedOrUpdatedCallback={() => {
-            setLinkOperation(ADD_LINK);
+            scrollLinkFeed({ type: 'ADD_LINK' });
           }}
         />
       )}

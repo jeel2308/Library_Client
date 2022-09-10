@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
@@ -23,15 +23,13 @@ import {
 import {
   compose,
   copyToClipboard,
-  scrollToBottom,
   getFieldPresenceStatus,
   checkScrollAtTop,
   mergeRefs,
 } from '#Utils';
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
-import { FETCH_MORE_LINK, ADD_LINK, MOVE_OR_DELETE_LINK } from '../FolderUtils';
-import { ScrollIntoViewWrapper, withLoader } from '#components';
+import { withLoader } from '#components';
 
 /**--relative-- */
 import classes from './Links.module.scss';
@@ -45,7 +43,6 @@ import DeleteLinkModal from './DeleteLinkModal';
 const Links = (props) => {
   const {
     folderDetails,
-    folderId,
     deleteLink,
     isCompleted,
     updateLink,
@@ -54,15 +51,15 @@ const Links = (props) => {
     fetchMore,
     showMoveAction,
     searchText,
-    linkOperation,
-    setLinkOperation,
+    setLinkScrollRef,
+    setLinkNodesRef,
+    scrollLinkFeed,
   } = props;
-  const { linksV2 } = folderDetails;
+  const { linksV2, id: folderId } = folderDetails;
   const links = _pipe((data) => {
     const edges = _get(data, 'edges', []);
     return _map(edges, ({ node }) => node);
   }, _reverse)(linksV2);
-  const totalPresentLinks = _size(links);
 
   const [showEditLinkModal, setShowEditLinkModal] = useState(false);
   const [selectedLinks, setSelectedLinks] = useState([]);
@@ -71,41 +68,8 @@ const Links = (props) => {
   const [showDeleteLinkModal, setDeleteLinkModalVisibility] = useState(false);
   const [showPaginationLoader, setShowPaginationLoader] = useState(false);
 
-  const listScrollRef = useRef();
-  const linksNodeRefs = useRef([]);
-
-  const previousTotalPresentLinksRef = useRef(_size(links));
-
-  const updateLinksNodeRefs = (node, index) => {
-    linksNodeRefs.current[index] = node;
-  };
-
-  useEffect(() => {
-    if (linkOperation === FETCH_MORE_LINK) {
-      const addedLinksCount =
-        totalPresentLinks - previousTotalPresentLinksRef.current;
-
-      const totalVerticalDistance =
-        linksNodeRefs.current?.[addedLinksCount]?.getBoundingClientRect().top ??
-        0;
-
-      listScrollRef.current.scrollTop = totalVerticalDistance - 75 - 75;
-
-      setLinkOperation(null);
-    } else if (linkOperation === MOVE_OR_DELETE_LINK) {
-      setLinkOperation(null);
-    } else {
-      listScrollRef.current && scrollToBottom(listScrollRef.current);
-    }
-  }, [totalPresentLinks, folderId, isCompleted, searchText]);
-
-  useEffect(() => {
-    previousTotalPresentLinksRef.current = totalPresentLinks;
-  }, [totalPresentLinks]);
-
   useEffect(() => {
     disableBulkSelectionMode();
-    setLinkOperation(null);
   }, [folderId]);
 
   useEffect(() => {
@@ -147,7 +111,6 @@ const Links = (props) => {
   const onDeleteLinks = async () => {
     toggleDeleteLinkModalVisibility();
     disableBulkSelectionMode();
-    setLinkOperation(MOVE_OR_DELETE_LINK);
 
     await deleteLink({
       linkIds: selectedLinks,
@@ -168,7 +131,6 @@ const Links = (props) => {
   };
 
   const onUpdateFolder = async ({ folderId: updatedFolderId }) => {
-    setLinkOperation(MOVE_OR_DELETE_LINK);
     await updateLink({
       linksDetails: _map(selectedLinks, (id) => ({
         id,
@@ -203,7 +165,6 @@ const Links = (props) => {
 
       case 'MARK_AS_PENDING':
       case 'MARK_AS_COMPLETE': {
-        setLinkOperation(MOVE_OR_DELETE_LINK);
         await updateLink({
           linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
           oldStatus: isCompleted,
@@ -254,7 +215,6 @@ const Links = (props) => {
         break;
       }
       case 'UPDATE_STATUS': {
-        setLinkOperation(MOVE_OR_DELETE_LINK);
         await updateLink({
           linksDetails: _map(selectedLinks, (id) => ({
             id,
@@ -312,9 +272,9 @@ const Links = (props) => {
     const isContainerAtTop = checkScrollAtTop(e.target);
 
     if (isContainerAtTop && hasNextPage && !isPaginationQueryRunning) {
-      fetchMore();
-      setLinkOperation(FETCH_MORE_LINK);
       setShowPaginationLoader(true);
+      await fetchMore();
+      scrollLinkFeed({ type: 'FETCH_MORE', oldCountOfLinks: totalLinks });
     }
   };
 
@@ -329,7 +289,6 @@ const Links = (props) => {
     if (isLinkStatusUpdated || isFolderUpdated) {
       if (_size(links) <= DEFAULT_PAGE_SIZE) {
         setShowPaginationLoader(false);
-        setLinkOperation(MOVE_OR_DELETE_LINK);
         fetchMoreFeed();
       }
     }
@@ -359,58 +318,11 @@ const Links = (props) => {
         }
       };
 
-      if (index === totalLinks - 1 && linkOperation === ADD_LINK) {
-        return (
-          <ScrollIntoViewWrapper
-            key={id}
-            dependencyForChangingScrollPosition={[]}
-          >
-            {({ ref, scrollIntoView }) => {
-              const onMetadataLoaded = () => {
-                scrollIntoView();
-                setLinkOperation(null);
-              };
-
-              return (
-                <div
-                  className={classes.linkOption}
-                  ref={(node) =>
-                    mergeRefs({
-                      node,
-                      refs: [ref, (node) => updateLinksNodeRefs(node, index)],
-                    })
-                  }
-                >
-                  {showBulkSelection && (
-                    <Checkbox
-                      size="lg"
-                      isChecked={isLinkSelected}
-                      backgroundColor="white"
-                      borderColor="rgba(0,0,0,0.5)"
-                      onChange={onChange}
-                    />
-                  )}
-                  <div className={classes.linkContainer}>
-                    <Link
-                      {...link}
-                      dropDownOptions={linkActions}
-                      handleActions={handleActions}
-                      onLinkClick={onLinkClick}
-                      onMetadataLoaded={onMetadataLoaded}
-                    />
-                  </div>
-                </div>
-              );
-            }}
-          </ScrollIntoViewWrapper>
-        );
-      }
-
       return (
         <div
           className={classes.linkOption}
           key={id}
-          ref={(node) => updateLinksNodeRefs(node, index)}
+          ref={(node) => setLinkNodesRef(node, index)}
         >
           {showBulkSelection && (
             <Checkbox
@@ -453,7 +365,7 @@ const Links = (props) => {
       {renderPaginationLoader()}
       <div
         className={classes.scrollContainer}
-        ref={listScrollRef}
+        ref={(node) => mergeRefs({ node, refs: [setLinkScrollRef] })}
         onScroll={onScroll}
       >
         <div className={classes.listContainer}>
@@ -520,7 +432,7 @@ export default compose(
     name: 'getFolderDetails',
     fetchPolicy: 'cache-and-network',
     skip: ({ folderId }) => !folderId,
-    options: ({ folderId, isCompleted, searchText }) => {
+    options: ({ folderId, isCompleted, searchText, scrollLinkFeed }) => {
       return {
         variables: {
           input: { id: folderId, type: 'FOLDER' },
@@ -531,6 +443,9 @@ export default compose(
           },
         },
         fetchPolicy: 'cache-and-network',
+        onCompleted: () => {
+          scrollLinkFeed({ type: 'FEED_REFRESH' });
+        },
       };
     },
     props: ({
