@@ -42,18 +42,8 @@ const client = new ApolloClient({
   }),
   defaultOptions: {
     watchQuery: {
-      /**
-       * This is required to avoid network calls when cache is updated
-       */
-      nextFetchPolicy(lastFetchPolicy) {
-        if (
-          lastFetchPolicy === 'cache-and-network' ||
-          lastFetchPolicy === 'network-only'
-        ) {
-          return 'cache-first';
-        }
-        return lastFetchPolicy;
-      },
+      nextFetchPolicy: 'cache-first',
+      notifyOnNetworkStatusChange: true,
     },
   },
   /**
