@@ -11,9 +11,9 @@ import _find from 'lodash/find';
 import _size from 'lodash/size';
 import _pipe from 'lodash/flow';
 import _reverse from 'lodash/reverse';
+import { graphql } from '@apollo/client/react/hoc';
 
 /**--internal-- */
-import { withQuery } from '#components';
 import {
   deleteLink,
   updateLink,
@@ -31,7 +31,7 @@ import {
 import { getFolderDetailsQuery } from '#modules/Queries';
 import { getFolderDetailsFromCache } from '#modules/GraphqlHelpers';
 import { FETCH_MORE_LINK, ADD_LINK, MOVE_OR_DELETE_LINK } from '../FolderUtils';
-import { ScrollIntoViewWrapper } from '#components';
+import { ScrollIntoViewWrapper, withLoader } from '#components';
 
 /**--relative-- */
 import classes from './Links.module.scss';
@@ -506,7 +506,7 @@ const mapStateToProps = (state) => {
 
   const showMoveAction = totalFolders > 1;
 
-  return { showMoveAction };
+  return { showMoveAction, isLoading: true, isData: false };
 };
 
 const mapActionCreators = {
@@ -516,22 +516,24 @@ const mapActionCreators = {
 
 export default compose(
   connect(mapStateToProps, mapActionCreators),
-  withQuery(getFolderDetailsQuery, {
+  graphql(getFolderDetailsQuery, {
     name: 'getFolderDetails',
-    displayName: 'getFolderDetails',
     fetchPolicy: 'cache-and-network',
-    getVariables: ({ folderId, isCompleted, searchText }) => {
+    skip: ({ folderId }) => !folderId,
+    options: ({ folderId, isCompleted, searchText }) => {
       return {
-        input: { id: folderId, type: 'FOLDER' },
-        linkFilterInputV2: {
-          isCompleted,
-          first: DEFAULT_PAGE_SIZE,
-          searchText,
+        variables: {
+          input: { id: folderId, type: 'FOLDER' },
+          linkFilterInputV2: {
+            isCompleted,
+            first: DEFAULT_PAGE_SIZE,
+            searchText,
+          },
         },
+        fetchPolicy: 'cache-and-network',
       };
     },
-    getSkipQueryStatus: ({ folderId }) => !folderId,
-    mapQueryDataToProps: ({
+    props: ({
       getFolderDetails,
       ownProps: { folderId, isCompleted, searchText },
     }) => {
@@ -542,7 +544,11 @@ export default compose(
        */
       const folderDetails = getFolderDetailsFromCache({
         folderId,
-        linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE, searchText },
+        linkFilters: {
+          isCompleted,
+          first: DEFAULT_PAGE_SIZE,
+          searchText,
+        },
         showOptimistic: true,
       });
 
@@ -554,7 +560,6 @@ export default compose(
 
       const fetchMore = async ({ first = DEFAULT_PAGE_SIZE } = {}) => {
         return await getFolderDetails.fetchMore({
-          //BUG: setting query option will not update network status while refetching
           variables: {
             input: {
               id: folderId,
@@ -605,5 +610,6 @@ export default compose(
         fetchMore,
       };
     },
-  })
+  }),
+  withLoader
 )(Links);
