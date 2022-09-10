@@ -66,19 +66,6 @@ const deleteLinkMutation = gql`
   }
 `;
 
-const updateLinksMetadataMutation = gql`
-  mutation updateLinksMetadata($input: [UpdateLinkMetadataInput!]!) {
-    linkManagement {
-      updateLinksMetadata(input: $input) {
-        id
-        title
-        description
-        thumbnail
-      }
-    }
-  }
-`;
-
 const updateUserMutation = gql`
   mutation updateUser($input: UpdateUserInput!) {
     userManagement {
@@ -97,6 +84,5 @@ export {
   addLinkMutation,
   updateLinkMutation,
   deleteLinkMutation,
-  updateLinksMetadataMutation,
   updateUserMutation,
 };

@@ -24,7 +24,6 @@ import {
   addLinkMutation,
   updateLinkMutation,
   deleteLinkMutation,
-  updateLinksMetadataMutation,
   updateUserMutation,
 } from './Mutations';
 
@@ -349,40 +348,13 @@ export const updateLinkBasicDetails = ({
   };
 };
 
-export const updateLinksMetadata = ({ linksDetails }) => {
-  return async (dispatch) => {
-    try {
-      await client.mutate({
-        mutation: updateLinksMetadataMutation,
-        variables: { input: linksDetails },
-      });
-    } catch (e) {
-      console.error(e);
-      dispatch(
-        setToastMessage({
-          title: 'Something went wrong',
-          status: 'error',
-          isClosable: true,
-          position: 'bottom-left',
-        })
-      );
-    }
-  };
-};
-
 export const addLink = ({ url, isCompleted, folderId, searchText }) => {
   return async (dispatch) => {
     dispatch(setLoaderVisibility(true));
-    const addedLinkId = await dispatch(
+    await dispatch(
       addLinkBasicDetails({ url, isCompleted, folderId, searchText })
     );
     dispatch(setLoaderVisibility(false));
-
-    if (addedLinkId) {
-      dispatch(
-        updateLinksMetadata({ linksDetails: [{ url, id: addedLinkId }] })
-      );
-    }
   };
 };
 
@@ -393,8 +365,6 @@ export const updateLink = ({
   searchText,
 }) => {
   return async (dispatch) => {
-    const linksWithNewUrl = _filter(linksDetails, ({ url }) => !!url);
-
     dispatch(setLoaderVisibility(true));
     await dispatch(
       updateLinkBasicDetails({
@@ -405,16 +375,6 @@ export const updateLink = ({
       })
     );
     dispatch(setLoaderVisibility(false));
-
-    if (!_isEmpty(linksWithNewUrl)) {
-      const updateLinksMetadataPayload = _map(
-        linksWithNewUrl,
-        ({ id, url }) => ({ id, url })
-      );
-      dispatch(
-        updateLinksMetadata({ linksDetails: updateLinksMetadataPayload })
-      );
-    }
   };
 };
 
