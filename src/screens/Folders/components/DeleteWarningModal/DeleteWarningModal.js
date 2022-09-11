@@ -14,9 +14,11 @@ const DeleteWarningModal = (props) => {
   const { closeModal, deleteFolder, folderId, deleteFolderCallback } = props;
 
   const onDeleteClick = async () => {
-    closeModal();
-    await deleteFolder({ id: folderId });
-    deleteFolderCallback({ folderId });
+    try {
+      closeModal();
+      await deleteFolder({ id: folderId });
+      deleteFolderCallback({ folderId });
+    } catch {}
   };
 
   return (

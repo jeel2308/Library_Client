@@ -111,18 +111,19 @@ const Links = (props) => {
   const onDeleteLinks = async () => {
     toggleDeleteLinkModalVisibility();
     disableBulkSelectionMode();
+    try {
+      await deleteLink({
+        linkIds: selectedLinks,
+        isCompleted,
+        folderId,
+        searchText,
+      });
 
-    await deleteLink({
-      linkIds: selectedLinks,
-      isCompleted,
-      folderId,
-      searchText,
-    });
-
-    if (_size(links) <= DEFAULT_PAGE_SIZE) {
-      setShowPaginationLoader(false);
-      fetchMoreFeed();
-    }
+      if (_size(links) <= DEFAULT_PAGE_SIZE) {
+        setShowPaginationLoader(false);
+        fetchMoreFeed();
+      }
+    } catch {}
   };
 
   const onCancelLinkDelete = () => {
@@ -131,22 +132,24 @@ const Links = (props) => {
   };
 
   const onUpdateFolder = async ({ folderId: updatedFolderId }) => {
-    await updateLink({
-      linksDetails: _map(selectedLinks, (id) => ({
-        id,
-        folderId: updatedFolderId,
-      })),
-      oldStatus: isCompleted,
-      oldFolderId: folderId,
-      searchText,
-    });
+    try {
+      await updateLink({
+        linksDetails: _map(selectedLinks, (id) => ({
+          id,
+          folderId: updatedFolderId,
+        })),
+        oldStatus: isCompleted,
+        oldFolderId: folderId,
+        searchText,
+      });
 
-    closeFolderList();
+      closeFolderList();
 
-    if (_size(links) <= DEFAULT_PAGE_SIZE) {
-      setShowPaginationLoader(false);
-      fetchMoreFeed();
-    }
+      if (_size(links) <= DEFAULT_PAGE_SIZE) {
+        setShowPaginationLoader(false);
+        fetchMoreFeed();
+      }
+    } catch {}
   };
 
   const handleActions = async ({ value, linkId }) => {
@@ -165,17 +168,19 @@ const Links = (props) => {
 
       case 'MARK_AS_PENDING':
       case 'MARK_AS_COMPLETE': {
-        await updateLink({
-          linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
-          oldStatus: isCompleted,
-          oldFolderId: folderId,
-          searchText,
-        });
+        try {
+          await updateLink({
+            linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
+            oldStatus: isCompleted,
+            oldFolderId: folderId,
+            searchText,
+          });
 
-        if (_size(links) <= DEFAULT_PAGE_SIZE) {
-          setShowPaginationLoader(false);
-          fetchMoreFeed();
-        }
+          if (_size(links) <= DEFAULT_PAGE_SIZE) {
+            setShowPaginationLoader(false);
+            fetchMoreFeed();
+          }
+        } catch (e) {}
 
         break;
       }
@@ -215,22 +220,24 @@ const Links = (props) => {
         break;
       }
       case 'UPDATE_STATUS': {
-        await updateLink({
-          linksDetails: _map(selectedLinks, (id) => ({
-            id,
-            isCompleted: !isCompleted,
-          })),
-          oldStatus: isCompleted,
-          oldFolderId: folderId,
-          searchText,
-        });
+        try {
+          await updateLink({
+            linksDetails: _map(selectedLinks, (id) => ({
+              id,
+              isCompleted: !isCompleted,
+            })),
+            oldStatus: isCompleted,
+            oldFolderId: folderId,
+            searchText,
+          });
 
-        disableBulkSelectionMode();
+          disableBulkSelectionMode();
 
-        if (_size(links) <= DEFAULT_PAGE_SIZE) {
-          setShowPaginationLoader(false);
-          fetchMoreFeed();
-        }
+          if (_size(links) <= DEFAULT_PAGE_SIZE) {
+            setShowPaginationLoader(false);
+            fetchMoreFeed();
+          }
+        } catch {}
 
         break;
       }

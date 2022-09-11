@@ -72,37 +72,39 @@ const EditOrCreateLink = (props) => {
     isCompleted = false,
     folderId: updatedFolderId,
   }) => {
-    if (mode === 'CREATE') {
-      const createLinkPayload = {
-        url: link,
-        isCompleted,
-        folderId,
-        searchText,
-      };
+    try {
+      if (mode === 'CREATE') {
+        const createLinkPayload = {
+          url: link,
+          isCompleted,
+          folderId,
+          searchText,
+        };
 
-      const data = await addLink(createLinkPayload);
+        const data = await addLink(createLinkPayload);
 
-      linkAddedOrUpdatedCallback &&
-        linkAddedOrUpdatedCallback({ ...data, folderId });
-    } else {
-      const payloadToUpdateLink = getPayloadToUpdateLink({
-        link,
-        isCompleted,
-        folderId: updatedFolderId,
-      });
+        linkAddedOrUpdatedCallback &&
+          linkAddedOrUpdatedCallback({ ...data, folderId });
+      } else {
+        const payloadToUpdateLink = getPayloadToUpdateLink({
+          link,
+          isCompleted,
+          folderId: updatedFolderId,
+        });
 
-      const [data] = await updateLink({
-        linksDetails: [payloadToUpdateLink],
-        oldStatus: linkDetails.isCompleted,
-        oldFolderId: folderId,
-        searchText,
-      });
+        const [data] = await updateLink({
+          linksDetails: [payloadToUpdateLink],
+          oldStatus: linkDetails.isCompleted,
+          oldFolderId: folderId,
+          searchText,
+        });
 
-      linkAddedOrUpdatedCallback &&
-        linkAddedOrUpdatedCallback({ ...data, folderId });
-    }
+        linkAddedOrUpdatedCallback &&
+          linkAddedOrUpdatedCallback({ ...data, folderId });
+      }
 
-    closeModal();
+      closeModal();
+    } catch {}
   };
 
   return (

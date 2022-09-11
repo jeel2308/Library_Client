@@ -53,9 +53,7 @@ const Profile = (props) => {
     try {
       await updateUser({ input: { name: nameLocal, email: emailLocal, id } });
       setMode(VIEW_MODE);
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   };
 
   const onNameChange = (e) => {

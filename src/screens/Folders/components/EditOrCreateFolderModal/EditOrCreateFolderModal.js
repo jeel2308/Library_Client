@@ -15,14 +15,15 @@ import classes from './EditOrCreateFolderModal.module.scss';
 const EditOrCreateFolderModal = (props) => {
   const { addFolder, closeModal, folderDetails, mode, updateFolder } = props;
 
-  const onSubmit = (data) => {
-    if (mode === 'CREATE') {
-      addFolder({ name: data.folder });
-    } else {
-      updateFolder({ name: data.folder, id: folderDetails.id });
-    }
-
-    closeModal();
+  const onSubmit = async (data) => {
+    try {
+      if (mode === 'CREATE') {
+        await addFolder({ name: data.folder });
+      } else {
+        await updateFolder({ name: data.folder, id: folderDetails.id });
+      }
+      closeModal();
+    } catch {}
   };
 
   const dynamicFormFields = getDynamicFormFields({
