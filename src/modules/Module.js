@@ -111,6 +111,7 @@ export const addFolder =
           position: 'bottom-left',
         })
       );
+      dispatch(setLoaderVisibility(false));
     } catch (e) {
       console.error(e);
       dispatch(
@@ -121,8 +122,8 @@ export const addFolder =
           position: 'bottom-left',
         })
       );
-    } finally {
       dispatch(setLoaderVisibility(false));
+      throw e;
     }
   };
 
@@ -158,6 +159,7 @@ export const updateFolder = ({ name, id }) => {
           position: 'bottom-left',
         })
       );
+      throw e;
     }
   };
 };
@@ -186,6 +188,7 @@ export const deleteFolder = ({ id }) => {
           position: 'bottom-left',
         })
       );
+      dispatch(setLoaderVisibility(false));
     } catch (e) {
       console.error(e);
       dispatch(
@@ -196,8 +199,8 @@ export const deleteFolder = ({ id }) => {
           position: 'bottom-left',
         })
       );
-    } finally {
       dispatch(setLoaderVisibility(false));
+      throw e;
     }
   };
 };
@@ -257,7 +260,7 @@ export const addLinkBasicDetails = ({
           position: 'bottom-left',
         })
       );
-      return {};
+      throw e;
     }
   };
 };
@@ -341,19 +344,23 @@ export const updateLinkBasicDetails = ({
           position: 'bottom-left',
         })
       );
-      return [];
+      throw e;
     }
   };
 };
 
 export const addLink = ({ url, isCompleted, folderId, searchText }) => {
   return async (dispatch) => {
-    dispatch(setLoaderVisibility(true));
-    const data = await dispatch(
-      addLinkBasicDetails({ url, isCompleted, folderId, searchText })
-    );
-    dispatch(setLoaderVisibility(false));
-    return data;
+    try {
+      dispatch(setLoaderVisibility(true));
+      const data = await dispatch(
+        addLinkBasicDetails({ url, isCompleted, folderId, searchText })
+      );
+      dispatch(setLoaderVisibility(false));
+      return data;
+    } catch (e) {
+      throw e;
+    }
   };
 };
 
@@ -364,17 +371,21 @@ export const updateLink = ({
   searchText,
 }) => {
   return async (dispatch) => {
-    dispatch(setLoaderVisibility(true));
-    const data = await dispatch(
-      updateLinkBasicDetails({
-        linksDetails,
-        oldStatus,
-        oldFolderId,
-        searchText,
-      })
-    );
-    dispatch(setLoaderVisibility(false));
-    return data;
+    try {
+      dispatch(setLoaderVisibility(true));
+      const data = await dispatch(
+        updateLinkBasicDetails({
+          linksDetails,
+          oldStatus,
+          oldFolderId,
+          searchText,
+        })
+      );
+      dispatch(setLoaderVisibility(false));
+      return data;
+    } catch (e) {
+      throw e;
+    }
   };
 };
 
@@ -421,6 +432,7 @@ export const deleteLink = ({ isCompleted, folderId, linkIds, searchText }) => {
           position: 'bottom-left',
         })
       );
+      throw e;
     }
   };
 };
@@ -634,8 +646,8 @@ export const changePassword = (data, successCallback) => {
       const responseData = await response.json();
 
       if (response.ok) {
-        setUserInfoInStorage({ userInfo: responseData });
-        dispatch(setUserDetails({ userInfo: responseData }));
+        setUserInfoInStorage(responseData);
+        dispatch(setUserDetails(responseData));
         dispatch(updateUserLoggedInStatus(true));
         successCallback && successCallback();
       } else {
