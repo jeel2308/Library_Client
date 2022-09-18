@@ -8,6 +8,9 @@ import propTypes from 'prop-types';
 /**--internal-- */
 import { addLink } from '#modules/Module';
 
+/**--relative-- */
+import { inputStyle, inputContainerStyle } from './AddResourceStyles';
+
 const AddResource = (props) => {
   const [url, setUrl] = useState('');
   const {
@@ -35,12 +38,21 @@ const AddResource = (props) => {
   };
 
   return (
-    <Box display={'flex'} padding={6} gap={6} background="white">
-      <Input
-        placeholder="enter url of resource"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-      />
+    <Box
+      display={'flex'}
+      padding={6}
+      gap={6}
+      background="white"
+      borderTop="1px solid rgba(0,0,0,0.2)"
+    >
+      <div style={inputContainerStyle}>
+        <Input
+          placeholder="enter url of resource"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
       <Button
         colorScheme={'blue'}
         disabled={_isEmpty(url)}
