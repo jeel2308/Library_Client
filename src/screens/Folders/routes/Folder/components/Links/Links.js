@@ -5,7 +5,7 @@ import _isEmpty from 'lodash/isEmpty';
 import _get from 'lodash/get';
 import _includes from 'lodash/includes';
 import _map from 'lodash/map';
-import { Checkbox, Spinner } from '@chakra-ui/react';
+import { Checkbox, Spinner, Box } from '@chakra-ui/react';
 import _filter from 'lodash/filter';
 import _find from 'lodash/find';
 import _size from 'lodash/size';
@@ -333,13 +333,15 @@ const Links = (props) => {
           ref={(node) => setLinkNodesRef(node, index)}
         >
           {showBulkSelection && (
-            <Checkbox
-              size="lg"
-              isChecked={isLinkSelected}
-              backgroundColor="white"
-              borderColor="rgba(0,0,0,0.5)"
-              onChange={onChange}
-            />
+            <Box position="absolute" top="50%" left="-34px">
+              <Checkbox
+                size="lg"
+                isChecked={isLinkSelected}
+                backgroundColor="white"
+                borderColor="rgba(0,0,0,0.5)"
+                onChange={onChange}
+              />
+            </Box>
           )}
           <div className={classes.linkContainer}>
             <Link
