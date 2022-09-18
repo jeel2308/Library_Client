@@ -77,4 +77,4 @@ AddResource.propTypes = {
 };
 
 export default connect(null, mapActionCreators)(AddResource);
-AddResource.displayName = 'AddItem';
+AddResource.displayName = 'AddResource';
