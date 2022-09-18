@@ -1,11 +1,5 @@
 /**--external-- */
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
 import _debounce from 'lodash/debounce';
@@ -19,7 +13,7 @@ import { scrollToBottom } from '#Utils';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
-import AddButton from './AddButton';
+import AddResource from './AddResource';
 import EditOrCreateLinkModal from './EditOrCreateLinkModal';
 import Links from './Links';
 import SearchBar from './SearchBar';
@@ -32,15 +26,11 @@ const Folder = () => {
   const [linkStatus, setLinkStatus] = useState(
     () => segmentControlOptions[0].value
   );
-  const [showEditOrCreateLinkModal, setShowEditOrCreateLinkModal] =
-    useState(false);
   const [searchText, setSearchText] = useState('');
 
   const updateSearchText = useMemo(() => {
     return _debounce((value) => setSearchText(value), 300);
   }, []);
-  const closeModal = useCallback(() => setShowEditOrCreateLinkModal(false), []);
-  const openModal = useCallback(() => setShowEditOrCreateLinkModal(true), []);
 
   const folderBasicDetails = useOutletContext();
 
@@ -129,12 +119,13 @@ const Folder = () => {
       <div className={classes.header}>
         <div className={classes.headerFirstRow}>
           <Text fontSize="xl">{folderName}</Text>
-          <SegmentControl
-            options={segmentControlOptions}
-            activeValue={linkStatus}
-            onOptionClick={({ value }) => setLinkStatus(value)}
-          />
-          <AddButton onClick={openModal} />
+          <div className={classes.segmentControlContainer}>
+            <SegmentControl
+              options={segmentControlOptions}
+              activeValue={linkStatus}
+              onOptionClick={({ value }) => setLinkStatus(value)}
+            />
+          </div>
         </div>
         <div className={classes.headerSecondRow}>
           <SearchBar key={folderId} onChange={updateSearchText} />
@@ -150,18 +141,11 @@ const Folder = () => {
         setLinkNodesRef={setLinkNodesRef}
         scrollLinkFeed={scrollLinkFeed}
       />
-
-      {showEditOrCreateLinkModal && (
-        <EditOrCreateLinkModal
-          closeModal={closeModal}
-          folderId={folderId}
-          defaultLinkStatus={isCompleted}
-          searchText={searchText}
-          linkAddedOrUpdatedCallback={() => {
-            scrollLinkFeed({ type: 'ADD_LINK' });
-          }}
-        />
-      )}
+      <AddResource
+        folderId={folderId}
+        isCompleted={isCompleted}
+        searchText={searchText}
+      />
     </div>
   );
 };

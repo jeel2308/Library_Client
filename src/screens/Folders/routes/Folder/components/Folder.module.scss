@@ -18,7 +18,6 @@
   display: flex;
   padding: 12px 12px 0;
   align-items: center;
-  justify-content: space-between;
 }
 
 .headerSecondRow {
@@ -26,4 +25,9 @@
   background-color: white;
   width: 60%;
   padding: 0 12px 8px 12px;
+}
+
+.segmentControlContainer {
+  margin-left: auto;
+  margin-right: auto;
 }
