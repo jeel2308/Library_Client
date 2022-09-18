@@ -129,13 +129,11 @@ const Folder = () => {
       <div className={classes.header}>
         <div className={classes.headerFirstRow}>
           <Text fontSize="xl">{folderName}</Text>
-          <div className={classes.segmentContainer}>
-            <SegmentControl
-              options={segmentControlOptions}
-              activeValue={linkStatus}
-              onOptionClick={({ value }) => setLinkStatus(value)}
-            />
-          </div>
+          <SegmentControl
+            options={segmentControlOptions}
+            activeValue={linkStatus}
+            onOptionClick={({ value }) => setLinkStatus(value)}
+          />
           <AddButton onClick={openModal} />
         </div>
         <div className={classes.headerSecondRow}>
