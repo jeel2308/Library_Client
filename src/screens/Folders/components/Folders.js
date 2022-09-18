@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _find from 'lodash/find';
 import _size from 'lodash/size';
-import { Avatar, Button } from '@chakra-ui/react';
+import { Avatar, Button, Text } from '@chakra-ui/react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
@@ -165,10 +165,11 @@ const Resources = (props) => {
             }
           />
         </div>
+        <Text color="white" fontSize={'18'} pl="4">
+          Collections
+        </Text>
         {!_isEmpty(folders) && (
-          <div className={classes.searchContainer}>
-            <Search value={searchValue} onChange={setSearchValue} />
-          </div>
+          <Search value={searchValue} onChange={setSearchValue} />
         )}
         <div className={classes.sidebarContainer}>
           {!_isEmpty(matchingFolders) ? (

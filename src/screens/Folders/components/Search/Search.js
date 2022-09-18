@@ -1,6 +1,6 @@
 /**--external-- */
 import React from 'react';
-import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { Input, InputGroup, InputLeftElement, Box } from '@chakra-ui/react';
 import { BiSearch } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
@@ -14,20 +14,22 @@ import {
 const Search = (props) => {
   const { value, onChange } = props;
   return (
-    <InputGroup style={inputGroupStyle} size="md">
-      <InputLeftElement style={inputLeftElementStyle}>
-        <IconContext.Provider value={searchIconStyle}>
-          <BiSearch />
-        </IconContext.Provider>
-      </InputLeftElement>
-      <Input
-        placeholder="Search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={inputStyle}
-        border="none"
-      />
-    </InputGroup>
+    <Box display={'flex'} width="100%" padding="8px 16px">
+      <InputGroup style={inputGroupStyle} size="md">
+        <InputLeftElement style={inputLeftElementStyle}>
+          <IconContext.Provider value={searchIconStyle}>
+            <BiSearch />
+          </IconContext.Provider>
+        </InputLeftElement>
+        <Input
+          placeholder="Search collections"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={inputStyle}
+          border="none"
+        />
+      </InputGroup>
+    </Box>
   );
 };
 
