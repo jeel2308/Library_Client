@@ -343,14 +343,12 @@ const Links = (props) => {
               />
             </Box>
           )}
-          <div className={classes.linkContainer}>
-            <Link
-              {...link}
-              dropDownOptions={linkActions}
-              handleActions={handleActions}
-              onLinkClick={onLinkClick}
-            />
-          </div>
+          <Link
+            {...link}
+            dropDownOptions={linkActions}
+            handleActions={handleActions}
+            onLinkClick={onLinkClick}
+          />
         </div>
       );
     });

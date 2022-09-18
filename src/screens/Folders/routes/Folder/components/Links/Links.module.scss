@@ -3,36 +3,29 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  background-color: ghostwhite;
 }
 
 .scrollContainer {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  height: 100%;
   overflow-y: auto;
 }
 
 .listContainer {
   display: flex;
   flex-direction: column;
-  padding: 48px;
-  background-color: ghostwhite;
   flex: 1;
   gap: 48px;
+  padding: 48px;
 }
 
 .linkOption {
   display: flex;
-  gap: 20px;
   position: relative;
   align-items: center;
   justify-content: flex-start;
-}
-
-.linkContainer {
-  display: flex;
-  gap: 20px;
-  max-width: 50%;
 }
 
 .spinnerContainer {
@@ -40,5 +33,5 @@
   padding: 8px;
   justify-content: center;
   align-items: center;
-  background-color: whitesmoke;
+  background-color: ghostwhite;
 }
