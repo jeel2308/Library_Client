@@ -1,36 +1,68 @@
 /**--external-- */
 import React from 'react';
-import { Button } from '@chakra-ui/react';
-import _map from 'lodash/map';
+import propTypes from 'prop-types';
+import { Button, Box } from '@chakra-ui/react';
+import { IconContext } from 'react-icons';
+import { BiX } from 'react-icons/bi';
 
 /**--relative-- */
-import classes from './Actions.module.scss';
+import { iconStyle } from './ActionStyles';
 
 const Actions = (props) => {
-  const { allowedBulkActions, onActionClick } = props;
+  const { onActionClick, showMoveAction, isCompleted } = props;
   return (
-    <div className={classes.container}>
-      {_map(
-        allowedBulkActions,
-        ({ value, label, disabled = false, variant, colorScheme, style }) => {
-          return (
-            <Button
-              key={value}
-              disabled={disabled}
-              variant={variant}
-              colorScheme={colorScheme}
-              style={style}
-              onClick={() => onActionClick({ type: value })}
-            >
-              {label}
-            </Button>
-          );
-        }
-      )}
-    </div>
+    <Box
+      display="flex"
+      borderTop="1px solid rgba(0,0,0,0.2)"
+      backgroundColor="white"
+      alignItems="center"
+      padding={3}
+    >
+      <Box marginLeft="auto" display="flex" gap={3}>
+        <Button
+          colorScheme="blue"
+          onClick={() => onActionClick({ type: 'UPDATE_STATUS' })}
+        >
+          {isCompleted ? 'Mark as pending' : 'Mark as completed'}
+        </Button>
+        {showMoveAction ? (
+          <Button
+            colorScheme="blue"
+            onClick={() => onActionClick({ type: 'MOVE' })}
+          >
+            Move
+          </Button>
+        ) : null}
+        <Button
+          colorScheme="red"
+          onClick={() => onActionClick({ type: 'DELETE' })}
+        >
+          Delete
+        </Button>
+      </Box>
+      <Box marginLeft="auto">
+        <Button
+          leftIcon={
+            <IconContext.Provider value={iconStyle}>
+              <BiX />
+            </IconContext.Provider>
+          }
+          colorScheme={'blue'}
+          onClick={() => onActionClick({ type: 'CANCEL' })}
+        >
+          Cancel
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
 export default Actions;
+
+Actions.propTypes = {
+  onActionClick: propTypes.func.isRequired,
+  showMoveAction: propTypes.bool.isRequired,
+  isCompleted: propTypes.bool.isRequired,
+};
 
 Actions.displayName = 'Actions';
