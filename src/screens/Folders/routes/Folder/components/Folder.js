@@ -13,8 +13,6 @@ import { scrollToBottom } from '#Utils';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
-import AddResource from './AddResource';
-import EditOrCreateLinkModal from './EditOrCreateLinkModal';
 import Links from './Links';
 import SearchBar from './SearchBar';
 
@@ -140,11 +138,6 @@ const Folder = () => {
         setLinkScrollRef={setLinkScrollRef}
         setLinkNodesRef={setLinkNodesRef}
         scrollLinkFeed={scrollLinkFeed}
-      />
-      <AddResource
-        folderId={folderId}
-        isCompleted={isCompleted}
-        searchText={searchText}
       />
     </div>
   );

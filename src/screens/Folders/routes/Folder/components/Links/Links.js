@@ -37,6 +37,7 @@ import Link from './Link';
 import { getLinkActions, getBulkLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
+import AddResource from './AddResource';
 import FolderListModal from './FolderListModal';
 import DeleteLinkModal from './DeleteLinkModal';
 
@@ -404,7 +405,7 @@ const Links = (props) => {
           )}
         </div>
       </div>
-      {showBulkSelection && (
+      {showBulkSelection ? (
         <Actions
           allowedBulkActions={getBulkLinkActions({
             isCompleted,
@@ -412,6 +413,12 @@ const Links = (props) => {
             showMoveAction,
           })}
           onActionClick={handleBulkSelectionActions}
+        />
+      ) : (
+        <AddResource
+          folderId={folderId}
+          searchText={searchText}
+          isCompleted={isCompleted}
         />
       )}
     </div>
