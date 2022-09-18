@@ -40,7 +40,7 @@ const AddResource = (props) => {
   return (
     <Box
       display={'flex'}
-      padding={6}
+      padding={3}
       gap={6}
       background="white"
       borderTop="1px solid rgba(0,0,0,0.2)"

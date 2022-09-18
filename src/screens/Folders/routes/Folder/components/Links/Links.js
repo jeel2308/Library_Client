@@ -34,7 +34,7 @@ import { withLoader } from '#components';
 /**--relative-- */
 import classes from './Links.module.scss';
 import Link from './Link';
-import { getLinkActions, getBulkLinkActions } from './LinkUtils';
+import { getLinkActions } from './LinkUtils';
 import EditOrCreateLinkModal from '../EditOrCreateLinkModal';
 import Actions from './Actions';
 import AddResource from './AddResource';
@@ -407,12 +407,9 @@ const Links = (props) => {
       </div>
       {showBulkSelection ? (
         <Actions
-          allowedBulkActions={getBulkLinkActions({
-            isCompleted,
-            totalLinks,
-            showMoveAction,
-          })}
           onActionClick={handleBulkSelectionActions}
+          showMoveAction={showMoveAction}
+          isCompleted={isCompleted}
         />
       ) : (
         <AddResource
