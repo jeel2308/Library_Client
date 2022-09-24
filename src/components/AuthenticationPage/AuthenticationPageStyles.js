@@ -3,12 +3,12 @@ const buttonGroupStyle = {
   justifyContent: 'space-between',
 };
 
-const linkStyle = {
-  display: 'flex',
+const textDecorationStyle = {
+  textDecoration: 'none',
 };
 
 const iconStyle = {
   size: 28,
 };
 
-export { buttonGroupStyle, linkStyle, iconStyle };
+export { buttonGroupStyle, iconStyle, textDecorationStyle };

@@ -1,8 +1,8 @@
 /**--external-- */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ButtonGroup, Button, IconButton, Box } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { ButtonGroup, Button, IconButton, Box, Link } from '@chakra-ui/react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { BiX } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
@@ -11,16 +11,20 @@ import Form from '../Form';
 import classes from './AuthenticationPage.module.scss';
 import {
   buttonGroupStyle,
-  linkStyle,
   iconStyle,
+  textDecorationStyle,
 } from './AuthenticationPageStyles';
 
 const FormButtons = (props) => {
   const { linkButtonText, submitButtonText, linkButtonHref } = props;
   return (
     <ButtonGroup style={buttonGroupStyle}>
-      <Link to={linkButtonHref} style={linkStyle}>
-        <Button colorScheme={'blue'} variant={'link'}>
+      <Link as={RouterLink} to={linkButtonHref} display="flex">
+        <Button
+          colorScheme={'blue'}
+          variant={'outline'}
+          _hover={textDecorationStyle}
+        >
           {linkButtonText}
         </Button>
       </Link>
