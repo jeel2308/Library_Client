@@ -1,7 +1,7 @@
 /**--external-- */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Heading } from '@chakra-ui/react';
+import { Button, Heading, Box } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 /**--internal-- */
@@ -45,17 +45,15 @@ const Login = (props) => {
       onSubmit={submitForm}
       linkButtonHref="/resetPassword"
       footerElement={
-        <div>
-          New to Online Library?
+        <Box textAlign="left">
           <Button
             variant="link"
             colorScheme="blue"
-            ml="1"
             onClick={onCreateAccountClick}
           >
             Create account
           </Button>
-        </div>
+        </Box>
       }
     />
   );
