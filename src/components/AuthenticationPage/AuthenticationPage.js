@@ -1,13 +1,7 @@
 /**--external-- */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Heading,
-  ButtonGroup,
-  Button,
-  IconButton,
-  Box,
-} from '@chakra-ui/react';
+import { ButtonGroup, Button, IconButton, Box } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiX } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
@@ -49,7 +43,7 @@ const AuthenticationPage = (props) => {
   const {
     submitButtonText,
     linkButtonText,
-    headingText,
+    headerElement,
     formFields,
     onSubmit,
     linkButtonHref,
@@ -65,9 +59,7 @@ const AuthenticationPage = (props) => {
   return (
     <div className={classes.container}>
       <Box display="flex" justifyContent="space-between">
-        <Heading as="h2" size="lg">
-          {headingText}
-        </Heading>
+        {headerElement}
         <IconButton variant={'unstyled'} onClick={onCloseClick} display="flex">
           <IconContext.Provider value={iconStyle}>
             <BiX />
@@ -95,7 +87,7 @@ export default AuthenticationPage;
 AuthenticationPage.propTypes = {
   submitButtonText: PropTypes.string,
   linkButtonText: PropTypes.string,
-  headingText: PropTypes.string,
+  headerElement: PropTypes.element.isRequired,
   formFields: PropTypes.array,
   onSubmit: PropTypes.func,
   linkButtonHref: PropTypes.string,

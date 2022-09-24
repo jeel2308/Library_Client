@@ -1,7 +1,7 @@
 /**--external-- */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { Heading } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 
 /**--internal-- */
@@ -21,12 +21,16 @@ const Register = (props) => {
 
   return (
     <AuthenticationPage
-      headingText="Sign up"
       linkButtonText="Sign in"
       submitButtonText="Sign up"
       formFields={formFields}
       onSubmit={onSubmit}
       linkButtonHref="/login"
+      headerElement={
+        <Heading as="h2" size="lg">
+          Sign up
+        </Heading>
+      }
     />
   );
 };

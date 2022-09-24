@@ -1,7 +1,7 @@
 /**--external-- */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Text, Button } from '@chakra-ui/react';
+import { Text, Button, Heading } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 /**--internal-- */
@@ -36,7 +36,11 @@ const ResetPassword = (props) => {
       formFields={formFields}
       submitButtonText="Reset password"
       linkButtonText="Sign in"
-      headingText="Reset password"
+      headerElement={
+        <Heading as="h2" size="lg">
+          Reset password
+        </Heading>
+      }
       linkButtonHref="/login"
       onSubmit={onSubmit}
     />

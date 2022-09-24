@@ -1,7 +1,7 @@
 /**--external-- */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button } from '@chakra-ui/react';
+import { Button, Heading } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 /**--internal-- */
@@ -10,8 +10,6 @@ import { loginUser } from '#modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';
-
-const origin = process.env.REACT_APP_SERVER_URL;
 
 const Login = (props) => {
   const { loginUser } = props;
@@ -39,7 +37,11 @@ const Login = (props) => {
       formFields={formFields}
       submitButtonText="Sign in"
       linkButtonText="Forgot password"
-      headingText="Sign in"
+      headerElement={
+        <Heading as="h2" size="lg">
+          Sign in
+        </Heading>
+      }
       onSubmit={submitForm}
       linkButtonHref="/resetPassword"
       footerElement={

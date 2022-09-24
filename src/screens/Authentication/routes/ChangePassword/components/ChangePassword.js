@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _get from 'lodash/get';
 import { useNavigate } from 'react-router-dom';
+import { Heading } from '@chakra-ui/react';
 
 /**--internal-- */
 import { AuthenticationPage } from '#components';
@@ -31,7 +32,11 @@ const ChangePassword = (props) => {
       linkButtonText="Sign in"
       linkButtonHref="/login"
       onSubmit={onSubmit}
-      headingText="Change password"
+      headerElement={
+        <Heading as="h2" size="lg">
+          Change password
+        </Heading>
+      }
     />
   );
 };
