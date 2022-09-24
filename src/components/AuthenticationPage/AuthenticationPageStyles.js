@@ -7,4 +7,8 @@ const linkStyle = {
   display: 'flex',
 };
 
-export { buttonGroupStyle, linkStyle };
+const iconStyle = {
+  size: 28,
+};
+
+export { buttonGroupStyle, linkStyle, iconStyle };

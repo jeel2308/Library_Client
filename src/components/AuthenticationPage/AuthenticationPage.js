@@ -1,13 +1,25 @@
 /**--external-- */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Heading, ButtonGroup, Button } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import {
+  Heading,
+  ButtonGroup,
+  Button,
+  IconButton,
+  Box,
+} from '@chakra-ui/react';
+import { Link, useNavigate } from 'react-router-dom';
+import { BiX } from 'react-icons/bi';
+import { IconContext } from 'react-icons';
 
 /**--relative-- */
 import Form from '../Form';
 import classes from './AuthenticationPage.module.scss';
-import { buttonGroupStyle, linkStyle } from './AuthenticationPageStyles';
+import {
+  buttonGroupStyle,
+  linkStyle,
+  iconStyle,
+} from './AuthenticationPageStyles';
 
 const FormButtons = (props) => {
   const { linkButtonText, submitButtonText, linkButtonHref } = props;
@@ -44,11 +56,24 @@ const AuthenticationPage = (props) => {
     footerElement,
   } = props;
 
+  const navigate = useNavigate();
+
+  const onCloseClick = () => {
+    navigate('/');
+  };
+
   return (
     <div className={classes.container}>
-      <Heading as="h2" size="lg">
-        {headingText}
-      </Heading>
+      <Box display="flex" justifyContent="space-between">
+        <Heading as="h2" size="lg">
+          {headingText}
+        </Heading>
+        <IconButton variant={'unstyled'} onClick={onCloseClick} display="flex">
+          <IconContext.Provider value={iconStyle}>
+            <BiX />
+          </IconContext.Provider>
+        </IconButton>
+      </Box>
       <Form
         fields={formFields}
         onSubmit={onSubmit}
