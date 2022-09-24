@@ -47,7 +47,7 @@ const SearchBar = (props) => {
         onChange={onInputChange}
         style={inputStyle}
         ref={inputRef}
-        placeholder="Search links by title or url"
+        placeholder="Search resources by title or url"
       />
       <InputRightElement
         style={inputAddonStyle}

@@ -33,22 +33,27 @@ const Home = () => {
         </ButtonGroup>
         <div className={classes.heroContainer}>
           <Heading as={TITLE_ELEMENT} size={TITLE_FONT_SIZE}>
-            LinkManagement: One place to keep all links
+            Online Library: Manage all resources online
           </Heading>
           <UnorderedList mt={'6'}>
             <ListItem>
               <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE}>
-                Manage links easily
+                Manage resources across different collections easily
               </Heading>
             </ListItem>
             <ListItem>
               <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE} mt={'2'}>
-                Group links by subject
+                Create new collections, move resources across collections
               </Heading>
             </ListItem>
             <ListItem>
               <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE} mt={'2'}>
-                Track link status
+                Create new resources
+              </Heading>
+            </ListItem>
+            <ListItem>
+              <Heading as={LIST_ITEM_ELEMENT} size={LIST_FONT_SIZE} mt={'2'}>
+                Keep track of currently borrowed resources and achives
               </Heading>
             </ListItem>
           </UnorderedList>

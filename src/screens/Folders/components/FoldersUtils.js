@@ -3,7 +3,7 @@ import _size from 'lodash/size';
 import _findIndex from 'lodash/findIndex';
 
 export const USER_ACTIONS = [
-  { label: 'Create folder', value: 'CREATE' },
+  { label: 'Create collection', value: 'CREATE' },
   { label: 'Log out', value: 'LOGOUT' },
 ];
 

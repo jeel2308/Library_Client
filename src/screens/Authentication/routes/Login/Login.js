@@ -44,7 +44,7 @@ const Login = (props) => {
       linkButtonHref="/resetPassword"
       footerElement={
         <div>
-          New to LinkManagement?
+          New to Online Library?
           <Button
             variant="link"
             colorScheme="blue"

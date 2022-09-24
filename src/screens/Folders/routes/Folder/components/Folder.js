@@ -17,8 +17,8 @@ import Links from './Links';
 import SearchBar from './SearchBar';
 
 const segmentControlOptions = [
-  { label: 'Pending', value: 'PENDING' },
-  { label: 'Completed', value: 'COMPLETED' },
+  { label: 'Borrowed', value: 'PENDING' },
+  { label: 'Archives', value: 'COMPLETED' },
 ];
 const Folder = () => {
   const [linkStatus, setLinkStatus] = useState(
