@@ -14,6 +14,7 @@ import {
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BiX, BiChevronLeft } from 'react-icons/bi';
+import GoogleLogin from 'react-google-login';
 
 /**--internal-- */
 import { Form } from '#components';
@@ -92,6 +93,24 @@ const Login = (props) => {
         return (
           <Box display="flex" flexDirection="column" gap={4}>
             <Box display="flex" flexDirection="column" gap={4}>
+              <GoogleLogin
+                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                render={({ onClick, disabled }) => {
+                  return (
+                    <Button
+                      onClick={onClick}
+                      disabled={disabled}
+                      variant="outline"
+                      colorScheme="blue"
+                    >
+                      Google sign in
+                    </Button>
+                  );
+                }}
+                onSuccess={(...params) => console.log(...params)}
+                onFailure={(...params) => console.log(...params)}
+                cookiePolicy="single_host_origin"
+              />
               <Button
                 variant="outline"
                 colorScheme="blue"

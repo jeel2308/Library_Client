@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, useRoutes } from 'react-router-dom';
 import _isEmpty from 'lodash/isEmpty';
+import { gapi, loadAuth2 } from 'gapi-script';
 
 /**--internal-- */
 import { connect } from 'react-redux';
@@ -26,6 +27,17 @@ function App(props) {
   const location = useLocation();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const initClient = async () => {
+      try {
+        await loadAuth2(gapi, process.env.REACT_APP_GOOGLE_CLIENT_ID, '');
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    initClient();
+  }, []);
 
   useEffect(() => {
     const userDetails = getUserInfoFromStorage();
