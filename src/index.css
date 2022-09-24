@@ -19,3 +19,8 @@ code {
 html {
   overflow-y: hidden;
 }
+
+/* -- This is required as chakra sets blue box shadow on focused elements -- */
+*:focus {
+  box-shadow: none !important;
+}
