@@ -21,7 +21,7 @@ import { loginUser } from '#modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';
-import { iconStyle, leftIconStyle } from './LoginStyles';
+import { iconStyle, leftIconStyle, textDecorationStyle } from './LoginStyles';
 
 const FormButtons = (props) => {
   const { linkButtonText, submitButtonText, linkButtonHref } = props;
@@ -31,7 +31,7 @@ const FormButtons = (props) => {
         to={linkButtonHref}
         display="flex"
         as={RouterLink}
-        _hover={{ textDecoration: 'none' }}
+        _hover={textDecorationStyle}
       >
         <Button colorScheme={'blue'} variant="outline">
           {linkButtonText}
