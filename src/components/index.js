@@ -1,6 +1,7 @@
 import Form from './Form';
 import AuthenticationPage from './AuthenticationPage';
 import Modal from './Modal';
+import MicrosoftLogin from './MicrosoftLogin';
 import FullScreenLoader from './FullScreenLoader';
 import ToastMessage from './ToastMessage';
 import withTooltip from './withTooltip';
@@ -24,4 +25,5 @@ export {
   Dropdown,
   ScrollIntoViewWrapper,
   withLoader,
+  MicrosoftLogin,
 };

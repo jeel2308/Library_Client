@@ -17,7 +17,7 @@ import { BiX, BiChevronLeft } from 'react-icons/bi';
 import GoogleLogin from 'react-google-login';
 
 /**--internal-- */
-import { Form } from '#components';
+import { Form, MicrosoftLogin } from '#components';
 import { loginUser, setToastMessage } from '#modules/Module';
 
 /**--relative-- */
@@ -92,6 +92,20 @@ const Login = (props) => {
     loginUser({ idToken: tokenId, method: 'google' }, onLoginSuccess);
   };
 
+  const onMicrosoftLogin = ({ accessToken }) => {
+    loginUser({ idToken: accessToken, method: 'microsoft' }, onLoginSuccess);
+  };
+
+  const onMicrosoftLoginError = (e) => {
+    setToastMessage({
+      title: 'Error in microsoft sign in',
+      status: 'error',
+      isClosable: true,
+      position: 'bottom-left',
+    });
+    console.error(e);
+  };
+
   const onGoogleLoginError = (e) => {
     setToastMessage({
       title: 'Error in google sign in',
@@ -126,6 +140,20 @@ const Login = (props) => {
                 onFailure={onGoogleLoginError}
                 cookiePolicy="single_host_origin"
               />
+              <MicrosoftLogin
+                onSuccess={onMicrosoftLogin}
+                onError={onMicrosoftLoginError}
+              >
+                {({ onClick }) => (
+                  <Button
+                    onClick={onClick}
+                    variant="outline"
+                    colorScheme="blue"
+                  >
+                    Sign in with microsoft
+                  </Button>
+                )}
+              </MicrosoftLogin>
               <Button
                 variant="outline"
                 colorScheme="blue"
