@@ -132,7 +132,7 @@ const Login = (props) => {
                       variant="outline"
                       colorScheme="blue"
                     >
-                      Google sign in
+                      Sign in with google
                     </Button>
                   );
                 }}
