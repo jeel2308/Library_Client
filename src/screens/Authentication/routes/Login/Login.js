@@ -18,7 +18,7 @@ import GoogleLogin from 'react-google-login';
 
 /**--internal-- */
 import { Form } from '#components';
-import { loginUser } from '#modules/Module';
+import { loginUser, setToastMessage } from '#modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';
@@ -54,7 +54,7 @@ FormButtons.propTypes = {
 FormButtons.displayName = 'FormButtons';
 
 const Login = (props) => {
-  const { loginUser } = props;
+  const { loginUser, setToastMessage } = props;
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const navigate = useNavigate();
@@ -76,7 +76,8 @@ const Login = (props) => {
   };
 
   const submitForm = async (data) => {
-    loginUser(data, onLoginSuccess);
+    const updatedData = { ...data, method: 'local' };
+    loginUser(updatedData, onLoginSuccess);
   };
 
   const goToNextPage = () => {
@@ -85,6 +86,20 @@ const Login = (props) => {
 
   const goToPreviousPage = () => {
     setCurrentPageIndex((currentPageIndex) => currentPageIndex - 1);
+  };
+
+  const onGoogleLogin = ({ tokenId }) => {
+    loginUser({ idToken: tokenId, method: 'google' }, onLoginSuccess);
+  };
+
+  const onGoogleLoginError = (e) => {
+    setToastMessage({
+      title: 'Error in google sign in',
+      status: 'error',
+      isClosable: true,
+      position: 'bottom-left',
+    });
+    console.error(e);
   };
 
   const getCurrentPageElement = () => {
@@ -107,8 +122,8 @@ const Login = (props) => {
                     </Button>
                   );
                 }}
-                onSuccess={(...params) => console.log(...params)}
-                onFailure={(...params) => console.log(...params)}
+                onSuccess={onGoogleLogin}
+                onFailure={onGoogleLoginError}
                 cookiePolicy="single_host_origin"
               />
               <Button
@@ -200,6 +215,7 @@ const Login = (props) => {
 
 const mapActionCreators = {
   loginUser,
+  setToastMessage,
 };
 
 export default connect(null, mapActionCreators)(Login);
