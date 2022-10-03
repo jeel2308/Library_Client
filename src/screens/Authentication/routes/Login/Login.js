@@ -92,8 +92,8 @@ const Login = (props) => {
     loginUser({ idToken: tokenId, method: 'google' }, onLoginSuccess);
   };
 
-  const onMicrosoftLogin = ({ accessToken }) => {
-    loginUser({ idToken: accessToken, method: 'microsoft' }, onLoginSuccess);
+  const onMicrosoftLogin = ({ idToken }) => {
+    loginUser({ idToken, method: 'microsoft' }, onLoginSuccess);
   };
 
   const onMicrosoftLoginError = (e) => {
