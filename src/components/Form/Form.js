@@ -14,7 +14,8 @@ import _map from 'lodash/map';
 
 /**--relative-- */
 import classes from './Form.module.scss';
-import PasswordInput from './PasswordInput';
+import BasicPasswordInput from './BasicPasswordInput';
+
 import { getInitialValues, trimFormFields } from './utils';
 const Form = (props) => {
   const { fields, onSubmit, formButtonsElement } = props;
@@ -65,25 +66,17 @@ const Form = (props) => {
                   switch (type) {
                     case 'password': {
                       return (
-                        <FormControl isInvalid={isInvalid}>
-                          <FormLabel htmlFor={id} fontSize={16}>
-                            {label}
-                          </FormLabel>
-                          <PasswordInput
-                            id={id}
-                            borderColor={'blackAlpha.500'}
-                            value={value}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            placeholder={placeholder}
-                            size={'md'}
-                          />
-                          {isInvalid && (
-                            <FormErrorMessage>
-                              {errorMessages[errorType]}
-                            </FormErrorMessage>
-                          )}
-                        </FormControl>
+                        <BasicPasswordInput
+                          errorMessage={
+                            isInvalid ? errorMessages[errorType] : ''
+                          }
+                          id={id}
+                          label={label}
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          placeholder={placeholder}
+                        />
                       );
                     }
                     case 'checkbox': {
