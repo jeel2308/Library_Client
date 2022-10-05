@@ -15,6 +15,7 @@ import _map from 'lodash/map';
 /**--relative-- */
 import classes from './Form.module.scss';
 import BasicPasswordInput from './BasicPasswordInput';
+import PasswordInputWithStrength from './PasswordInputWithStrength';
 
 import { getInitialValues, trimFormFields } from './utils';
 const Form = (props) => {
@@ -48,6 +49,7 @@ const Form = (props) => {
           errorMessages,
           constrains,
           options,
+          showPasswordStrength,
         } = field;
 
         const errorType = errors?.[id]?.type ?? 'required';
@@ -65,7 +67,19 @@ const Form = (props) => {
                 const getInputElement = () => {
                   switch (type) {
                     case 'password': {
-                      return (
+                      return showPasswordStrength ? (
+                        <PasswordInputWithStrength
+                          errorMessage={
+                            isInvalid ? errorMessages[errorType] : ''
+                          }
+                          id={id}
+                          label={label}
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          placeholder={placeholder}
+                        />
+                      ) : (
                         <BasicPasswordInput
                           errorMessage={
                             isInvalid ? errorMessages[errorType] : ''
