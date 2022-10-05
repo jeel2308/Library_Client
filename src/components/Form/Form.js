@@ -25,9 +25,11 @@ const Form = (props) => {
     control,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm({
     defaultValues: getInitialValues({ fields }),
     mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
 
   const formSubmitHandler = (value) => {
@@ -64,6 +66,11 @@ const Form = (props) => {
                 const { value, onChange, onBlur } = field;
                 const { invalid: isInvalid } = fieldState;
 
+                const onInputChange = (e) => {
+                  clearErrors(id);
+                  onChange(e);
+                };
+
                 const getInputElement = () => {
                   switch (type) {
                     case 'password': {
@@ -75,7 +82,7 @@ const Form = (props) => {
                           id={id}
                           label={label}
                           value={value}
-                          onChange={onChange}
+                          onChange={onInputChange}
                           onBlur={onBlur}
                           placeholder={placeholder}
                         />
@@ -87,7 +94,7 @@ const Form = (props) => {
                           id={id}
                           label={label}
                           value={value}
-                          onChange={onChange}
+                          onChange={onInputChange}
                           onBlur={onBlur}
                           placeholder={placeholder}
                         />
@@ -99,7 +106,7 @@ const Form = (props) => {
                           <Checkbox
                             id={id}
                             isChecked={value}
-                            onChange={onChange}
+                            onChange={onInputChange}
                             onBlur={onBlur}
                             size={'lg'}
                           />
@@ -117,7 +124,7 @@ const Form = (props) => {
                           </FormLabel>
                           <Select
                             placeholder="Select folder"
-                            onChange={onChange}
+                            onChange={onInputChange}
                             isInvalid={isInvalid}
                             value={value}
                           >
@@ -149,7 +156,7 @@ const Form = (props) => {
                             borderColor={'blackAlpha.500'}
                             type={type}
                             value={value}
-                            onChange={onChange}
+                            onChange={onInputChange}
                             onBlur={onBlur}
                             placeholder={placeholder}
                             size={'md'}
