@@ -6,13 +6,12 @@ const formFields = [
     defaultValue: '',
     placeholder: 'Password',
     constrains: {
-      minLength: 8,
       required: true,
     },
     errorMessages: {
       required: 'Password is required!!',
-      minLength: 'Password should have at least 8 characters',
     },
+    showPasswordStrength: true,
   },
 ];
 
