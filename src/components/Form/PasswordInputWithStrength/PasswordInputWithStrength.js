@@ -10,6 +10,7 @@ import {
   ListItem,
   Collapse,
   FormErrorMessage,
+  Text,
 } from '@chakra-ui/react';
 import { BsInfoCircle } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
@@ -18,15 +19,41 @@ import { BiX } from 'react-icons/bi';
 /**--relative-- */
 import { passwordStrengthCloseButtonStyle } from './PasswordInputWithStregthStyles';
 import PasswordInput from '../PasswordInput';
+import PasswordStrength from './PasswordStrength';
+
+const PASSWORD_STRENGTH_LABEL_BY_SCORE = [
+  'Worst',
+  'Bad',
+  'Weak',
+  'Good',
+  'Strong',
+];
+
+const PASSWORD_COLOR_BY_SCORE = [
+  'red.500',
+  'red.500',
+  'orange.400',
+  'blue.300',
+  'green.500',
+];
 
 const PasswordInputWithStrength = (props) => {
   const { label, errorMessage, id, value, onChange, onBlur, placeholder } =
     props;
 
   const [showPasswordHelp, setShowPasswordHelp] = useState(false);
+  const [passwordScore, setPasswordScore] = useState(0);
 
   const togglePasswordHelpVisibility = () => {
     setShowPasswordHelp((showPasswordHelp) => !showPasswordHelp);
+  };
+
+  const onPasswordChange = (e) => {
+    const value = e.target.value;
+    const { score } = window.zxcvbn?.(value) ?? { score: 0 };
+    console.log({ score });
+    setPasswordScore(score);
+    onChange(e);
   };
 
   return (
@@ -84,14 +111,29 @@ const PasswordInputWithStrength = (props) => {
         id={id}
         borderColor={'blackAlpha.500'}
         value={value}
-        onChange={onChange}
+        onChange={onPasswordChange}
         onBlur={onBlur}
         placeholder={placeholder}
         size={'md'}
       />
       {errorMessage ? (
         <FormErrorMessage>{errorMessage}</FormErrorMessage>
-      ) : null}
+      ) : (
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box width="70%">
+            <PasswordStrength
+              min={0}
+              max={4}
+              value={passwordScore}
+              containerBackgroundColor="blackAlpha.300"
+              barBackgroundColor={PASSWORD_COLOR_BY_SCORE[passwordScore]}
+            />
+          </Box>
+          <Text color={PASSWORD_COLOR_BY_SCORE[passwordScore]} fontWeight={600}>
+            {PASSWORD_STRENGTH_LABEL_BY_SCORE[passwordScore]}
+          </Text>
+        </Box>
+      )}
     </FormControl>
   );
 };
