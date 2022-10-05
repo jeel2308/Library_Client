@@ -58,7 +58,8 @@ const PasswordInputWithStrength = (props) => {
 
   return (
     <FormControl isInvalid={!!errorMessage}>
-      <FormLabel htmlFor={id}>
+      {/**Setting marginInlineEnd to override margin added by chakra default styling */}
+      <FormLabel htmlFor={id} marginInlineEnd={0}>
         <Box display="flex" flexDirection="column">
           <Box display="flex" alignItems="center">
             {label}
