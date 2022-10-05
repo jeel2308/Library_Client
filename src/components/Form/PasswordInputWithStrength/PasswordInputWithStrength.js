@@ -119,7 +119,7 @@ const PasswordInputWithStrength = (props) => {
       />
       {errorMessage ? (
         <FormErrorMessage>{errorMessage}</FormErrorMessage>
-      ) : (
+      ) : value ? (
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Box width="70%">
             <PasswordStrength
@@ -134,7 +134,7 @@ const PasswordInputWithStrength = (props) => {
             {PASSWORD_STRENGTH_LABEL_BY_SCORE[passwordScore]}
           </Text>
         </Box>
-      )}
+      ) : null}
     </FormControl>
   );
 };
