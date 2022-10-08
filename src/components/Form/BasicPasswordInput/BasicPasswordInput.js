@@ -1,33 +1,31 @@
 /**--external-- */
 import React from 'react';
-import { FormLabel, FormControl, FormErrorMessage } from '@chakra-ui/react';
 import propTypes from 'prop-types';
+import { Box } from '@chakra-ui/react';
 
 /**--relative-- */
-import PasswordInput from '../PasswordInput';
+import ComposedPasswordInput from '../ComposedPasswordInput';
 
 const BasicPasswordInput = (props) => {
   const { id, label, value, onChange, onBlur, placeholder, errorMessage } =
     props;
 
   return (
-    <FormControl isInvalid={!!errorMessage}>
-      <FormLabel htmlFor={id} fontSize={16}>
-        {label}
-      </FormLabel>
-      <PasswordInput
-        id={id}
-        borderColor={'blackAlpha.500'}
-        value={value}
+    <ComposedPasswordInput id={id} value={value} isInvalid={!!errorMessage}>
+      <ComposedPasswordInput.Label>
+        <Box fontSize={16}> {label}</Box>
+      </ComposedPasswordInput.Label>
+      <ComposedPasswordInput.Input
+        placeholder={placeholder}
         onChange={onChange}
         onBlur={onBlur}
-        placeholder={placeholder}
-        size={'md'}
       />
       {errorMessage ? (
-        <FormErrorMessage>{errorMessage}</FormErrorMessage>
+        <ComposedPasswordInput.Error>
+          {errorMessage}
+        </ComposedPasswordInput.Error>
       ) : null}
-    </FormControl>
+    </ComposedPasswordInput>
   );
 };
 
@@ -35,7 +33,7 @@ export default BasicPasswordInput;
 BasicPasswordInput.displayName = 'BasicPasswordInput';
 
 BasicPasswordInput.propTypes = {
-  errorMessage: propTypes.string,
+  errorMessage: propTypes.oneOfType([propTypes.string, propTypes.object]),
   id: propTypes.string.isRequired,
   label: propTypes.string.isRequired,
   onChange: propTypes.func.isRequired,
