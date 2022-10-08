@@ -51,7 +51,6 @@ const PasswordInputWithStrength = (props) => {
   const onPasswordChange = (e) => {
     const value = e.target.value;
     const { score } = window.zxcvbn?.(value) ?? { score: 0 };
-    console.log({ score });
     setPasswordScore(score);
     onChange(e);
   };
