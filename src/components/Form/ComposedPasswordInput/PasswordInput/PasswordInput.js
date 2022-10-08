@@ -26,8 +26,8 @@ const PasswordInput = (props) => {
         placeholder={placeholder}
         borderColor={'blackAlpha.500'}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onBlur={(e) => onBlur(e.target.value)}
+        onChange={onChange}
+        onBlur={onBlur}
       />
       <InputRightElement width={'16'}>
         <Button size={'sm'} onClick={updatePasswordVisibility} m={'1'}>
