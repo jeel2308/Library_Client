@@ -1,6 +1,5 @@
 /**--external-- */
 import React, { useContext, useState, useEffect } from 'react';
-import propTypes from 'prop-types';
 import { Box, Text } from '@chakra-ui/react';
 
 /**--relative-- */
@@ -22,7 +21,11 @@ const PASSWORD_COLOR_BY_SCORE = [
   'green.500',
 ];
 
-const PasswordStrength = (props) => {
+const MIN = 0;
+
+const MAX = 4;
+
+const PasswordStrength = () => {
   const [passwordScore, setPasswordScore] = useState(0);
 
   const { value } = useContext(ComposedPasswordInputContext);
@@ -32,28 +35,26 @@ const PasswordStrength = (props) => {
     setPasswordScore(score);
   }, [value]);
 
-  const { min, max, containerBackgroundColor, barBackgroundColor } = props;
-
   let updatedPasswordScore = passwordScore;
-  if (passwordScore < min) {
-    updatedPasswordScore = min;
+  if (passwordScore < MIN) {
+    updatedPasswordScore = MIN;
   }
-  if (passwordScore > max) {
-    updatedPasswordScore = max;
+  if (passwordScore > MAX) {
+    updatedPasswordScore = MAX;
   }
 
   return (
     <Box display="flex" justifyContent="space-between" alignItems="center">
       <Box width="70%">
         <Box
-          backgroundColor={containerBackgroundColor}
+          backgroundColor="blackAlpha.300"
           height={1}
           borderRadius={4}
           overflow="hidden"
         >
           <Box
-            width={`${(updatedPasswordScore * 100) / (max - min)}%`}
-            backgroundColor={barBackgroundColor}
+            width={`${(updatedPasswordScore * 100) / (MAX - MIN)}%`}
+            backgroundColor={PASSWORD_COLOR_BY_SCORE[passwordScore]}
             height="100%"
           ></Box>
         </Box>
@@ -67,10 +68,3 @@ const PasswordStrength = (props) => {
 
 export default PasswordStrength;
 PasswordStrength.displayName = 'PasswordStrength';
-
-PasswordStrength.propTypes = {
-  min: propTypes.number.isRequired,
-  max: propTypes.number.isRequired,
-  containerBackgroundColor: propTypes.string.isRequired,
-  barBackgroundColor: propTypes.string.isRequired,
-};
