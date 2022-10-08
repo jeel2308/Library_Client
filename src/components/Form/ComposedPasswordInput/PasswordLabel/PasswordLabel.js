@@ -11,7 +11,7 @@ const PasswordLabel = (props) => {
   const { id } = useContext(ComposedPasswordInputContext);
 
   return (
-    <FormLabel htmlFor={id} fontSize={16} marginInlineEnd={0}>
+    <FormLabel htmlFor={id} marginInlineEnd={0}>
       {children}
     </FormLabel>
   );
