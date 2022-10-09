@@ -48,7 +48,7 @@ const ResetPassword = (props) => {
     <div className={classes.container}>
       <Text>
         We have reset your password. We have sent you an email containing
-        temporary password. Sign in with this password and set new password.
+        temporary password. Sign in with that password and set new password.
       </Text>
       <div className={classes.footer}>
         <Button colorScheme="blue" onClick={onSignInClick}>
