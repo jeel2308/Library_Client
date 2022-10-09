@@ -643,17 +643,17 @@ export const changePassword = (data, successCallback) => {
         data,
       });
 
-      const responseData = await response.json();
+      const { message, ...userInfo } = await response.json();
 
       if (response.ok) {
-        setUserInfoInStorage(responseData);
-        dispatch(setUserDetails(responseData));
+        setUserInfoInStorage({ userInfo });
+        dispatch(setUserDetails(userInfo));
         dispatch(updateUserLoggedInStatus(true));
         successCallback && successCallback();
       } else {
         dispatch(
           setToastMessage({
-            title: responseData.message || response.statusText,
+            title: message || response.statusText,
             status: 'error',
             isClosable: true,
             position: 'bottom-left',
