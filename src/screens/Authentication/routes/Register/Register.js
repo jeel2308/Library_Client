@@ -22,13 +22,13 @@ const Register = (props) => {
   return (
     <AuthenticationPage
       linkButtonText="Sign in"
-      submitButtonText="Sign up"
+      submitButtonText="Register"
       formFields={formFields}
       onSubmit={onSubmit}
       linkButtonHref="/login"
       headerElement={
         <Heading as="h2" size="lg">
-          Sign up
+          Create account
         </Heading>
       }
     />
