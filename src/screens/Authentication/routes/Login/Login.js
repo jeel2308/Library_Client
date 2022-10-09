@@ -15,6 +15,8 @@ import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { IconContext } from 'react-icons';
 import { BiX, BiChevronLeft } from 'react-icons/bi';
 import GoogleLogin from 'react-google-login';
+import { BsGoogle, BsMicrosoft, BsPersonCircle } from 'react-icons/bs';
+import { AiOutlineMail } from 'react-icons/ai';
 
 /**--internal-- */
 import { Form, MicrosoftLogin } from '#components';
@@ -22,7 +24,13 @@ import { loginUser, setToastMessage } from '#modules/Module';
 
 /**--relative-- */
 import { formFields } from './utils';
-import { iconStyle, leftIconStyle, textDecorationStyle } from './LoginStyles';
+import {
+  iconStyle,
+  leftIconStyle,
+  textDecorationStyle,
+  emailIconStyle,
+  createIconStyle,
+} from './LoginStyles';
 
 const FormButtons = (props) => {
   const { linkButtonText, submitButtonText, linkButtonHref } = props;
@@ -129,10 +137,18 @@ const Login = (props) => {
                     <Button
                       onClick={onClick}
                       disabled={disabled}
-                      variant="outline"
-                      colorScheme="blue"
+                      variant="solid"
+                      colorScheme="red"
+                      backgroundColor="red.500"
                     >
-                      Sign in with google
+                      <Box
+                        display="flex"
+                        gap={2}
+                        width="200px"
+                        alignItems="center"
+                      >
+                        <BsGoogle /> Sign in with Google
+                      </Box>
                     </Button>
                   );
                 }}
@@ -147,10 +163,19 @@ const Login = (props) => {
                 {({ onClick }) => (
                   <Button
                     onClick={onClick}
-                    variant="outline"
+                    variant="solid"
                     colorScheme="blue"
+                    backgroundColor="blue.500"
                   >
-                    Sign in with microsoft
+                    <Box
+                      display="flex"
+                      gap={2}
+                      width="200px"
+                      alignItems="center"
+                    >
+                      <BsMicrosoft />
+                      Sign in with Microsoft
+                    </Box>
                   </Button>
                 )}
               </MicrosoftLogin>
@@ -159,10 +184,15 @@ const Login = (props) => {
                 colorScheme="blue"
                 onClick={goToNextPage}
               >
-                Sign in with email
+                <Box display="flex" gap={2} width="200px" alignItems="center">
+                  <IconContext.Provider value={emailIconStyle}>
+                    <AiOutlineMail />
+                  </IconContext.Provider>
+                  Sign in with email
+                </Box>
               </Button>
             </Box>
-            <Box display="flex" gap={4} alignItems="center">
+            <Box display="flex" gap={2} alignItems="center">
               <Box height="1px" backgroundColor="blackAlpha.400" flex={1} />
               <Text>or</Text>
               <Box height="1px" backgroundColor="blackAlpha.400" flex={1} />
@@ -173,7 +203,12 @@ const Login = (props) => {
                 colorScheme="blue"
                 onClick={onCreateAccountClick}
               >
-                Create account
+                <Box display="flex" gap={2} width="200px" alignItems="center">
+                  <IconContext.Provider value={createIconStyle}>
+                    <BsPersonCircle />
+                  </IconContext.Provider>
+                  Create account
+                </Box>
               </Button>
             </Box>
           </Box>

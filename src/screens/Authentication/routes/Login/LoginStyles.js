@@ -9,3 +9,11 @@ export const leftIconStyle = {
 export const textDecorationStyle = {
   textDecoration: 'none',
 };
+
+export const emailIconStyle = {
+  size: 22,
+};
+
+export const createIconStyle = {
+  size: 20,
+};
