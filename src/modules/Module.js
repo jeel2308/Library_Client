@@ -482,6 +482,14 @@ export const updateUser = ({ input }) => {
   };
 };
 
+const _updateUserLoggedInStatus = ({ userInfo }) => {
+  return (dispatch) => {
+    setUserInfoInStorage({ userInfo });
+    dispatch(setUserDetails(userInfo));
+    dispatch(updateUserLoggedInStatus(true));
+  };
+};
+
 export const loginUser = (data, successCallback) => {
   return async (dispatch, getState) => {
     let responseData = {};
@@ -506,9 +514,7 @@ export const loginUser = (data, successCallback) => {
         if (showResetPasswordFlow) {
           dispatch(setUserDetails(userInfo));
         } else {
-          setUserInfoInStorage({ userInfo });
-          dispatch(setUserDetails(userInfo));
-          dispatch(updateUserLoggedInStatus(true));
+          dispatch(_updateUserLoggedInStatus({ userInfo }));
         }
         successCallback && successCallback({ showResetPasswordFlow });
       } else {
@@ -536,10 +542,8 @@ export const loginUser = (data, successCallback) => {
   };
 };
 
-export const registerUser = (data, successCallback) => {
+export const registerUser = (data) => {
   return async (dispatch) => {
-    let responseData = {};
-
     let res = {};
 
     try {
@@ -554,19 +558,18 @@ export const registerUser = (data, successCallback) => {
         referrerPolicy: 'no-referrer',
       });
 
+      const { message, ...userInfo } = await res.json();
+
       /**
        * If res status is ok(status is 200) then we will do redirection
        */
       if (res.ok) {
-        successCallback && successCallback();
+        dispatch(_updateUserLoggedInStatus({ userInfo }));
       } else {
         /**
          * Fetch api throws error only when network error occur.
          * For status 4xx and 5xx, we have to add logic for toast in try block
          */
-        responseData = await res.json();
-
-        const { message } = responseData;
 
         /**
          * If there is message from backend then we will use it otherwise we use
@@ -646,9 +649,7 @@ export const changePassword = (data, successCallback) => {
       const { message, ...userInfo } = await response.json();
 
       if (response.ok) {
-        setUserInfoInStorage({ userInfo });
-        dispatch(setUserDetails(userInfo));
-        dispatch(updateUserLoggedInStatus(true));
+        dispatch(_updateUserLoggedInStatus({ userInfo }));
         successCallback && successCallback();
       } else {
         dispatch(
