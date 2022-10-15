@@ -31,7 +31,7 @@ function App(props) {
   useEffect(() => {
     const initClient = async () => {
       try {
-        await loadAuth2(gapi, process.env.REACT_APP_GOOGLE_CLIENT_ID, '');
+        await loadAuth2(gapi, process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID, '');
       } catch (e) {
         console.error(e);
       }

@@ -131,7 +131,7 @@ const Login = (props) => {
           <Box display="flex" flexDirection="column" gap={4}>
             <Box display="flex" flexDirection="column" gap={4}>
               <GoogleLogin
-                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}
                 render={({ onClick, disabled }) => {
                   return (
                     <Button
