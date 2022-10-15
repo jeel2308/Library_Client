@@ -1,7 +1,7 @@
 /**--external-- */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Text, Button, Heading } from '@chakra-ui/react';
+import { Text, Button, Heading, Box } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 /**--internal-- */
@@ -46,10 +46,16 @@ const ResetPassword = (props) => {
     />
   ) : (
     <div className={classes.container}>
-      <Text>
-        We have reset your password. We have sent you an email containing
-        temporary password. Sign in with that password and set new password.
-      </Text>
+      <Box>
+        <Text>
+          We have reset your password. We have sent you an email containing
+          temporary password. Sign in with that password and set new password.
+        </Text>
+        <Text>
+          <b>Note:</b> If you didn't get mail in inbox folder, check spam
+          folder.
+        </Text>
+      </Box>
       <div className={classes.footer}>
         <Button colorScheme="blue" onClick={onSignInClick}>
           Sign in
