@@ -10,6 +10,8 @@ import {
   setUserInfoInStorage,
   getFieldPresenceStatus,
   localSearch,
+  clearStorage,
+  getToken,
 } from '../Utils';
 import {
   updateUserFoldersInCache,
@@ -46,6 +48,7 @@ const getRequestPromise = ({ route, data }) => {
       'Content-Type': 'application/json',
     },
     referrerPolicy: 'no-referrer',
+    credentials: 'include',
   });
 };
 
@@ -670,6 +673,27 @@ export const changePassword = (data, successCallback) => {
           position: 'bottom-left',
         })
       );
+    } finally {
+      dispatch(setLoaderVisibility(false));
+    }
+  };
+};
+
+export const logoutUser = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(setLoaderVisibility(true));
+      await fetch(`${origin}/logout`, {
+        credentials: 'include',
+        headers: {
+          authorization: getToken(),
+        },
+        referrerPolicy: 'no-referrer',
+      });
+      clearStorage();
+      window.location.href = '/';
+    } catch (e) {
+      console.error(e);
     } finally {
       dispatch(setLoaderVisibility(false));
     }

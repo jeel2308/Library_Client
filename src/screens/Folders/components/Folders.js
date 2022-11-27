@@ -16,9 +16,10 @@ import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
 /**--internal-- */
-import { compose, getMatchingResults, clearStorage } from '#Utils';
+import { compose, getMatchingResults } from '#Utils';
 import { Sidebar, Dropdown, withLoader } from '#components';
 import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
+import { logoutUser } from '#modules/Module';
 
 /**--relative-- */
 import classes from './Folders.module.scss';
@@ -29,7 +30,7 @@ import { loadingContainerStyle, dotsStyle } from './FoldersStyles';
 import { USER_ACTIONS, getNextAvailableFolderId } from './FoldersUtils';
 
 const Resources = (props) => {
-  const { folders, userBasicDetails } = props;
+  const { folders, userBasicDetails, logoutUser } = props;
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -130,8 +131,7 @@ const Resources = (props) => {
         break;
       }
       case 'LOGOUT': {
-        clearStorage();
-        window.location.href = '/';
+        logoutUser();
         break;
       }
       default: {
@@ -207,8 +207,12 @@ const mapStateToProps = (state) => {
   return { userId: userDetails.id };
 };
 
+const mapActionCreators = {
+  logoutUser,
+};
+
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapActionCreators),
   getUserFoldersEnhancer({ loadingContainerStyle }),
   withLoader
 )(Resources);
