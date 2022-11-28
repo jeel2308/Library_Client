@@ -12,6 +12,7 @@ import {
   localSearch,
   clearStorage,
   getToken,
+  getPostRequestPromise,
 } from '../Utils';
 import {
   updateUserFoldersInCache,
@@ -38,18 +39,6 @@ export const getTotalFolders = ({ userId }) => {
   const { folders } = getUserFoldersFromCache({ userId });
 
   return _size(folders);
-};
-
-const getRequestPromise = ({ route, data }) => {
-  return fetch(`${origin}/${route}`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    referrerPolicy: 'no-referrer',
-    credentials: 'include',
-  });
 };
 
 /**--REDUX ACTIONS-- */
@@ -501,14 +490,7 @@ export const loginUser = (data, successCallback) => {
     try {
       dispatch(setLoaderVisibility(true));
 
-      res = await fetch(`${origin}/login`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        referrerPolicy: 'no-referrer',
-      });
+      res = await getPostRequestPromise({ route: 'login', data });
 
       responseData = await res.json();
 
@@ -552,14 +534,7 @@ export const registerUser = (data) => {
     try {
       dispatch(setLoaderVisibility(true));
 
-      res = await fetch(`${origin}/signup`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        referrerPolicy: 'no-referrer',
-      });
+      res = await getPostRequestPromise({ route: 'signup', data });
 
       const { message, ...userInfo } = await res.json();
 
@@ -609,7 +584,7 @@ export const resetPassword = (data, successCallback) => {
     try {
       dispatch(setLoaderVisibility(true));
 
-      response = await getRequestPromise({ route: 'reset-password', data });
+      response = await getPostRequestPromise({ route: 'reset-password', data });
 
       if (!response.ok) {
         const responseData = await response.json();
@@ -644,7 +619,7 @@ export const changePassword = (data, successCallback) => {
   return async (dispatch) => {
     try {
       dispatch(setLoaderVisibility(true));
-      const response = await getRequestPromise({
+      const response = await getPostRequestPromise({
         route: 'change-password',
         data,
       });

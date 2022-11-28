@@ -129,6 +129,18 @@ const mergeRefs = ({ node, refs }) => {
   });
 };
 
+const getPostRequestPromise = ({ route, data }) => {
+  return fetch(`${origin}/${route}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    referrerPolicy: 'no-referrer',
+    credentials: 'include', //Required to sent and set cookies
+  });
+};
+
 export {
   validateEmail,
   setUserInfoInStorage,
@@ -147,4 +159,5 @@ export {
   getFieldPresenceStatus,
   localSearch,
   mergeRefs,
+  getPostRequestPromise,
 };
