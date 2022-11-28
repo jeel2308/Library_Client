@@ -4,6 +4,10 @@ import _keys from 'lodash/keys';
 import _filter from 'lodash/filter';
 import _forEach from 'lodash/forEach';
 
+const getOrigin = () => {
+  return process.env.REACT_APP_SERVER_URL;
+};
+
 const validateEmail = (email) => {
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/, 'i');
 
@@ -130,6 +134,7 @@ const mergeRefs = ({ node, refs }) => {
 };
 
 const getPostRequestPromise = ({ route, data }) => {
+  const origin = getOrigin();
   return fetch(`${origin}/${route}`, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -160,4 +165,5 @@ export {
   localSearch,
   mergeRefs,
   getPostRequestPromise,
+  getOrigin,
 };

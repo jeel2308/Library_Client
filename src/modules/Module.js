@@ -13,6 +13,7 @@ import {
   clearStorage,
   getToken,
   getPostRequestPromise,
+  getOrigin,
 } from '../Utils';
 import {
   updateUserFoldersInCache,
@@ -32,8 +33,6 @@ import {
 
 /**--CONSTANTS AND UTILS-- */
 export const DEFAULT_PAGE_SIZE = 9;
-
-const origin = process.env.REACT_APP_SERVER_URL;
 
 export const getTotalFolders = ({ userId }) => {
   const { folders } = getUserFoldersFromCache({ userId });
@@ -657,6 +656,7 @@ export const changePassword = (data, successCallback) => {
 export const logoutUser = () => {
   return async (dispatch) => {
     try {
+      const origin = getOrigin();
       dispatch(setLoaderVisibility(true));
       await fetch(`${origin}/logout`, {
         credentials: 'include',
