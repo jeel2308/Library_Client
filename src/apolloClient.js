@@ -1,12 +1,23 @@
 /**--external-- */
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  from,
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
+import { onError } from '@apollo/client/link/error';
+import _get from 'lodash/get';
+
+/**--internal-- */
+import { logoutUser } from '#modules/Module';
 
 /**--relative-- */
 import { getToken } from './Utils';
 import schema from './fragmentTypes.json';
 import { createCustomFetchFunction } from './apolloClientUtils';
+import store from './store';
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: schema,
@@ -25,6 +36,12 @@ const authLink = setContext((_, { headers }) => {
       authorization: token ? token : '',
     },
   };
+});
+
+const errorLink = onError(({ networkError }) => {
+  if (_get(networkError, ['result', 'message']) === 'jwt expired') {
+    store.dispatch(logoutUser());
+  }
 });
 
 const client = new ApolloClient({
@@ -51,7 +68,8 @@ const client = new ApolloClient({
   /**
    * Apollo links will be recalculated for each operation.
    */
-  link: authLink.concat(httpLink),
+
+  link: from([errorLink, authLink, httpLink]),
 });
 
 export default client;
