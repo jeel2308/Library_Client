@@ -6,6 +6,7 @@ import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 /**--relative-- */
 import { getToken } from './Utils';
 import schema from './fragmentTypes.json';
+import { createCustomFetchFunction } from './apolloClientUtils';
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: schema,
@@ -13,6 +14,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 
 const httpLink = createHttpLink({
   uri: `${process.env.REACT_APP_SERVER_URL}/graphql`,
+  fetch: createCustomFetchFunction(),
 });
 
 const authLink = setContext((_, { headers }) => {

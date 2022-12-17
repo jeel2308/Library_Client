@@ -675,6 +675,39 @@ export const logoutUser = () => {
   };
 };
 
+export const refreshAccessToken = () => {
+  return async (dispatch) => {
+    try {
+      const res = await getPostRequestPromise({ route: 'refresh-old-token' });
+      const { message, ...userInfo } = await res.json();
+
+      if (res.ok) {
+        dispatch(_updateUserLoggedInStatus({ userInfo }));
+      } else {
+        dispatch(
+          setToastMessage({
+            title: message || res.statusText,
+            status: 'error',
+            isClosable: true,
+            position: 'bottom-left',
+          })
+        );
+        throw new Error(message || res.statusText);
+      }
+    } catch (e) {
+      dispatch(
+        setToastMessage({
+          title: 'Something went wrong',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-left',
+        })
+      );
+      throw e;
+    }
+  };
+};
+
 const reducerHandlers = {
   [SET_LOADER_VISIBILITY]: (state, action) => {
     const { payload } = action;
