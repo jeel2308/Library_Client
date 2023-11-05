@@ -16,12 +16,12 @@ const DeleteLinkModal = (props) => {
     <Modal onClickOutside={onCancelClick}>
       <div className={classes.container}>
         <Heading as={'h3'} fontSize={'xl'}>
-          {`Delete ${totalLinks === 1 ? 'link' : 'links'}`}
+          {`Delete ${totalLinks === 1 ? 'resource' : 'resources'}`}
         </Heading>
 
         <Text mt={'4'}>
           {`Are you sure you want to delete ${
-            totalLinks === 1 ? 'this link' : 'these links'
+            totalLinks === 1 ? 'this resource' : 'these resources'
           }?`}
         </Text>
         <ButtonGroup mt={'10'} display={'flex'} justifyContent={'flex-end'}>

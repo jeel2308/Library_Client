@@ -406,7 +406,7 @@ export const deleteLink = ({ isCompleted, folderId, linkIds, searchText }) => {
       dispatch(
         setToastMessage({
           title: `Deleted ${
-            _size(linkIds) === 1 ? 'link' : 'links'
+            _size(linkIds) === 1 ? 'resource' : 'resource'
           } successfully`,
           status: 'success',
           isClosable: true,
