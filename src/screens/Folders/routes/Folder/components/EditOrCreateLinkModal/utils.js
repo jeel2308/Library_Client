@@ -5,7 +5,7 @@ import _get from 'lodash/get';
 export const formFields = [
   {
     id: 'link',
-    label: 'Link',
+    label: 'Resource',
     type: 'url',
     defaultValue: '',
     placeholder: 'link',
@@ -13,7 +13,7 @@ export const formFields = [
       required: true,
     },
     errorMessages: {
-      required: 'link is required!!',
+      required: 'url is required!!',
     },
   },
   {
@@ -23,14 +23,14 @@ export const formFields = [
   },
   {
     id: 'folderId',
-    label: 'Select folder',
-    placeholder: 'Select folder',
+    label: 'Select collection',
+    placeholder: 'Select collection',
     type: 'select',
     constrains: {
       required: true,
     },
     errorMessages: {
-      required: 'Folder is required!!',
+      required: 'Collection is required!!',
     },
   },
 ];

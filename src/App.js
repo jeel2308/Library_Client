@@ -48,7 +48,7 @@ function App(props) {
     updateUserLoggedInStatus(isUserLoggedIn);
     setIsComponentReady(true);
     if (isUserLoggedIn && location.pathname === '/') {
-      navigate('/folders');
+      navigate('/collections');
     }
   }, []);
 

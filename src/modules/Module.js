@@ -233,7 +233,7 @@ export const addLinkBasicDetails = ({
 
       dispatch(
         setToastMessage({
-          title: 'Added link successfully',
+          title: 'Added resource successfully',
           status: 'success',
           isClosable: true,
           position: 'bottom-left',

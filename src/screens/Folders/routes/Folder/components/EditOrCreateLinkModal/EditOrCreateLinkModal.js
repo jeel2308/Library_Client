@@ -114,7 +114,7 @@ const EditOrCreateLink = (props) => {
       formButtonsElement={
         <div className={classes.footer}>
           <Button type="submit" colorScheme="blue">
-            {mode === 'CREATE' ? 'Add link' : 'Update link'}
+            {mode === 'CREATE' ? 'Add resource' : 'Update resource'}
           </Button>
         </div>
       }

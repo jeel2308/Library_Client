@@ -304,7 +304,7 @@ const Links = (props) => {
 
   const renderLinks = () => {
     if (_isEmpty(links)) {
-      return 'No links';
+      return 'No Resources';
     }
     const linkActions = getLinkActions({ isCompleted, showMoveAction });
     return _map(links, (link, index) => {

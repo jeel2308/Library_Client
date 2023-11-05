@@ -77,7 +77,7 @@ const Login = (props) => {
 
   const onLoginSuccess = ({ showResetPasswordFlow }) => {
     if (!showResetPasswordFlow) {
-      navigate('/folders');
+      navigate('/collections');
     } else {
       navigate('/changePassword');
     }

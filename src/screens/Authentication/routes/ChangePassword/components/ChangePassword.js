@@ -18,7 +18,7 @@ const ChangePassword = (props) => {
   const navigate = useNavigate();
 
   const onChangePassword = () => {
-    navigate('/folders');
+    navigate('/collections');
   };
 
   const onSubmit = (data) => {

@@ -91,7 +91,7 @@ const Resources = (props) => {
       if (nextFolderId) {
         setSelectedFolderId(nextFolderId);
       } else {
-        navigate('../folders', { replace: true });
+        navigate('../collections', { replace: true });
       }
     }
   };

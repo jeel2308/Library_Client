@@ -2,7 +2,7 @@ import Component from './components';
 import { folderRoutes, noFolderRoutes } from './routes';
 
 const plainRoutes = {
-  path: 'folders',
+  path: 'collections',
   element: <Component />,
   children: [folderRoutes, noFolderRoutes],
 };
