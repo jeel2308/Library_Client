@@ -59,7 +59,7 @@ const FolderList = (props) => {
           disabled={!selectedFolder}
           onClick={() => onUpdateFolder({ folderId: selectedFolder })}
         >
-          Update folder
+          Update collection
         </Button>
       </ButtonGroup>
     </div>

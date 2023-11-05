@@ -41,7 +41,7 @@ const EditOrCreateFolderModal = (props) => {
             <div className={classes.footer}>
               <Button colorScheme={'blue'} type={'submit'}>{`${
                 mode === 'CREATE' ? 'Create' : 'Update'
-              } folder`}</Button>
+              } collection`}</Button>
             </div>
           }
         />

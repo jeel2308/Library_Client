@@ -21,9 +21,9 @@ const NoFolders = () => {
 
   return (
     <div className={classes.container}>
-      <Text>No folders found</Text>
+      <Text>No collections found</Text>
       <Button colorScheme="blue" onClick={onButtonClick}>
-        Create new folder
+        Create new collection
       </Button>
       {showModal && <EditOrCreateFolderModal closeModal={closeModal} />}
     </div>

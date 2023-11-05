@@ -123,7 +123,7 @@ const Form = (props) => {
                             {label}
                           </FormLabel>
                           <Select
-                            placeholder="Select folder"
+                            placeholder="Select collection"
                             onChange={onInputChange}
                             isInvalid={isInvalid}
                             value={value}

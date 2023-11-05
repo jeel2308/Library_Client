@@ -4,10 +4,10 @@ import _isEmpty from 'lodash/isEmpty';
 export const formFields = [
   {
     id: 'folder',
-    label: 'Folder name',
+    label: 'Collection name',
     type: 'text',
     defaultValue: '',
-    placeholder: 'folder',
+    placeholder: 'Collection',
     constrains: {
       required: true,
     },

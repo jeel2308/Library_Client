@@ -96,7 +96,7 @@ export const addFolder =
 
       dispatch(
         setToastMessage({
-          title: `Created folder successfully`,
+          title: `Created collection successfully`,
           status: 'success',
           isClosable: true,
           position: 'bottom-left',
@@ -134,7 +134,7 @@ export const updateFolder = ({ name, id }) => {
 
       dispatch(
         setToastMessage({
-          title: `Updated folder successfully`,
+          title: `Updated collection successfully`,
           status: 'success',
           isClosable: true,
           position: 'bottom-left',
@@ -173,7 +173,7 @@ export const deleteFolder = ({ id }) => {
 
       dispatch(
         setToastMessage({
-          title: `Deleted folder successfully`,
+          title: `Deleted collection successfully`,
           status: 'success',
           isClosable: true,
           position: 'bottom-left',
