@@ -196,17 +196,12 @@ export const deleteFolder = ({ id }) => {
   };
 };
 
-export const addLinkBasicDetails = ({
-  url,
-  isCompleted,
-  folderId,
-  searchText,
-}) => {
+export const addLinkBasicDetails = ({ url, folderId, searchText }) => {
   return async (dispatch) => {
     try {
       const mutationResponse = await client.mutate({
         mutation: addLinkMutation,
-        variables: { input: { url, folderId, isCompleted } },
+        variables: { input: { url, folderId } },
         update: (
           _,
           {
@@ -221,7 +216,6 @@ export const addLinkBasicDetails = ({
             addLinkInCache({
               folderId,
               linkFilters: {
-                isCompleted,
                 first: DEFAULT_PAGE_SIZE,
                 searchText,
               },
@@ -258,7 +252,6 @@ export const addLinkBasicDetails = ({
 
 export const updateLinkBasicDetails = ({
   linksDetails,
-  oldStatus,
   oldFolderId,
   searchText,
 }) => {
@@ -266,8 +259,7 @@ export const updateLinkBasicDetails = ({
     const linksToBeRemovedFromCurrentFeed = _pipe(
       (data) => {
         return _filter(data, (link) => {
-          const { isCompleted, folderId, url } = link;
-          const isStatusFilterPresent = getFieldPresenceStatus(isCompleted);
+          const { folderId, url } = link;
 
           const isFolderPresent = getFieldPresenceStatus(folderId);
 
@@ -277,11 +269,7 @@ export const updateLinkBasicDetails = ({
             ? localSearch({ text: url, searchText }) > -1
             : true;
 
-          return (
-            isStatusFilterPresent ||
-            isFolderPresent ||
-            !doesUrlMatchWithSearchText
-          );
+          return isFolderPresent || !doesUrlMatchWithSearchText;
         });
       },
       (data) => _map(data, ({ id }) => id)
@@ -304,7 +292,6 @@ export const updateLinkBasicDetails = ({
             deleteLinkFromCache({
               folderId: oldFolderId,
               linkFilters: {
-                isCompleted: oldStatus,
                 first: DEFAULT_PAGE_SIZE,
                 searchText,
               },
@@ -340,12 +327,12 @@ export const updateLinkBasicDetails = ({
   };
 };
 
-export const addLink = ({ url, isCompleted, folderId, searchText }) => {
+export const addLink = ({ url, folderId, searchText }) => {
   return async (dispatch) => {
     try {
       dispatch(setLoaderVisibility(true));
       const data = await dispatch(
-        addLinkBasicDetails({ url, isCompleted, folderId, searchText })
+        addLinkBasicDetails({ url, folderId, searchText })
       );
       dispatch(setLoaderVisibility(false));
       return data;
@@ -355,19 +342,13 @@ export const addLink = ({ url, isCompleted, folderId, searchText }) => {
   };
 };
 
-export const updateLink = ({
-  linksDetails,
-  oldStatus,
-  oldFolderId,
-  searchText,
-}) => {
+export const updateLink = ({ linksDetails, oldFolderId, searchText }) => {
   return async (dispatch) => {
     try {
       dispatch(setLoaderVisibility(true));
       const data = await dispatch(
         updateLinkBasicDetails({
           linksDetails,
-          oldStatus,
           oldFolderId,
           searchText,
         })
@@ -380,7 +361,7 @@ export const updateLink = ({
   };
 };
 
-export const deleteLink = ({ isCompleted, folderId, linkIds, searchText }) => {
+export const deleteLink = ({ folderId, linkIds, searchText }) => {
   return async (dispatch, getState) => {
     const mutationInput = _map(linkIds, (id) => ({ id }));
     const responseLinks = _map(linkIds, (id) => ({ id, __typename: 'Link' }));
@@ -398,7 +379,7 @@ export const deleteLink = ({ isCompleted, folderId, linkIds, searchText }) => {
         update: () => {
           deleteLinkFromCache({
             folderId,
-            linkFilters: { isCompleted, first: DEFAULT_PAGE_SIZE, searchText },
+            linkFilters: { first: DEFAULT_PAGE_SIZE, searchText },
             linkIds,
           });
         },

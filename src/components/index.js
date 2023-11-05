@@ -7,7 +7,6 @@ import ToastMessage from './ToastMessage';
 import withTooltip from './withTooltip';
 import withRouter from './withRouter';
 import Sidebar from './Sidebar';
-import SegmentControl from './SegmentControl';
 import Dropdown from './Dropdown';
 import ScrollIntoViewWrapper from './ScrollIntoViewWrapper';
 import withLoader from './withLoader';
@@ -21,7 +20,6 @@ export {
   withTooltip,
   withRouter,
   Sidebar,
-  SegmentControl,
   Dropdown,
   ScrollIntoViewWrapper,
   withLoader,

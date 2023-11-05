@@ -17,11 +17,6 @@ export const formFields = [
     },
   },
   {
-    id: 'isCompleted',
-    label: 'mark as completed',
-    type: 'checkbox',
-  },
-  {
     id: 'folderId',
     label: 'Select collection',
     placeholder: 'Select collection',
@@ -46,10 +41,6 @@ export const getDynamicFormFields = ({ formFields, data }) => {
     switch (id) {
       case 'link': {
         defaultValue = _get(data, 'url', '');
-        break;
-      }
-      case 'isCompleted': {
-        defaultValue = _get(data, 'isCompleted', false);
         break;
       }
       case 'folderId': {

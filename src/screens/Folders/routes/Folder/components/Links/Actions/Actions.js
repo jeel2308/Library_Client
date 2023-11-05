@@ -9,7 +9,7 @@ import { BiX } from 'react-icons/bi';
 import { iconStyle } from './ActionStyles';
 
 const Actions = (props) => {
-  const { onActionClick, showMoveAction, isCompleted } = props;
+  const { onActionClick, showMoveAction } = props;
   return (
     <Box
       display="flex"
@@ -19,12 +19,6 @@ const Actions = (props) => {
       padding={3}
     >
       <Box marginLeft="auto" display="flex" gap={3}>
-        <Button
-          colorScheme="blue"
-          onClick={() => onActionClick({ type: 'UPDATE_STATUS' })}
-        >
-          {isCompleted ? 'Mark as pending' : 'Mark as completed'}
-        </Button>
         {showMoveAction ? (
           <Button
             colorScheme="blue"
@@ -62,7 +56,6 @@ export default Actions;
 Actions.propTypes = {
   onActionClick: propTypes.func.isRequired,
   showMoveAction: propTypes.bool.isRequired,
-  isCompleted: propTypes.bool.isRequired,
 };
 
 Actions.displayName = 'Actions';

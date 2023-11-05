@@ -8,7 +8,6 @@ import _size from 'lodash/size';
 import { Text } from '@chakra-ui/react';
 
 /**--internal-- */
-import { SegmentControl } from '#components';
 import { scrollToBottom } from '#Utils';
 
 /**--relative-- */
@@ -16,14 +15,7 @@ import classes from './Folder.module.scss';
 import Links from './Links';
 import SearchBar from './SearchBar';
 
-const segmentControlOptions = [
-  { label: 'Borrowed', value: 'PENDING' },
-  { label: 'Archives', value: 'COMPLETED' },
-];
 const Folder = () => {
-  const [linkStatus, setLinkStatus] = useState(
-    () => segmentControlOptions[0].value
-  );
   const [searchText, setSearchText] = useState('');
 
   const updateSearchText = useMemo(() => {
@@ -55,8 +47,6 @@ const Folder = () => {
     setSearchText('');
   }, [folderId]);
 
-  const isCompleted = linkStatus !== 'PENDING';
-
   const scrollLinkFeed = (operationDetails) => {
     const { type } = operationDetails;
     switch (type) {
@@ -85,21 +75,16 @@ const Folder = () => {
         break;
       }
       case 'FEED_REFRESH': {
-        const {
-          folderId: previousFolderId,
-          linkStatus: previousLinkStatus,
-          searchText: previousSearchText,
-        } = previousFiltersRef.current;
+        const { folderId: previousFolderId, searchText: previousSearchText } =
+          previousFiltersRef.current;
 
         if (
           folderId !== previousFolderId ||
-          linkStatus !== previousLinkStatus ||
           searchText !== previousSearchText
         ) {
           scrollToBottom(linkScrollRef.current);
           previousFiltersRef.current = {
             folderId,
-            linkStatus,
             searchText,
           };
         }
@@ -117,13 +102,6 @@ const Folder = () => {
       <div className={classes.header}>
         <div className={classes.headerFirstRow}>
           <Text fontSize="xl">{folderName}</Text>
-          <div className={classes.segmentControlContainer}>
-            <SegmentControl
-              options={segmentControlOptions}
-              activeValue={linkStatus}
-              onOptionClick={({ value }) => setLinkStatus(value)}
-            />
-          </div>
         </div>
         <div className={classes.headerSecondRow}>
           <SearchBar key={folderId} onChange={updateSearchText} />
@@ -132,7 +110,6 @@ const Folder = () => {
 
       <Links
         folderId={folderId}
-        isCompleted={isCompleted}
         searchText={searchText}
         updateSearchText={setSearchText}
         setLinkScrollRef={setLinkScrollRef}

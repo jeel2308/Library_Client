@@ -45,7 +45,6 @@ const Links = (props) => {
   const {
     folderDetails,
     deleteLink,
-    isCompleted,
     updateLink,
     networkStatus,
     hasNextPage,
@@ -115,7 +114,6 @@ const Links = (props) => {
     try {
       await deleteLink({
         linkIds: selectedLinks,
-        isCompleted,
         folderId,
         searchText,
       });
@@ -139,7 +137,6 @@ const Links = (props) => {
           id,
           folderId: updatedFolderId,
         })),
-        oldStatus: isCompleted,
         oldFolderId: folderId,
         searchText,
       });
@@ -163,25 +160,6 @@ const Links = (props) => {
       case 'DELETE': {
         setSelectedLinks([linkId]);
         toggleDeleteLinkModalVisibility();
-
-        break;
-      }
-
-      case 'MARK_AS_PENDING':
-      case 'MARK_AS_COMPLETE': {
-        try {
-          await updateLink({
-            linksDetails: [{ id: linkId, isCompleted: !isCompleted }],
-            oldStatus: isCompleted,
-            oldFolderId: folderId,
-            searchText,
-          });
-
-          if (_size(links) <= DEFAULT_PAGE_SIZE) {
-            setShowPaginationLoader(false);
-            fetchMoreFeed();
-          }
-        } catch (e) {}
 
         break;
       }
@@ -218,28 +196,6 @@ const Links = (props) => {
       }
       case 'CANCEL': {
         disableBulkSelectionMode();
-        break;
-      }
-      case 'UPDATE_STATUS': {
-        try {
-          await updateLink({
-            linksDetails: _map(selectedLinks, (id) => ({
-              id,
-              isCompleted: !isCompleted,
-            })),
-            oldStatus: isCompleted,
-            oldFolderId: folderId,
-            searchText,
-          });
-
-          disableBulkSelectionMode();
-
-          if (_size(links) <= DEFAULT_PAGE_SIZE) {
-            setShowPaginationLoader(false);
-            fetchMoreFeed();
-          }
-        } catch {}
-
         break;
       }
       case 'MOVE': {
@@ -286,15 +242,10 @@ const Links = (props) => {
     }
   };
 
-  const linkAddedOrUpdatedCallback = ({
-    isCompleted: updatedStatus,
-    folderId: updatedFolderId,
-  }) => {
-    const isLinkStatusUpdated = getFieldPresenceStatus(updatedStatus);
-
+  const linkAddedOrUpdatedCallback = ({ folderId: updatedFolderId }) => {
     const isFolderUpdated = getFieldPresenceStatus(updatedFolderId);
 
-    if (isLinkStatusUpdated || isFolderUpdated) {
+    if (isFolderUpdated) {
       if (_size(links) <= DEFAULT_PAGE_SIZE) {
         setShowPaginationLoader(false);
         fetchMoreFeed();
@@ -306,7 +257,7 @@ const Links = (props) => {
     if (_isEmpty(links)) {
       return 'No Resources';
     }
-    const linkActions = getLinkActions({ isCompleted, showMoveAction });
+    const linkActions = getLinkActions({ showMoveAction });
     return _map(links, (link, index) => {
       const { id } = link;
       const isLinkSelected = _includes(selectedLinks, id);
@@ -409,14 +360,9 @@ const Links = (props) => {
         <Actions
           onActionClick={handleBulkSelectionActions}
           showMoveAction={showMoveAction}
-          isCompleted={isCompleted}
         />
       ) : (
-        <AddResource
-          folderId={folderId}
-          searchText={searchText}
-          isCompleted={isCompleted}
-        />
+        <AddResource folderId={folderId} searchText={searchText} />
       )}
     </div>
   );
@@ -443,12 +389,11 @@ export default compose(
     name: 'getFolderDetails',
     fetchPolicy: 'cache-and-network',
     skip: ({ folderId }) => !folderId,
-    options: ({ folderId, isCompleted, searchText, scrollLinkFeed }) => {
+    options: ({ folderId, searchText, scrollLinkFeed }) => {
       return {
         variables: {
           input: { id: folderId, type: 'FOLDER' },
           linkFilterInputV2: {
-            isCompleted,
             first: DEFAULT_PAGE_SIZE,
             searchText,
           },
@@ -459,10 +404,7 @@ export default compose(
         },
       };
     },
-    props: ({
-      getFolderDetails,
-      ownProps: { folderId, isCompleted, searchText },
-    }) => {
+    props: ({ getFolderDetails, ownProps: { folderId, searchText } }) => {
       const { networkStatus } = getFolderDetails;
 
       /**
@@ -471,7 +413,6 @@ export default compose(
       const folderDetails = getFolderDetailsFromCache({
         folderId,
         linkFilters: {
-          isCompleted,
           first: DEFAULT_PAGE_SIZE,
           searchText,
         },
@@ -492,7 +433,6 @@ export default compose(
               type: 'FOLDER',
             },
             linkFilterInputV2: {
-              isCompleted,
               first,
               after: endCursor,
               searchText,

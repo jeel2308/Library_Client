@@ -26,7 +26,6 @@ const EditOrCreateLink = (props) => {
     linkId,
     updateLink,
     folders,
-    defaultLinkStatus,
     linkAddedOrUpdatedCallback,
     searchText,
   } = props;
@@ -34,30 +33,20 @@ const EditOrCreateLink = (props) => {
   const dynamicFormFields = getDynamicFormFields({
     formFields,
     data: {
-      isCompleted: defaultLinkStatus,
       ...linkDetails,
       options: folders,
       folderId,
     },
   });
 
-  const getPayloadToUpdateLink = ({
-    link,
-    isCompleted: updatedStatus,
-    folderId: updatedFolderId,
-  }) => {
+  const getPayloadToUpdateLink = ({ link, folderId: updatedFolderId }) => {
     const linkData = { id: linkId };
 
     const isLinkUrlUpdated = link !== linkDetails.url;
-    const isLinkStatusUpdated = updatedStatus !== linkDetails.isCompleted;
     const isFolderUpdated = updatedFolderId !== folderId;
 
     if (isLinkUrlUpdated) {
       linkData.url = link;
-    }
-
-    if (isLinkStatusUpdated) {
-      linkData.isCompleted = updatedStatus;
     }
 
     if (isFolderUpdated) {
@@ -67,16 +56,11 @@ const EditOrCreateLink = (props) => {
     return linkData;
   };
 
-  const onSubmit = async ({
-    link,
-    isCompleted = false,
-    folderId: updatedFolderId,
-  }) => {
+  const onSubmit = async ({ link, folderId: updatedFolderId }) => {
     try {
       if (mode === 'CREATE') {
         const createLinkPayload = {
           url: link,
-          isCompleted,
           folderId,
           searchText,
         };
@@ -88,13 +72,11 @@ const EditOrCreateLink = (props) => {
       } else {
         const payloadToUpdateLink = getPayloadToUpdateLink({
           link,
-          isCompleted,
           folderId: updatedFolderId,
         });
 
         const [data] = await updateLink({
           linksDetails: [payloadToUpdateLink],
-          oldStatus: linkDetails.isCompleted,
           oldFolderId: folderId,
           searchText,
         });

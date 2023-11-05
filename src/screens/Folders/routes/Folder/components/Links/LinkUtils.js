@@ -1,19 +1,8 @@
 import _filter from 'lodash/filter';
-import _reduce from 'lodash/reduce';
 
 export const LINK_ACTIONS = [
   { label: 'Edit', value: 'EDIT' },
   { label: 'Delete', value: 'DELETE' },
-  {
-    label: 'Mark as complete',
-    value: 'MARK_AS_COMPLETE',
-    getVisibilityStatus: ({ isCompleted }) => !isCompleted,
-  },
-  {
-    label: 'Mark as pending',
-    value: 'MARK_AS_PENDING',
-    getVisibilityStatus: ({ isCompleted }) => isCompleted,
-  },
   {
     label: 'Select',
     value: 'SELECT',
