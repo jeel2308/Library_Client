@@ -2,11 +2,6 @@
 import _size from 'lodash/size';
 import _findIndex from 'lodash/findIndex';
 
-export const USER_ACTIONS = [
-  { label: 'Create collection', value: 'CREATE' },
-  { label: 'Log out', value: 'LOGOUT' },
-];
-
 export const getNextAvailableFolderId = ({ folderId, folders }) => {
   const totalFolders = _size(folders);
 

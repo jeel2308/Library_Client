@@ -11,26 +11,23 @@ import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _find from 'lodash/find';
 import _size from 'lodash/size';
-import { Avatar, Button, Text } from '@chakra-ui/react';
-import { BiDotsVerticalRounded } from 'react-icons/bi';
-import { IconContext } from 'react-icons';
+import { Text, Box } from '@chakra-ui/react';
 
 /**--internal-- */
 import { compose, getMatchingResults } from '#Utils';
-import { Sidebar, Dropdown, withLoader } from '#components';
+import { Sidebar, withLoader } from '#components';
 import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
-import { logoutUser } from '#modules/Module';
 
 /**--relative-- */
 import classes from './Folders.module.scss';
 import Search from './Search';
 import EditOrCreateFolderModal from './EditOrCreateFolderModal';
 import DeleteWarningModal from './DeleteWarningModal';
-import { loadingContainerStyle, dotsStyle } from './FoldersStyles';
-import { USER_ACTIONS, getNextAvailableFolderId } from './FoldersUtils';
+import { getNextAvailableFolderId } from './FoldersUtils';
+import { loadingContainerStyle } from './FoldersStyles';
 
 const Resources = (props) => {
-  const { folders, userBasicDetails, logoutUser } = props;
+  const { folders } = props;
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -124,50 +121,10 @@ const Resources = (props) => {
     }
   };
 
-  const handleUserActions = ({ value }) => {
-    switch (value) {
-      case 'CREATE': {
-        setShowEditOrCreateFolderModal(true);
-        break;
-      }
-      case 'LOGOUT': {
-        logoutUser();
-        break;
-      }
-      default: {
-        return;
-      }
-    }
-  };
-
-  const onAvatarClick = () => {
-    navigate('/profile');
-  };
-
-  const { name } = userBasicDetails;
-
   return (
     <div className={classes.container}>
-      <div className={classes.leftContainer}>
-        <div className={classes.header}>
-          <Button variant="link" onClick={onAvatarClick}>
-            <Avatar name={name} size="sm" />
-          </Button>
-          <Dropdown
-            variant="unstyled"
-            options={USER_ACTIONS}
-            dropdownButtonType="icon"
-            handleActions={handleUserActions}
-            icon={
-              <IconContext.Provider value={dotsStyle}>
-                <BiDotsVerticalRounded />
-              </IconContext.Provider>
-            }
-          />
-        </div>
-        <Text color="white" fontSize={'18'} pl="4">
-          Collections
-        </Text>
+      <Box className={classes.leftContainer}>
+        <Text className={classes.header}>Collections</Text>
         {!_isEmpty(folders) && (
           <Search value={searchValue} onChange={setSearchValue} />
         )}
@@ -183,7 +140,7 @@ const Resources = (props) => {
             <div className={classes.noMatchText}>{'No match found'}</div>
           ) : null}
         </div>
-      </div>
+      </Box>
       <Outlet context={selectedFolder} />
       {showEditOrCreateFolderModal && (
         <EditOrCreateFolderModal
@@ -207,12 +164,8 @@ const mapStateToProps = (state) => {
   return { userId: userDetails.id };
 };
 
-const mapActionCreators = {
-  logoutUser,
-};
-
 export default compose(
-  connect(mapStateToProps, mapActionCreators),
+  connect(mapStateToProps),
   getUserFoldersEnhancer({ loadingContainerStyle }),
   withLoader
 )(Resources);

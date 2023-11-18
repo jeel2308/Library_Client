@@ -29,7 +29,7 @@ const Sidebar = (props) => {
         return (
           <ListItem
             key={id}
-            padding={3}
+            padding={4}
             gap={3}
             className={optionClasses}
             onClick={onOptionClick}
