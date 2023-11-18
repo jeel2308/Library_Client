@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button, Text } from '@chakra-ui/react';
 
 /**--internal-- */
-import EditOrCreateFolderModal from '../../../components/EditOrCreateFolderModal';
+import { EditOrCreateFolderModal } from '#AppComponents';
 
 /**--relative-- */
 import classes from './NoFolders.module.scss';
