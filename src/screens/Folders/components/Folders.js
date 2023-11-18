@@ -21,8 +21,7 @@ import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
 /**--relative-- */
 import classes from './Folders.module.scss';
 import Search from './Search';
-import EditOrCreateFolderModal from './EditOrCreateFolderModal';
-import DeleteWarningModal from './DeleteWarningModal';
+import { EditOrCreateFolderModal, DeleteWarningModal } from '#AppComponents';
 import { getNextAvailableFolderId } from './FoldersUtils';
 import { loadingContainerStyle } from './FoldersStyles';
 

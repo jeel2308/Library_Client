@@ -4,7 +4,8 @@
     "paths": {
       "#components": ["./src/components"],
       "#modules/*": ["./src/modules/*"],
-      "#Utils": ["./src/Utils.js"]
+      "#Utils": ["./src/Utils.js"],
+      "#AppComponents": ["./src/AppComponents"]
     }
   },
   "include": ["**/*.js"],
