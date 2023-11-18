@@ -7,11 +7,16 @@
 }
 
 .header {
+  background-color: white;
+  border-bottom: 1px solid rgb(230, 231, 234);
+  display: flex;
+  justify-content: space-between;
+}
+
+.collectionDetails {
   display: flex;
   gap: 12px;
   align-items: center;
-  background-color: white;
-  border-bottom: 1px solid rgb(230, 231, 234);
 }
 
 .headerFirstRow {

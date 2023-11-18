@@ -1,18 +1,23 @@
 /**--external-- */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _size from 'lodash/size';
 import { Text, Box, Avatar } from '@chakra-ui/react';
+import { IconContext } from 'react-icons';
+import { BiDotsHorizontal } from 'react-icons/bi';
 
 /**--internal-- */
 import { scrollToBottom } from '#Utils';
+import { Dropdown } from '#components';
+import { EditOrCreateFolderModal } from '#AppComponents';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
-import { avatarContainerStyle } from './FolderStyles';
+import { avatarContainerStyle, dotsStyle } from './FolderStyles';
 import Links from './Links';
+import { FOLDER_ACTIONS } from './FolderUtils';
 
 const Folder = () => {
   const folderBasicDetails = useOutletContext();
@@ -23,6 +28,8 @@ const Folder = () => {
     folderId: '',
     linkStatus: '',
   });
+
+  const [selectedAction, setSelectedAction] = useState(null);
 
   const setLinkScrollRef = (node) => {
     linkScrollRef.current = node;
@@ -83,10 +90,23 @@ const Folder = () => {
   return (
     <div className={classes.container}>
       <Box className={classes.header} p={6}>
-        <Avatar style={avatarContainerStyle} name={folderName} size="sm" />
-        <Text fontWeight={600} fontSize="md">
-          {folderName}
-        </Text>
+        <Box className={classes.collectionDetails}>
+          <Avatar style={avatarContainerStyle} name={folderName} size="sm" />
+          <Text fontWeight={600} fontSize="md">
+            {folderName}
+          </Text>
+        </Box>
+        <Dropdown
+          variant="unstyled"
+          options={FOLDER_ACTIONS}
+          dropdownButtonType="icon"
+          handleActions={({ value }) => setSelectedAction(value)}
+          icon={
+            <IconContext.Provider value={dotsStyle}>
+              <BiDotsHorizontal />
+            </IconContext.Provider>
+          }
+        />
       </Box>
 
       <Links
@@ -95,6 +115,12 @@ const Folder = () => {
         setLinkNodesRef={setLinkNodesRef}
         scrollLinkFeed={scrollLinkFeed}
       />
+      {selectedAction === 'EDIT' && (
+        <EditOrCreateFolderModal
+          closeModal={() => setSelectedAction(null)}
+          folderId={folderId}
+        />
+      )}
     </div>
   );
 };
