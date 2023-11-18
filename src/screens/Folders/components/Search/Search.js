@@ -5,7 +5,7 @@ import { BiSearch } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
 /**--relative-- */
-import { searchIconStyle, inputGroupStyle } from './SearchStyles';
+import { searchIconStyle, inputGroupStyle, inputStyle } from './SearchStyles';
 import classes from './Search.module.scss';
 
 const Search = (props) => {
@@ -22,7 +22,7 @@ const Search = (props) => {
           placeholder="Search collections"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={classes.inputContainer}
+          style={inputStyle}
         />
       </InputGroup>
     </Box>
