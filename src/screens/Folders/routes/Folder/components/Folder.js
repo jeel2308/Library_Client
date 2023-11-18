@@ -1,27 +1,20 @@
 /**--external-- */
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
-import _debounce from 'lodash/debounce';
 import _isEmpty from 'lodash/isEmpty';
 import _size from 'lodash/size';
-import { Text } from '@chakra-ui/react';
+import { Text, Box, Avatar } from '@chakra-ui/react';
 
 /**--internal-- */
 import { scrollToBottom } from '#Utils';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
+import { avatarContainerStyle } from './FolderStyles';
 import Links from './Links';
-import SearchBar from './SearchBar';
 
 const Folder = () => {
-  const [searchText, setSearchText] = useState('');
-
-  const updateSearchText = useMemo(() => {
-    return _debounce((value) => setSearchText(value), 300);
-  }, []);
-
   const folderBasicDetails = useOutletContext();
 
   const linkScrollRef = useRef(null);
@@ -29,7 +22,6 @@ const Folder = () => {
   const previousFiltersRef = useRef({
     folderId: '',
     linkStatus: '',
-    searchText: '',
   });
 
   const setLinkScrollRef = (node) => {
@@ -42,10 +34,6 @@ const Folder = () => {
 
   const folderName = _get(folderBasicDetails, 'label', 'Anonymous');
   const folderId = _get(folderBasicDetails, 'id', '');
-
-  useEffect(() => {
-    setSearchText('');
-  }, [folderId]);
 
   const scrollLinkFeed = (operationDetails) => {
     const { type } = operationDetails;
@@ -75,17 +63,12 @@ const Folder = () => {
         break;
       }
       case 'FEED_REFRESH': {
-        const { folderId: previousFolderId, searchText: previousSearchText } =
-          previousFiltersRef.current;
+        const { folderId: previousFolderId } = previousFiltersRef.current;
 
-        if (
-          folderId !== previousFolderId ||
-          searchText !== previousSearchText
-        ) {
+        if (folderId !== previousFolderId) {
           scrollToBottom(linkScrollRef.current);
           previousFiltersRef.current = {
             folderId,
-            searchText,
           };
         }
 
@@ -99,19 +82,15 @@ const Folder = () => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
-        <div className={classes.headerFirstRow}>
-          <Text fontSize="xl">{folderName}</Text>
-        </div>
-        <div className={classes.headerSecondRow}>
-          <SearchBar key={folderId} onChange={updateSearchText} />
-        </div>
-      </div>
+      <Box className={classes.header} p={6}>
+        <Avatar style={avatarContainerStyle} name={folderName} size="sm" />
+        <Text fontWeight={600} fontSize="md">
+          {folderName}
+        </Text>
+      </Box>
 
       <Links
         folderId={folderId}
-        searchText={searchText}
-        updateSearchText={setSearchText}
         setLinkScrollRef={setLinkScrollRef}
         setLinkNodesRef={setLinkNodesRef}
         scrollLinkFeed={scrollLinkFeed}

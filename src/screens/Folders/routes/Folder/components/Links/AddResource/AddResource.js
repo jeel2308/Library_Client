@@ -13,14 +13,13 @@ import { inputStyle, inputContainerStyle } from './AddResourceStyles';
 
 const AddResource = (props) => {
   const [url, setUrl] = useState('');
-  const { addLink, folderId, searchText, linkAddedOrUpdatedCallback } = props;
+  const { addLink, folderId, linkAddedOrUpdatedCallback } = props;
 
   const onAddLinkClick = async () => {
     try {
       const addLinkPayload = {
         url,
         folderId,
-        searchText,
       };
       const data = await addLink(addLinkPayload);
       linkAddedOrUpdatedCallback &&
@@ -64,7 +63,6 @@ const mapActionCreators = {
 AddResource.propTypes = {
   addLink: propTypes.func.isRequired,
   folderId: propTypes.string.isRequired,
-  searchText: propTypes.string,
   linkAddedOrUpdatedCallback: propTypes.func,
 };
 

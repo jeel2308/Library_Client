@@ -50,7 +50,6 @@ const Links = (props) => {
     hasNextPage,
     fetchMore,
     showMoveAction,
-    searchText,
     setLinkScrollRef,
     setLinkNodesRef,
     scrollLinkFeed,
@@ -115,7 +114,6 @@ const Links = (props) => {
       await deleteLink({
         linkIds: selectedLinks,
         folderId,
-        searchText,
       });
 
       if (_size(links) <= DEFAULT_PAGE_SIZE) {
@@ -138,7 +136,6 @@ const Links = (props) => {
           folderId: updatedFolderId,
         })),
         oldFolderId: folderId,
-        searchText,
       });
 
       closeFolderList();
@@ -336,7 +333,6 @@ const Links = (props) => {
               closeModal={closeEditLinkModal}
               folderId={folderId}
               linkAddedOrUpdatedCallback={linkAddedOrUpdatedCallback}
-              searchText={searchText}
             />
           )}
           {showFolderList && (
@@ -362,7 +358,7 @@ const Links = (props) => {
           showMoveAction={showMoveAction}
         />
       ) : (
-        <AddResource folderId={folderId} searchText={searchText} />
+        <AddResource folderId={folderId} />
       )}
     </div>
   );
@@ -389,13 +385,12 @@ export default compose(
     name: 'getFolderDetails',
     fetchPolicy: 'cache-and-network',
     skip: ({ folderId }) => !folderId,
-    options: ({ folderId, searchText, scrollLinkFeed }) => {
+    options: ({ folderId, scrollLinkFeed }) => {
       return {
         variables: {
           input: { id: folderId, type: 'FOLDER' },
           linkFilterInputV2: {
             first: DEFAULT_PAGE_SIZE,
-            searchText,
           },
         },
         fetchPolicy: 'cache-and-network',
@@ -404,7 +399,7 @@ export default compose(
         },
       };
     },
-    props: ({ getFolderDetails, ownProps: { folderId, searchText } }) => {
+    props: ({ getFolderDetails, ownProps: { folderId } }) => {
       const { networkStatus } = getFolderDetails;
 
       /**
@@ -414,7 +409,6 @@ export default compose(
         folderId,
         linkFilters: {
           first: DEFAULT_PAGE_SIZE,
-          searchText,
         },
         showOptimistic: true,
       });
@@ -435,7 +429,6 @@ export default compose(
             linkFilterInputV2: {
               first,
               after: endCursor,
-              searchText,
             },
           },
           updateQuery: (previousFeed, { fetchMoreResult }) => {

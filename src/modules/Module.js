@@ -9,7 +9,6 @@ import _pipe from 'lodash/flow';
 import {
   setUserInfoInStorage,
   getFieldPresenceStatus,
-  localSearch,
   clearStorage,
   getToken,
   getPostRequestPromise,
@@ -196,7 +195,7 @@ export const deleteFolder = ({ id }) => {
   };
 };
 
-export const addLinkBasicDetails = ({ url, folderId, searchText }) => {
+export const addLinkBasicDetails = ({ url, folderId }) => {
   return async (dispatch) => {
     try {
       const mutationResponse = await client.mutate({
@@ -210,18 +209,13 @@ export const addLinkBasicDetails = ({ url, folderId, searchText }) => {
             },
           }
         ) => {
-          const shouldUpdateCache = localSearch({ text: url, searchText }) > -1;
-
-          if (shouldUpdateCache) {
-            addLinkInCache({
-              folderId,
-              linkFilters: {
-                first: DEFAULT_PAGE_SIZE,
-                searchText,
-              },
-              linkData: addLink,
-            });
-          }
+          addLinkInCache({
+            folderId,
+            linkFilters: {
+              first: DEFAULT_PAGE_SIZE,
+            },
+            linkData: addLink,
+          });
         },
       });
 
@@ -250,26 +244,16 @@ export const addLinkBasicDetails = ({ url, folderId, searchText }) => {
   };
 };
 
-export const updateLinkBasicDetails = ({
-  linksDetails,
-  oldFolderId,
-  searchText,
-}) => {
+export const updateLinkBasicDetails = ({ linksDetails, oldFolderId }) => {
   return async (dispatch) => {
     const linksToBeRemovedFromCurrentFeed = _pipe(
       (data) => {
         return _filter(data, (link) => {
-          const { folderId, url } = link;
+          const { folderId } = link;
 
           const isFolderPresent = getFieldPresenceStatus(folderId);
 
-          const isUrlPresent = getFieldPresenceStatus(url);
-
-          const doesUrlMatchWithSearchText = isUrlPresent
-            ? localSearch({ text: url, searchText }) > -1
-            : true;
-
-          return isFolderPresent || !doesUrlMatchWithSearchText;
+          return isFolderPresent;
         });
       },
       (data) => _map(data, ({ id }) => id)
@@ -293,7 +277,6 @@ export const updateLinkBasicDetails = ({
               folderId: oldFolderId,
               linkFilters: {
                 first: DEFAULT_PAGE_SIZE,
-                searchText,
               },
               linkIds: linksToBeRemovedFromCurrentFeed,
             });
@@ -327,13 +310,11 @@ export const updateLinkBasicDetails = ({
   };
 };
 
-export const addLink = ({ url, folderId, searchText }) => {
+export const addLink = ({ url, folderId }) => {
   return async (dispatch) => {
     try {
       dispatch(setLoaderVisibility(true));
-      const data = await dispatch(
-        addLinkBasicDetails({ url, folderId, searchText })
-      );
+      const data = await dispatch(addLinkBasicDetails({ url, folderId }));
       dispatch(setLoaderVisibility(false));
       return data;
     } catch (e) {
@@ -342,7 +323,7 @@ export const addLink = ({ url, folderId, searchText }) => {
   };
 };
 
-export const updateLink = ({ linksDetails, oldFolderId, searchText }) => {
+export const updateLink = ({ linksDetails, oldFolderId }) => {
   return async (dispatch) => {
     try {
       dispatch(setLoaderVisibility(true));
@@ -350,7 +331,6 @@ export const updateLink = ({ linksDetails, oldFolderId, searchText }) => {
         updateLinkBasicDetails({
           linksDetails,
           oldFolderId,
-          searchText,
         })
       );
       dispatch(setLoaderVisibility(false));
@@ -361,7 +341,7 @@ export const updateLink = ({ linksDetails, oldFolderId, searchText }) => {
   };
 };
 
-export const deleteLink = ({ folderId, linkIds, searchText }) => {
+export const deleteLink = ({ folderId, linkIds }) => {
   return async (dispatch, getState) => {
     const mutationInput = _map(linkIds, (id) => ({ id }));
     const responseLinks = _map(linkIds, (id) => ({ id, __typename: 'Link' }));
@@ -379,7 +359,7 @@ export const deleteLink = ({ folderId, linkIds, searchText }) => {
         update: () => {
           deleteLinkFromCache({
             folderId,
-            linkFilters: { first: DEFAULT_PAGE_SIZE, searchText },
+            linkFilters: { first: DEFAULT_PAGE_SIZE },
             linkIds,
           });
         },
