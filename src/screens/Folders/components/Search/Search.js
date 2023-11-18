@@ -5,18 +5,15 @@ import { BiSearch } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 
 /**--relative-- */
-import {
-  searchIconStyle,
-  inputStyle,
-  inputGroupStyle,
-  inputLeftElementStyle,
-} from './SearchStyles';
+import { searchIconStyle, inputGroupStyle } from './SearchStyles';
+import classes from './Search.module.scss';
+
 const Search = (props) => {
   const { value, onChange } = props;
   return (
-    <Box display={'flex'} width="100%" padding="8px 16px">
-      <InputGroup style={inputGroupStyle} size="md">
-        <InputLeftElement style={inputLeftElementStyle}>
+    <Box className={classes.container}>
+      <InputGroup style={inputGroupStyle} size="lg">
+        <InputLeftElement className={classes.inputLeftElementContainer}>
           <IconContext.Provider value={searchIconStyle}>
             <BiSearch />
           </IconContext.Provider>
@@ -25,8 +22,7 @@ const Search = (props) => {
           placeholder="Search collections"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          style={inputStyle}
-          border="none"
+          className={classes.inputContainer}
         />
       </InputGroup>
     </Box>
