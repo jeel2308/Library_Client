@@ -3,7 +3,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
-import { Heading, Text, Image, Box } from '@chakra-ui/react';
+import { Text, Image, Box, Link as ChakraLink } from '@chakra-ui/react';
 import _noop from 'lodash/noop';
 
 /**--internal-- */
@@ -13,6 +13,8 @@ import { Dropdown } from '#components';
 import { dotsStyle } from './LinkStyles';
 //This will not work with js aliasing
 import * as fallbackUrl from '../../../../../../../assests/linkBackupImage.jpeg';
+
+import classes from './Link.module.scss';
 
 const Link = (props) => {
   const {
@@ -32,63 +34,44 @@ const Link = (props) => {
   const showMetadata = title || thumbnail || description;
 
   return (
-    <Box
-      display="flex"
-      gap={3}
-      width="600px"
-      borderRadius={'8px'}
-      backgroundColor="white"
-      boxShadow={
-        '0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.1)'
-      }
-      cursor="pointer"
-      padding={3}
-      onClick={onLinkClick}
-    >
-      {!showMetadata ? (
-        <Text
-          display="flex"
-          flex={1}
-          flexWrap="wrap"
-          wordBreak="break-all"
-          color="blue"
-        >
-          {url}
-        </Text>
-      ) : (
-        <React.Fragment>
+    <Box className={classes.container}>
+      <Box className={classes.topContainer}>
+        <Box className={classes.linkContainer} onClick={onLinkClick}>
+          <ChakraLink href={url} className={classes.link}>
+            {url}
+          </ChakraLink>
+        </Box>
+        <Box display="flex" flexShrink={0}>
+          <Dropdown
+            variant="unstyled"
+            options={dropDownOptions}
+            dropdownButtonType="icon"
+            handleActions={handleActions}
+            icon={
+              <IconContext.Provider value={dotsStyle}>
+                <BiDotsVerticalRounded />
+              </IconContext.Provider>
+            }
+          />
+        </Box>
+      </Box>
+      {showMetadata ? (
+        <Box className={classes.linkDetails}>
+          <Text as="h5" size="md">
+            {title}
+          </Text>
+          <Text fontSize={'sm'} className={classes.linkDescription}>
+            {description}
+          </Text>
           <Image
             src={thumbnail}
-            width={'200px'}
-            height="104px"
             fallbackSrc={fallbackUrl.default}
             border="1px solid rgba(0,0,0,0.1)"
             borderRadius={'8px'}
             flexShrink={0}
           />
-          <Box gap={1} display="flex" flexDirection="column" flex={1}>
-            <Heading as="h5" size="md">
-              {title}
-            </Heading>
-            <Text fontSize={'sm'} colorScheme="blackAlpha">
-              {description}
-            </Text>
-          </Box>
-        </React.Fragment>
-      )}
-      <Box display="flex">
-        <Dropdown
-          variant="unstyled"
-          options={dropDownOptions}
-          dropdownButtonType="icon"
-          handleActions={handleActions}
-          icon={
-            <IconContext.Provider value={dotsStyle}>
-              <BiDotsVerticalRounded />
-            </IconContext.Provider>
-          }
-        />
-      </Box>
+        </Box>
+      ) : null}
     </Box>
   );
 };
