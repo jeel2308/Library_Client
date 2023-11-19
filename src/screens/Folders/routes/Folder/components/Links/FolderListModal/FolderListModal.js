@@ -31,7 +31,7 @@ const FolderList = (props) => {
   return (
     <div className={classes.folderListContainer}>
       <Heading as="h4" size="md">
-        Select Folder
+        Select collection
       </Heading>
       <RadioGroup onChange={setSelectedFolder} value={selectedFolder} mt={4}>
         <Stack direction="column" spacing="1">
