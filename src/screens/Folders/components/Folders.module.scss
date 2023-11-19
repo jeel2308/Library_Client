@@ -12,11 +12,17 @@
   background-color: rgb(245, 247, 251);
 }
 
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 12px 24px 24px;
+}
+
 .header {
   color: rgb(63, 65, 77);
   font-size: 20px;
   font-weight: 600;
-  padding: 24px;
 }
 
 .sidebarContainer {

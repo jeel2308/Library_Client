@@ -11,7 +11,8 @@ import { connect } from 'react-redux';
 import _isEmpty from 'lodash/isEmpty';
 import _find from 'lodash/find';
 import _size from 'lodash/size';
-import { Text, Box } from '@chakra-ui/react';
+import { Text, Box, IconButton, Tooltip } from '@chakra-ui/react';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 /**--internal-- */
 import { compose, getMatchingResults } from '#Utils';
@@ -117,6 +118,10 @@ const Resources = (props) => {
         setShowDeleteWarningModal(true);
         break;
       }
+      case 'CREATE': {
+        setShowEditOrCreateFolderModal(true);
+        break;
+      }
       default: {
         return;
       }
@@ -133,7 +138,17 @@ const Resources = (props) => {
   return (
     <div className={classes.container}>
       <Box className={classes.leftContainer}>
-        <Text className={classes.header}>Collections</Text>
+        <Box className={classes.headerContainer}>
+          <Text className={classes.header}>Collections</Text>
+          <Tooltip label="Create collection" aria-label="Create collection">
+            <IconButton
+              aria-label="Create collection"
+              icon={<AiOutlinePlus />}
+              size="sm"
+              onClick={() => handleActions({ type: 'CREATE' })}
+            />
+          </Tooltip>
+        </Box>
         {!_isEmpty(folders) && (
           <Search value={searchValue} onChange={setSearchValue} />
         )}
