@@ -3,14 +3,22 @@
 }
 
 .option {
-  display: flex;
-  align-items: center;
   cursor: pointer;
   &:hover {
     background-color: rgb(230, 235, 245);
   }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 4px 16px 16px;
 }
 
 .activeOption {
   background-color: rgb(230, 235, 245);
+}
+
+.optionDetails {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }

@@ -22,7 +22,7 @@ import { getUserFoldersEnhancer } from '#modules/QueryEnhancer';
 import classes from './Folders.module.scss';
 import Search from './Search';
 import { EditOrCreateFolderModal, DeleteWarningModal } from '#AppComponents';
-import { getNextAvailableFolderId } from './FoldersUtils';
+import { getNextAvailableFolderId, FOLDER_ACTIONS } from './FoldersUtils';
 import { loadingContainerStyle } from './FoldersStyles';
 
 const Resources = (props) => {
@@ -141,8 +141,10 @@ const Resources = (props) => {
           {!_isEmpty(matchingFolders) ? (
             <Sidebar
               activeOption={selectedFolderId}
-              sidebarOptions={matchingFolders}
+              options={matchingFolders}
               onClickOption={({ id }) => setSelectedFolderId(id)}
+              actions={FOLDER_ACTIONS}
+              handleActions={handleActions}
             />
           ) : !_isEmpty(searchValue) ? (
             <div className={classes.noMatchText}>{'No match found'}</div>

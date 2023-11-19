@@ -17,3 +17,14 @@ export const getNextAvailableFolderId = ({ folderId, folders }) => {
 
   return folders[folderIndex - 1]?.id;
 };
+
+export const FOLDER_ACTIONS = [
+  {
+    label: 'Edit',
+    value: 'EDIT',
+  },
+  {
+    label: 'Delete',
+    value: 'DELETE',
+  },
+];
