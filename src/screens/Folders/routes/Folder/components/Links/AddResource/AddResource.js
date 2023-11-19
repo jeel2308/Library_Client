@@ -30,13 +30,7 @@ const AddResource = (props) => {
   };
 
   return (
-    <Box
-      display={'flex'}
-      padding={3}
-      gap={6}
-      background="white"
-      borderTop="1px solid rgba(0,0,0,0.2)"
-    >
+    <Box display={'flex'} padding={3} gap={6} background="white">
       <div style={inputContainerStyle}>
         <Input
           placeholder="enter url of resource"

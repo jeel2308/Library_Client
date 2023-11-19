@@ -11,13 +11,7 @@ import { iconStyle } from './ActionStyles';
 const Actions = (props) => {
   const { onActionClick, showMoveAction } = props;
   return (
-    <Box
-      display="flex"
-      borderTop="1px solid rgba(0,0,0,0.2)"
-      backgroundColor="white"
-      alignItems="center"
-      padding={3}
-    >
+    <Box display="flex" backgroundColor="white" alignItems="center" padding={3}>
       <Box marginLeft="auto" display="flex" gap={3}>
         {showMoveAction ? (
           <Button
