@@ -1,9 +1,10 @@
 /**--external-- */
 import React from 'react';
 import propTypes from 'prop-types';
-import { Button, Box } from '@chakra-ui/react';
+import { Button, Box, IconButton, Tooltip } from '@chakra-ui/react';
 import { IconContext } from 'react-icons';
-import { BiX } from 'react-icons/bi';
+import { BiX, BiShare } from 'react-icons/bi';
+import { AiOutlineDelete } from 'react-icons/ai';
 
 /**--relative-- */
 import { iconStyle } from './ActionStyles';
@@ -11,36 +12,50 @@ import { iconStyle } from './ActionStyles';
 const Actions = (props) => {
   const { onActionClick, showMoveAction } = props;
   return (
-    <Box display="flex" backgroundColor="white" alignItems="center" padding={3}>
-      <Box marginLeft="auto" display="flex" gap={3}>
-        {showMoveAction ? (
-          <Button
-            colorScheme="blue"
-            onClick={() => onActionClick({ type: 'MOVE' })}
-          >
-            Move
-          </Button>
-        ) : null}
-        <Button
-          colorScheme="red"
-          onClick={() => onActionClick({ type: 'DELETE' })}
-        >
-          Delete
-        </Button>
-      </Box>
-      <Box marginLeft="auto">
-        <Button
-          leftIcon={
+    <Box
+      display="flex"
+      backgroundColor="white"
+      alignItems="center"
+      padding={3}
+      gap={3}
+    >
+      <Tooltip label="Cancel" aria-label="Cancel">
+        <IconButton
+          icon={
             <IconContext.Provider value={iconStyle}>
               <BiX />
             </IconContext.Provider>
           }
-          colorScheme={'blue'}
           onClick={() => onActionClick({ type: 'CANCEL' })}
-        >
-          Cancel
-        </Button>
-      </Box>
+          colorScheme="blue"
+        />
+      </Tooltip>
+      <Tooltip label="Delete" aria-label="Delete">
+        <IconButton
+          icon={
+            <IconContext.Provider value={iconStyle}>
+              <AiOutlineDelete />
+            </IconContext.Provider>
+          }
+          marginLeft={'auto'}
+          colorScheme="red"
+          onClick={() => onActionClick({ type: 'DELETE' })}
+        />
+      </Tooltip>
+
+      {showMoveAction ? (
+        <Tooltip label="Move" aria-label="Move">
+          <IconButton
+            icon={
+              <IconContext.Provider value={iconStyle}>
+                <BiShare />
+              </IconContext.Provider>
+            }
+            onClick={() => onActionClick({ type: 'MOVE' })}
+            colorScheme="blue"
+          ></IconButton>
+        </Tooltip>
+      ) : null}
     </Box>
   );
 };
