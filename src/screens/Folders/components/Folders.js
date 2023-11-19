@@ -82,7 +82,10 @@ const Resources = (props) => {
 
   const deleteFolderCallback = ({ folderId: deletedFolderId }) => {
     if (deletedFolderId === selectedFolderId) {
-      const nextFolderId = getNextAvailableFolderId({ folderId, folders });
+      const nextFolderId = getNextAvailableFolderId({
+        folderId: selectedFolderId,
+        folders,
+      });
 
       if (nextFolderId) {
         setSelectedFolderId(nextFolderId);
@@ -102,7 +105,7 @@ const Resources = (props) => {
     return _find(folders, ({ id }) => id === selectedFolderId);
   }, [selectedFolderId, folders]);
 
-  const handleAction = ({ data, type }) => {
+  const handleActions = useCallback(({ data, type }) => {
     switch (type) {
       case 'EDIT': {
         setFolderId(data.id);
@@ -118,7 +121,14 @@ const Resources = (props) => {
         return;
       }
     }
-  };
+  }, []);
+
+  const outletProps = useMemo(() => {
+    return {
+      selectedFolder,
+      handleActions,
+    };
+  }, [selectedFolder, handleActions]);
 
   return (
     <div className={classes.container}>
@@ -133,14 +143,13 @@ const Resources = (props) => {
               activeOption={selectedFolderId}
               sidebarOptions={matchingFolders}
               onClickOption={({ id }) => setSelectedFolderId(id)}
-              handleAction={handleAction}
             />
           ) : !_isEmpty(searchValue) ? (
             <div className={classes.noMatchText}>{'No match found'}</div>
           ) : null}
         </div>
       </Box>
-      <Outlet context={selectedFolder} />
+      <Outlet context={outletProps} />
       {showEditOrCreateFolderModal && (
         <EditOrCreateFolderModal
           closeModal={closeEditOrCreateFolderModal}

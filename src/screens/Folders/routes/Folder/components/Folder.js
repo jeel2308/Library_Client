@@ -1,5 +1,5 @@
 /**--external-- */
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
@@ -11,7 +11,6 @@ import { BiDotsHorizontal } from 'react-icons/bi';
 /**--internal-- */
 import { scrollToBottom } from '#Utils';
 import { Dropdown } from '#components';
-import { EditOrCreateFolderModal } from '#AppComponents';
 
 /**--relative-- */
 import classes from './Folder.module.scss';
@@ -20,7 +19,8 @@ import Links from './Links';
 import { FOLDER_ACTIONS } from './FolderUtils';
 
 const Folder = () => {
-  const folderBasicDetails = useOutletContext();
+  const { selectedFolder: folderBasicDetails, handleActions } =
+    useOutletContext();
 
   const linkScrollRef = useRef(null);
   const linksNodeRefs = useRef([]);
@@ -28,8 +28,6 @@ const Folder = () => {
     folderId: '',
     linkStatus: '',
   });
-
-  const [selectedAction, setSelectedAction] = useState(null);
 
   const setLinkScrollRef = (node) => {
     linkScrollRef.current = node;
@@ -100,7 +98,9 @@ const Folder = () => {
           variant="unstyled"
           options={FOLDER_ACTIONS}
           dropdownButtonType="icon"
-          handleActions={({ value }) => setSelectedAction(value)}
+          handleActions={({ value }) =>
+            handleActions({ type: value, data: { id: folderId } })
+          }
           icon={
             <IconContext.Provider value={dotsStyle}>
               <BiDotsHorizontal />
@@ -115,12 +115,6 @@ const Folder = () => {
         setLinkNodesRef={setLinkNodesRef}
         scrollLinkFeed={scrollLinkFeed}
       />
-      {selectedAction === 'EDIT' && (
-        <EditOrCreateFolderModal
-          closeModal={() => setSelectedAction(null)}
-          folderId={folderId}
-        />
-      )}
     </div>
   );
 };
